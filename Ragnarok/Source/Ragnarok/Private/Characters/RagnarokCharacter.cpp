@@ -3,29 +3,27 @@
 
 #include "Characters/RagnarokCharacter.h"
 
-// Sets default values
 ARagnarokCharacter::ARagnarokCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+
+	GetMesh()->bReceivesDecals = false;
 
 }
 
-// Called when the game starts or when spawned
 void ARagnarokCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ARagnarokCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void ARagnarokCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
