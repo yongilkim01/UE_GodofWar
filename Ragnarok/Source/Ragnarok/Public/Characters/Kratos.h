@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UKratosConfigDataAsset;
+class UKratosConfigPrimaryDataAsset;
 
 /**
  * 
@@ -24,6 +25,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+	void LoadKratosConfigData();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	UKratosConfigDataAsset* KratosConfig = nullptr;
@@ -34,4 +38,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArmComponent = nullptr;
+
+private:
+	FPrimaryAssetId KratosConfigPrimaryAssetId;
+	UKratosConfigPrimaryDataAsset* KratosConfigPrimaryDataAsset = nullptr;
 };

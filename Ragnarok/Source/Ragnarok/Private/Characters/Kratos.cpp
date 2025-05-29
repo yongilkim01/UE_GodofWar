@@ -4,12 +4,16 @@
 #include "Characters/Kratos.h"
 #include "RagnarokDebugHelper.h"
 
+#include "Engine/StreamableManager.h"
+#include "Engine/AssetManager.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 #include "DataAssets/KratosConfigDataAsset.h"
+#include "DataAssets/KratosConfigPrimaryDataAsset.h"
 
 AKratos::AKratos()
 {
@@ -26,6 +30,8 @@ AKratos::AKratos()
 	MainCameraComponent->bUsePawnControlRotation = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	KratosConfigPrimaryAssetId = FPrimaryAssetId("KratosConfig", "DA_KratosConfigPrimary");
 }
 
 void AKratos::BeginPlay()
@@ -44,9 +50,32 @@ void AKratos::BeginPlay()
 		GetCharacterMovement()->RotationRate = KratosConfig->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = KratosConfig->MaxWalkSpeed;
 
+		UAssetManager::Get().LoadPrimaryAsset
+		(
+			KratosConfigPrimaryAssetId,
+			{},
+			FStreamableDelegate::CreateUObject(this, &AKratos::LoadKratosConfigData)
+		);
+
 	}
 	else
 	{
 		Debug::Print(TEXT("Kratos config data assets is nullptr!!"), FColor::Red);
+	}
+}
+
+void AKratos::LoadKratosConfigData()
+{
+	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(KratosConfigPrimaryAssetId);
+	KratosConfigPrimaryDataAsset = Cast<UKratosConfigPrimaryDataAsset>(AssetObject);
+
+	if (nullptr != KratosConfigPrimaryDataAsset && KratosConfigPrimaryDataAsset->KratosSkeletalMesh.IsValid())
+	{
+		GetMesh()->SetSkeletalMesh(KratosConfigPrimaryDataAsset->KratosSkeletalMesh.Get());
+	}
+	else
+	{
+		Debug::Print(TEXT("Kratos config primary data assets is nullptr!!"), FColor::Red);
+
 	}
 }
