@@ -29,8 +29,12 @@ private:
 	void LoadKratosConfigData();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
 	UKratosConfigDataAsset* KratosConfig = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
+	FPrimaryAssetId SkeletalMeshPrimaryAssetId;
+
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
@@ -40,6 +44,5 @@ private:
 	USpringArmComponent* SpringArmComponent = nullptr;
 
 private:
-	FPrimaryAssetId KratosConfigPrimaryAssetId;
 	UKratosConfigPrimaryDataAsset* KratosConfigPrimaryDataAsset = nullptr;
 };

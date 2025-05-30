@@ -30,8 +30,6 @@ AKratos::AKratos()
 	MainCameraComponent->bUsePawnControlRotation = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-	KratosConfigPrimaryAssetId = FPrimaryAssetId("KratosAsset", "/Game/Data/Assets/PDA_KratosConfigPrimary.PDA_KratosConfigPrimary");
 }
 
 void AKratos::BeginPlay()
@@ -52,7 +50,7 @@ void AKratos::BeginPlay()
 
 		UAssetManager::Get().LoadPrimaryAsset
 		(
-			KratosConfigPrimaryAssetId,
+			SkeletalMeshPrimaryAssetId,
 			{},
 			FStreamableDelegate::CreateUObject(this, &AKratos::LoadKratosConfigData)
 		);
@@ -66,7 +64,7 @@ void AKratos::BeginPlay()
 
 void AKratos::LoadKratosConfigData()
 {
-	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(KratosConfigPrimaryAssetId);
+	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(SkeletalMeshPrimaryAssetId);
 	KratosConfigPrimaryDataAsset = Cast<UKratosConfigPrimaryDataAsset>(AssetObject);
 
 	if (nullptr != KratosConfigPrimaryDataAsset && KratosConfigPrimaryDataAsset->KratosSkeletalMesh.IsValid())
