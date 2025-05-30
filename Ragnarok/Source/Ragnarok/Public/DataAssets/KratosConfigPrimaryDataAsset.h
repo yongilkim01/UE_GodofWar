@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class RAGNAROK_API UKratosConfigPrimaryDataAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
@@ -19,3 +19,4 @@ public:
 	TSoftObjectPtr<USkeletalMesh> KratosSkeletalMesh;
 	
 };
+	

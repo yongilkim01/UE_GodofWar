@@ -31,7 +31,7 @@ AKratos::AKratos()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-	KratosConfigPrimaryAssetId = FPrimaryAssetId("KratosConfig", "DA_KratosConfigPrimary");
+	KratosConfigPrimaryAssetId = FPrimaryAssetId("KratosAsset", "/Game/Data/Assets/PDA_KratosConfigPrimary.PDA_KratosConfigPrimary");
 }
 
 void AKratos::BeginPlay()
