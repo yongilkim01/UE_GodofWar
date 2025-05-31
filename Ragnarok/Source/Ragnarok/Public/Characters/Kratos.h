@@ -9,7 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UKratosConfigDataAsset;
-class UKratosConfigPrimaryDataAsset;
+class UCharacterPrimaryAssetKratos;
 
 /**
  * 
@@ -33,7 +33,7 @@ protected:
 	UKratosConfigDataAsset* KratosConfig = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
-	FPrimaryAssetId SkeletalMeshPrimaryAssetId;
+	FPrimaryAssetId CharacterPDAId;
 
 
 private:
@@ -44,5 +44,5 @@ private:
 	USpringArmComponent* SpringArmComponent = nullptr;
 
 private:
-	UKratosConfigPrimaryDataAsset* KratosConfigPrimaryDataAsset = nullptr;
+	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
 };

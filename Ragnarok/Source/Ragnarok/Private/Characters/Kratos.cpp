@@ -13,7 +13,7 @@
 #include "Components/SkeletalMeshComponent.h"
 
 #include "DataAssets/KratosConfigDataAsset.h"
-#include "DataAssets/KratosConfigPrimaryDataAsset.h"
+#include "Data/Kratos/CharacterPrimaryAssetKratos.h"
 
 AKratos::AKratos()
 {
@@ -50,7 +50,7 @@ void AKratos::BeginPlay()
 
 		UAssetManager::Get().LoadPrimaryAsset
 		(
-			SkeletalMeshPrimaryAssetId,
+			CharacterPDAId,
 			{},
 			FStreamableDelegate::CreateUObject(this, &AKratos::LoadKratosConfigData)
 		);
@@ -64,12 +64,12 @@ void AKratos::BeginPlay()
 
 void AKratos::LoadKratosConfigData()
 {
-	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(SkeletalMeshPrimaryAssetId);
-	KratosConfigPrimaryDataAsset = Cast<UKratosConfigPrimaryDataAsset>(AssetObject);
+	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(CharacterPDAId);
+	CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
 
-	if (nullptr != KratosConfigPrimaryDataAsset && KratosConfigPrimaryDataAsset->KratosSkeletalMesh.IsValid())
+	if (nullptr != CharacterPDA && true == CharacterPDA->KratosSkeletalMesh.IsValid())
 	{
-		GetMesh()->SetSkeletalMesh(KratosConfigPrimaryDataAsset->KratosSkeletalMesh.Get());
+		GetMesh()->SetSkeletalMesh(CharacterPDA->KratosSkeletalMesh.Get());
 	}
 	else
 	{
