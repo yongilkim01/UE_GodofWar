@@ -32,10 +32,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
 	UKratosConfigDataAsset* KratosConfig = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
-	FPrimaryAssetId CharacterPDAId;
-
-
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* MainCameraComponent = nullptr;
@@ -45,4 +41,5 @@ private:
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
+	FPrimaryAssetId CharacterPDAId;
 };

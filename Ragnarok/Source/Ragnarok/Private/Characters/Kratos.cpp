@@ -30,6 +30,8 @@ AKratos::AKratos()
 	MainCameraComponent->bUsePawnControlRotation = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	CharacterPDAId = FPrimaryAssetId(TEXT("CharacterPrimaryAssetKratos"), TEXT("PDA_Kratos"));
 }
 
 void AKratos::BeginPlay()
