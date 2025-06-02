@@ -2,7 +2,7 @@
 
 
 #include "Characters/Kratos.h"
-#include "RagnarokDebugHelper.h"
+#include "Tools/RagnarokDebugHelper.h"
 
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
@@ -14,6 +14,8 @@
 
 #include "DataAssets/KratosConfigDataAsset.h"
 #include "Data/Kratos/CharacterPrimaryAssetKratos.h"
+#include "Manager/Global/RagnarokAssetManager.h"
+#include "Types/RagnarokTypes.h"
 
 AKratos::AKratos()
 {
@@ -31,7 +33,7 @@ AKratos::AKratos()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
-	CharacterPDAId = FPrimaryAssetId(TEXT("CharacterPrimaryAssetKratos"), TEXT("PDA_Kratos"));
+	//CharacterPDAId = FPrimaryAssetId(TEXT("CharacterPrimaryAssetKratos"), TEXT("PDA_Kratos"));
 }
 
 void AKratos::BeginPlay()
@@ -50,13 +52,19 @@ void AKratos::BeginPlay()
 		GetCharacterMovement()->RotationRate = KratosConfig->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = KratosConfig->MaxWalkSpeed;
 
-		UAssetManager::Get().LoadPrimaryAsset
+		FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
+		FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
+
+		CharacterPDAId = FPrimaryAssetId(
+			*PrimaryAssetType,
+			*PrimaryAssetName);
+
+		URagnarokAssetManager::Get().LoadPrimaryAsset
 		(
 			CharacterPDAId,
 			{},
 			FStreamableDelegate::CreateUObject(this, &AKratos::LoadKratosConfigData)
 		);
-
 	}
 	else
 	{

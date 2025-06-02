@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Controllers/KratosController.h"
-#include "Tools/RagnarokDebugHelper.h"
+#include "Data/Global/PrimaryAssetIdDataTable.h"
+
