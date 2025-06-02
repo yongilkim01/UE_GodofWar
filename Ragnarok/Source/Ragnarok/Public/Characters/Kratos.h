@@ -8,7 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
-class UKratosConfigDataAsset;
+class UInitDataAssetKratos;
 class UCharacterPrimaryAssetKratos;
 
 /**
@@ -26,11 +26,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void LoadKratosConfigData();
+	void AsyncLoadCharacterKratos();
+
+	void LoadKratosDataAsset();
+	void LoadKratosPrimaryDataAsset();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Config")
-	UKratosConfigDataAsset* KratosConfig = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Init")
+	UInitDataAssetKratos* InitDA = nullptr;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))

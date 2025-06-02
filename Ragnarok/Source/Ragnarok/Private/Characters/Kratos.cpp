@@ -12,8 +12,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
-#include "DataAssets/KratosConfigDataAsset.h"
 #include "Data/Kratos/CharacterPrimaryAssetKratos.h"
+#include "Data/Kratos/InitDataAssetKratos.h"
 #include "Manager/Global/RagnarokAssetManager.h"
 #include "Types/RagnarokTypes.h"
 
@@ -32,8 +32,6 @@ AKratos::AKratos()
 	MainCameraComponent->bUsePawnControlRotation = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-	//CharacterPDAId = FPrimaryAssetId(TEXT("CharacterPrimaryAssetKratos"), TEXT("PDA_Kratos"));
 }
 
 void AKratos::BeginPlay()
@@ -42,37 +40,46 @@ void AKratos::BeginPlay()
 
 	Debug::Print(TEXT("Start Kratos Beginplay method"));
 
-	if (nullptr != KratosConfig)
+	LoadKratosDataAsset();
+	LoadKratosPrimaryDataAsset();
+}
+
+void AKratos::LoadKratosDataAsset()
+{
+	if (nullptr != InitDA)
 	{
-		GetCapsuleComponent()->InitCapsuleSize(KratosConfig->CapsuleRadius, KratosConfig->CapsuleHalfHeight);
+		GetCapsuleComponent()->InitCapsuleSize(InitDA->CapsuleRadius, InitDA->CapsuleHalfHeight);
 
-		SpringArmComponent->TargetArmLength = KratosConfig->TargetArmLength;
-		SpringArmComponent->SocketOffset = KratosConfig->SocketOffset;
+		SpringArmComponent->TargetArmLength = InitDA->TargetArmLength;
+		SpringArmComponent->SocketOffset = InitDA->SocketOffset;
 
-		GetCharacterMovement()->RotationRate = KratosConfig->CharacterMovementRotationRate;
-		GetCharacterMovement()->MaxWalkSpeed = KratosConfig->MaxWalkSpeed;
-
-		FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
-		FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
-
-		CharacterPDAId = FPrimaryAssetId(
-			*PrimaryAssetType,
-			*PrimaryAssetName);
-
-		URagnarokAssetManager::Get().LoadPrimaryAsset
-		(
-			CharacterPDAId,
-			{},
-			FStreamableDelegate::CreateUObject(this, &AKratos::LoadKratosConfigData)
-		);
+		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
+		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
 	}
 	else
 	{
-		Debug::Print(TEXT("Kratos config data assets is nullptr!!"), FColor::Red);
+		Debug::Print(TEXT("Init data assets is nullptr!!"), FColor::Red);
 	}
 }
 
-void AKratos::LoadKratosConfigData()
+void AKratos::LoadKratosPrimaryDataAsset()
+{
+	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
+	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
+
+	CharacterPDAId = FPrimaryAssetId(
+		*PrimaryAssetType,
+		*PrimaryAssetName);
+
+	URagnarokAssetManager::Get().LoadPrimaryAsset
+	(
+		CharacterPDAId,
+		{},
+		FStreamableDelegate::CreateUObject(this, &AKratos::AsyncLoadCharacterKratos)
+	);
+}
+
+void AKratos::AsyncLoadCharacterKratos()
 {
 	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(CharacterPDAId);
 	CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
@@ -80,6 +87,20 @@ void AKratos::LoadKratosConfigData()
 	if (nullptr != CharacterPDA && true == CharacterPDA->KratosSkeletalMesh.IsValid())
 	{
 		GetMesh()->SetSkeletalMesh(CharacterPDA->KratosSkeletalMesh.Get());
+	}
+	else if (nullptr != CharacterPDA)
+	{
+		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+		StreamableManager.RequestAsyncLoad
+		(
+			CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(),
+			FStreamableDelegate::CreateLambda([this]()
+				{
+					if (USkeletalMesh* Mesh = CharacterPDA->KratosSkeletalMesh.Get())
+					{
+						GetMesh()->SetSkeletalMesh(Mesh);
+					}
+				}));
 	}
 	else
 	{

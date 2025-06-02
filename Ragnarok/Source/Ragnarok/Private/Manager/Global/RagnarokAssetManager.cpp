@@ -30,7 +30,7 @@ void URagnarokAssetManager::StartInitialLoading()
 
 }
 
-URagnarokAssetManager& URagnarokAssetManager::Get()
+URagnarokAssetManager& URagnarokAssetManager::Get()	
 {
 	URagnarokAssetManager* This = Cast<URagnarokAssetManager>(GEngine->AssetManager);
 

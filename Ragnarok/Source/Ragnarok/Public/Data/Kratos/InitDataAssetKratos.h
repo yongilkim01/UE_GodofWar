@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "KratosConfigDataAsset.generated.h"
+#include "InitDataAssetKratos.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RAGNAROK_API UKratosConfigDataAsset : public UDataAsset
+class RAGNAROK_API UInitDataAssetKratos : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -38,4 +38,5 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     float BrakingDecelerationWalking = 0.0f;
+	
 };

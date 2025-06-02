@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DataAssets/KratosConfigPrimaryDataAsset.h"
+#include "Data/Kratos/InitDataAssetKratos.h"
 
