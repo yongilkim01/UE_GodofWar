@@ -55,6 +55,9 @@ void AKratos::LoadKratosDataAsset()
 
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
+
+		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
+		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
 	}
 	else
 	{

@@ -19,6 +19,9 @@ public:
     FVector SkeletalMeshOffset = FVector::ZeroVector;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
+    FRotator SkeletalMeshRotator = FRotator::ZeroRotator;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     float CapsuleRadius = 0.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
