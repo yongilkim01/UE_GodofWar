@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Types/RagnarokTypes.h"
+#include "Core/Types/RagnarokTypes.h"
 #include "DataTableManager.generated.h"
 
 struct FPrimaryAssetIdDataTableRow;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/AssetManager.h"
-#include "Types/RagnarokTypes.h"
+#include "Core/Types/RagnarokTypes.h"
 #include "RagnarokAssetManager.generated.h"
 
 /**

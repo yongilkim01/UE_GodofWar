@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "Types/RagnarokTypes.h"
+#include "Core/Types/RagnarokTypes.h"
 #include "PrimaryAssetIdDataTable.generated.h"
 
 // 일반 재료 데이터 열

@@ -2,7 +2,6 @@
 
 
 #include "Characters/Kratos.h"
-#include "Tools/RagnarokDebugHelper.h"
 
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
@@ -12,10 +11,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
+#include "Core/Types/RagnarokTypes.h"
+#include "Core/Tools/RagnarokDebugHelper.h"
 #include "Data/Kratos/CharacterPrimaryAssetKratos.h"
 #include "Data/Kratos/InitDataAssetKratos.h"
 #include "Manager/Global/RagnarokAssetManager.h"
-#include "Types/RagnarokTypes.h"
 
 AKratos::AKratos()
 {
@@ -25,13 +25,9 @@ AKratos::AKratos()
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
-	SpringArmComponent->bUsePawnControlRotation = true;
 
 	MainCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
-	MainCameraComponent->bUsePawnControlRotation = false;
-
-	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void AKratos::BeginPlay()
@@ -51,11 +47,15 @@ void AKratos::LoadKratosDataAsset()
 		GetCapsuleComponent()->InitCapsuleSize(InitDA->CapsuleRadius, InitDA->CapsuleHalfHeight);
 
 		SpringArmComponent->TargetArmLength = InitDA->TargetArmLength;
-		SpringArmComponent->SocketOffset = InitDA->SocketOffset;
+		SpringArmComponent->SocketOffset = InitDA->SocketOffset;	
+		SpringArmComponent->bUsePawnControlRotation = true;
 
+		MainCameraComponent->bUsePawnControlRotation = false;
+
+		GetCharacterMovement()->bOrientRotationToMovement = true;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
-
+		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
 	}
