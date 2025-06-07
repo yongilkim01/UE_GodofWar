@@ -10,6 +10,10 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInitDataAssetKratos;
 class UCharacterPrimaryAssetKratos;
+class UInputConfigDataAsset;
+class UInputComponent;
+
+struct FInputActionValue;
 
 /**
  * 
@@ -24,6 +28,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
 	void AsyncLoadCharacterKratos();
@@ -31,9 +36,14 @@ private:
 	void LoadKratosDataAsset();
 	void LoadKratosPrimaryDataAsset();
 
+	void InputMove(const FInputActionValue& InputActionValue);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Init")
 	UInitDataAssetKratos* InitDA = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Input")
+	UInputConfigDataAsset* InputConfigDA = nullptr;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))

@@ -3,6 +3,7 @@
 
 #include "Characters/Kratos.h"
 
+#include "EnhancedInputSubsystems.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -12,10 +13,13 @@
 #include "Components/SkeletalMeshComponent.h"
 
 #include "Core/Types/RagnarokTypes.h"
+#include "Core/Tags/RagnarokGameplayTags.h"
 #include "Core/Tools/RagnarokDebugHelper.h"
 #include "Data/Kratos/CharacterPrimaryAssetKratos.h"
 #include "Data/Kratos/InitDataAssetKratos.h"
+#include "Data/Input/InputConfigDataAsset.h"
 #include "Manager/Global/RagnarokAssetManager.h"
+#include "Components/Input/RagnarokEnhancedInputComponent.h"
 
 AKratos::AKratos()
 {
@@ -38,6 +42,31 @@ void AKratos::BeginPlay()
 
 	LoadKratosDataAsset();
 	LoadKratosPrimaryDataAsset();
+}
+
+void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	checkf(InputConfigDA, TEXT("Check input config data asset"));
+
+	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
+
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
+		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+	check(InputSubsystem);
+
+	InputSubsystem->AddMappingContext(InputConfigDA->InputMappingContext, 0);
+
+	URagnarokEnhancedInputComponent* RagnarokInputComponent
+		= CastChecked<URagnarokEnhancedInputComponent>(PlayerInputComponent);
+
+	RagnarokInputComponent->BindNativeInputAction(
+		InputConfigDA,
+		RagnarokGameplayTags::InputTag_Move,
+		ETriggerEvent::Triggered,
+		this,
+		&ThisClass::InputMove
+	);
 }
 
 void AKratos::LoadKratosDataAsset()
@@ -80,6 +109,25 @@ void AKratos::LoadKratosPrimaryDataAsset()
 		{},
 		FStreamableDelegate::CreateUObject(this, &AKratos::AsyncLoadCharacterKratos)
 	);
+}
+
+void AKratos::InputMove(const FInputActionValue& InputActionValue)
+{
+	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
+	const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+
+	if (0.0f != MovementVector.Y)
+	{
+		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+	}
+
+
+	if (0.0f != MovementVector.X)
+	{
+		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
+		AddMovementInput(RightDirection, MovementVector.X);
+	}
 }
 
 void AKratos::AsyncLoadCharacterKratos()
