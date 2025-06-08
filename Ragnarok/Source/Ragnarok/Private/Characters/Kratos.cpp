@@ -155,7 +155,7 @@ void AKratos::InputLook(const FInputActionValue& InputActionValue)
 	}
 	if (0.0f != LookAxisVector.Y)
 	{
-		AddControllerPitchInput(LookAxisVector.Y);
+		AddControllerPitchInput(-LookAxisVector.Y);
 	}
 
 }
