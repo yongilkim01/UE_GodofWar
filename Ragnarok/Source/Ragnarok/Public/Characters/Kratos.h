@@ -37,6 +37,7 @@ private:
 	void LoadKratosPrimaryDataAsset();
 
 	void InputMove(const FInputActionValue& InputActionValue);
+	void InputLook(const FInputActionValue& InputActionValue);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Init")

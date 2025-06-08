@@ -40,32 +40,47 @@ void AKratos::BeginPlay()
 
 	Debug::Print(TEXT("Start Kratos Beginplay method"));
 
-	LoadKratosDataAsset();
 	LoadKratosPrimaryDataAsset();
+	LoadKratosDataAsset();
 }
 
 void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDA, TEXT("Check input config data asset"));
 
+	// 현재 컨트롤러가 APlayerController인지 확인 후, 그에 해당하는 LocalPlayer를 가져옴
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
+	// EnhancedInput 시스템을 사용하기 위한 서브시스템을 가져옴
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(InputSubsystem);
 
+	// InputConfigDA에 저장된 MappingContext를 InputSubsystem에 등록 (우선순위 0)
 	InputSubsystem->AddMappingContext(InputConfigDA->InputMappingContext, 0);
 
+	// 입력을 처리할 컴포넌트를 캐스팅
 	URagnarokEnhancedInputComponent* RagnarokInputComponent
 		= CastChecked<URagnarokEnhancedInputComponent>(PlayerInputComponent);
 
+	check(RagnarokInputComponent);
+
+	// InputConfigDA에 정의된 "Move" InputTag에 대해, Triggered 시 InputMove 함수를 바인딩
 	RagnarokInputComponent->BindNativeInputAction(
 		InputConfigDA,
 		RagnarokGameplayTags::InputTag_Move,
 		ETriggerEvent::Triggered,
 		this,
 		&ThisClass::InputMove
+	);
+
+	RagnarokInputComponent->BindNativeInputAction(
+		InputConfigDA,
+		RagnarokGameplayTags::InputTag_Look,
+		ETriggerEvent::Triggered,
+		this,
+		&ThisClass::InputLook
 	);
 }
 
@@ -128,6 +143,21 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+}
+
+void AKratos::InputLook(const FInputActionValue& InputActionValue)
+{
+	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+
+	if(0.0f != LookAxisVector.X)
+	{
+		AddControllerYawInput(LookAxisVector.X);
+	}
+	if (0.0f != LookAxisVector.Y)
+	{
+		AddControllerPitchInput(LookAxisVector.Y);
+	}
+
 }
 
 void AKratos::AsyncLoadCharacterKratos()
