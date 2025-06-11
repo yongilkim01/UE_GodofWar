@@ -3,6 +3,9 @@
 
 #include "Characters/RagnarokCharacter.h"
 
+#include "GAS/RagnarokAbilitySystemComponent.h"
+#include "GAS/AttributeSets/RagnarokAttributeSet.h"
+
 ARagnarokCharacter::ARagnarokCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -10,6 +13,8 @@ ARagnarokCharacter::ARagnarokCharacter()
 
 	GetMesh()->bReceivesDecals = false;
 
+	AbilitySystemComponent = CreateDefaultSubobject<URagnarokAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AttributeSet = CreateDefaultSubobject<URagnarokAttributeSet>(TEXT("AttributeSet"));
 }
 
 void ARagnarokCharacter::BeginPlay()
@@ -28,5 +33,20 @@ void ARagnarokCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ARagnarokCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (nullptr != AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+}
+
+UAbilitySystemComponent* ARagnarokCharacter::GetAbilitySystemComponent() const
+{
+	return GetAbilitySystem();
 }
 

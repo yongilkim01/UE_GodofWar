@@ -20,6 +20,8 @@
 #include "Data/Input/InputConfigDataAsset.h"
 #include "Manager/Global/RagnarokAssetManager.h"
 #include "Components/Input/RagnarokEnhancedInputComponent.h"
+#include "GAS/RagnarokAbilitySystemComponent.h"
+#include "GAS/AttributeSets/RagnarokAttributeSet.h"
 
 AKratos::AKratos()
 {
@@ -82,6 +84,22 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		this,
 		&ThisClass::InputLook
 	);
+}
+
+void AKratos::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (nullptr != AbilitySystemComponent && nullptr != AttributeSet)
+	{
+		const FString DebugInfoStr = 
+			FString::Printf(TEXT("GAS Owner Actor : %s, AvataActor : %s"), 
+			*AbilitySystemComponent->GetOwnerActor()->GetActorLabel(),
+			*AbilitySystemComponent->GetAvatarActor()->GetActorLabel());
+
+		Debug::Print(TEXT("Ability system component valid ") + DebugInfoStr, FColor::Green);
+		Debug::Print(TEXT("AttributeSet valid ") + DebugInfoStr, FColor::Green);
+	}
 }
 
 void AKratos::LoadKratosDataAsset()
