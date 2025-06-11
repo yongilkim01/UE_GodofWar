@@ -27,9 +27,11 @@ public:
 
 	//~ Begin APawn Interface.
 	virtual void PossessedBy(AController* NewController) override;
+	//~ End APawn Interface.
 
 	//~ Begin IAbilitySystemInterface Interface.
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	//~ End IAbilitySystemInterface Interface.
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
