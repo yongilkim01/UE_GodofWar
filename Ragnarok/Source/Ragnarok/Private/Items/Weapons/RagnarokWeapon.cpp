@@ -1,0 +1,20 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Items/Weapons/RagnarokWeapon.h"
+
+#include "Components/BoxComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+
+ARagnarokWeapon::ARagnarokWeapon()
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	SetRootComponent(WeaponMesh);
+
+	WeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponCollision"));
+	WeaponCollision->SetupAttachment(GetRootComponent());
+	WeaponCollision->SetBoxExtent(FVector(20.0f));
+	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
