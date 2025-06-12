@@ -10,7 +10,8 @@ UENUM(BlueprintType)
 enum class EPrimaryAssetType : uint8
 {
 	EPT_None				UMETA(DisplayName = "None"),
-	EPT_CHARACTER_KRATOS    UMETA(DisplayName = "Chracter Kratos"),
+	EPT_Chracter_Kratos		UMETA(DisplayName = "Chracter Kratos"),
+	EPT_Item_LeviathanAxe	UMETA(DisplayName = "Item LeviathanAxe"),
 };
 
 UENUM(BlueprintType)

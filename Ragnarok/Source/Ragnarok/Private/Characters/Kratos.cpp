@@ -129,8 +129,8 @@ void AKratos::LoadKratosDataAsset()
 
 void AKratos::LoadKratosPrimaryDataAsset()
 {
-	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
-	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_CHARACTER_KRATOS)->ToString();
+	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
+	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
 
 	CharacterPDAId = FPrimaryAssetId(
 		*PrimaryAssetType,
