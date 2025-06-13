@@ -13,5 +13,14 @@ UCLASS()
 class RAGNAROK_API ALeviathanAxe : public AKratosWeapon
 {
 	GENERATED_BODY()
+
+protected:
+	//~ Begin ARagnarokWeapon Interface.
+	virtual void LoadWeaponDataAsset() override;
+	virtual void LoadWeaponPrimaryDataAsset() override;
+	//~ End ARagnarokWeapon Interface.
 	
+private:
+	void AsyncLoadItemLeviathanAxe();
+
 };

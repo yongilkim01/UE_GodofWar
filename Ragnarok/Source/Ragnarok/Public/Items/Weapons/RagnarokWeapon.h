@@ -8,6 +8,7 @@
 
 class USkeletalMeshComponent;
 class UBoxComponent;
+class UItemPrimaryAssetKratosWeapon;
 
 UCLASS()
 class RAGNAROK_API ARagnarokWeapon : public AActor
@@ -17,11 +18,28 @@ class RAGNAROK_API ARagnarokWeapon : public AActor
 public:	
 	ARagnarokWeapon();
 
+public:
+	//~ Begin AActor Interface.
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	//~ End AActor Interface.
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WeaponData")
+	virtual void LoadWeaponDataAsset();
+	virtual void LoadWeaponPrimaryDataAsset();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
+	UItemPrimaryAssetKratosWeapon* WeaponPDA = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
+	FPrimaryAssetId WeaponPDAId;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Components")
 	USkeletalMeshComponent* WeaponMesh = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WeaponData")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Components")
 	UBoxComponent* WeaponCollision = nullptr;
 
 public:

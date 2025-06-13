@@ -3,3 +3,12 @@
 
 #include "Items/Weapons/Kratos/KratosWeapon.h"
 
+void AKratosWeapon::LoadWeaponDataAsset()
+{
+	Super::LoadWeaponDataAsset();
+}
+
+void AKratosWeapon::LoadWeaponPrimaryDataAsset()
+{
+	Super::LoadWeaponPrimaryDataAsset();
+}

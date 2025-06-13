@@ -18,3 +18,25 @@ ARagnarokWeapon::ARagnarokWeapon()
 	WeaponCollision->SetBoxExtent(FVector(20.0f));
 	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
+
+void ARagnarokWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	LoadWeaponDataAsset();
+	LoadWeaponPrimaryDataAsset();
+}
+
+void ARagnarokWeapon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void ARagnarokWeapon::LoadWeaponDataAsset()
+{
+}
+
+void ARagnarokWeapon::LoadWeaponPrimaryDataAsset()
+{
+
+}
