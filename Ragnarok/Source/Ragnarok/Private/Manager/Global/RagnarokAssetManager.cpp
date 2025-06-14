@@ -4,6 +4,8 @@
 #include "Manager/Global/RagnarokAssetManager.h"
 #include "Core/Tools/RagnarokDebugHelper.h"
 #include "Data/Global/PrimaryAssetIdDataTable.h"
+#include "Data/Items/Weapons/ItemPrimaryAssetKratosWeapon.h"
+#include "Data/Kratos/CharacterPrimaryAssetKratos.h"
 
 URagnarokAssetManager::URagnarokAssetManager()
 {
@@ -45,6 +47,7 @@ URagnarokAssetManager& URagnarokAssetManager::Get()
 	}
 }
 
+
 const TPair<FName, FName>* URagnarokAssetManager::GetPrimaryAssetIdPair(EPrimaryAssetType AssetType) const
 {
 	return PrimaryIdMap.Find(AssetType);
@@ -58,4 +61,75 @@ const FName* URagnarokAssetManager::GetPrimaryAssetType(EPrimaryAssetType AssetT
 const FName* URagnarokAssetManager::GetPrimaryAssetName(EPrimaryAssetType AssetType) const
 {
 	return &GetPrimaryAssetIdPair(AssetType)->Value;
+}
+
+UObject* URagnarokAssetManager::GetPDA(EPrimaryAssetType AssetType)
+{
+	FString PrimaryAssetType = GetPrimaryAssetType(AssetType)->ToString();
+	FString PrimaryAssetName = GetPrimaryAssetName(AssetType)->ToString();
+
+	FPrimaryAssetId PrimaryAssetId = FPrimaryAssetId(
+		*PrimaryAssetType,
+		*PrimaryAssetName);
+
+	return UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
+}
+
+void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType)
+{
+	FString PrimaryAssetType = GetPrimaryAssetType(AssetType)->ToString();
+	FString PrimaryAssetName = GetPrimaryAssetName(AssetType)->ToString();
+
+	FPrimaryAssetId PrimaryAssetId = FPrimaryAssetId(
+		*PrimaryAssetType,
+		*PrimaryAssetName);
+
+	LoadPrimaryAsset
+	(
+		PrimaryAssetId,
+		{},
+		FStreamableDelegate::CreateLambda([this, PrimaryAssetId, AssetType]()
+			{
+				UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
+				AsyncLoadPrimaryAssetData(AssetObject, AssetType);
+			})
+	);
+}
+void URagnarokAssetManager::AsyncLoadPrimaryAssetData(UObject* AssetObject, EPrimaryAssetType AssetType)
+{
+	switch (AssetType)
+	{
+	case EPrimaryAssetType::EPT_Chracter_Kratos:
+	{
+		UCharacterPrimaryAssetKratos* CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
+
+		if (nullptr != CharacterPDA)
+		{
+			UAssetManager::GetStreamableManager().RequestAsyncLoad(CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(), []() {});
+		}
+		else
+		{
+			Debug::Print(TEXT("UItemPrimaryAssetKratosWeapon primary data assets is nullptr!!"), FColor::Red);
+		}
+		break;
+	}
+	case EPrimaryAssetType::EPT_Item_LeviathanAxe:
+	{
+		UItemPrimaryAssetKratosWeapon* WeaponPDA = Cast<UItemPrimaryAssetKratosWeapon>(AssetObject);
+
+		if (nullptr != WeaponPDA)
+		{
+			UAssetManager::GetStreamableManager().RequestAsyncLoad(WeaponPDA->WeaponMesh.ToSoftObjectPath(), []() {});
+		}
+		else
+		{
+			Debug::Print(TEXT("UItemPrimaryAssetKratosWeapon primary data assets is nullptr!!"), FColor::Red);
+		}
+
+		break;
+	}
+	default:
+		break;
+	}
+
 }

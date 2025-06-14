@@ -25,6 +25,10 @@ public:
 	const TPair<FName, FName>* GetPrimaryAssetIdPair(EPrimaryAssetType AssetType) const;
 	const FName* GetPrimaryAssetType(EPrimaryAssetType AssetType) const;
 	const FName* GetPrimaryAssetName(EPrimaryAssetType AssetType) const;
+	UObject* GetPDA(EPrimaryAssetType AssetType);
+
+	void LoadPrimaryAssetData(EPrimaryAssetType AssetType);
+	void AsyncLoadPrimaryAssetData(UObject* AssetObject, EPrimaryAssetType AssetType);
 	
 
 public:	

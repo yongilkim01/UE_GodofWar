@@ -35,10 +35,10 @@ protected:
 	//~ End APawn Interface.
 
 private:
-	void AsyncLoadCharacterKratos();
+	//void AsyncLoadCharacterKratos();
 
 	void LoadKratosDataAsset();
-	void LoadKratosPrimaryDataAsset();
+	//void LoadKratosPrimaryDataAsset();
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);
@@ -59,5 +59,5 @@ private:
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
-	FPrimaryAssetId CharacterPDAId;
+	//FPrimaryAssetId CharacterPDAId;
 };

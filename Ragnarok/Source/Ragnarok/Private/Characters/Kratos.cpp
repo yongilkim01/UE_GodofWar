@@ -42,7 +42,22 @@ void AKratos::BeginPlay()
 
 	Debug::Print(TEXT("Start Kratos Beginplay method"));
 
-	LoadKratosPrimaryDataAsset();
+	//LoadKratosPrimaryDataAsset();
+
+	UCharacterPrimaryAssetKratos* ChracterPDA = Cast<UCharacterPrimaryAssetKratos>(URagnarokAssetManager::Get().GetPDA(EPrimaryAssetType::EPT_Chracter_Kratos));
+
+	if (nullptr != CharacterPDA)
+	{
+		if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+		{
+			GetMesh()->SetSkeletalMesh(KratosMesh);
+		}
+	}
+	else
+	{
+		Debug::Print(TEXT("CharacterPDA assets is nullptr!!"), FColor::Red);
+	}
+
 	LoadKratosDataAsset();
 }
 
@@ -127,22 +142,22 @@ void AKratos::LoadKratosDataAsset()
 	}
 }
 
-void AKratos::LoadKratosPrimaryDataAsset()
-{
-	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
-	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
-
-	CharacterPDAId = FPrimaryAssetId(
-		*PrimaryAssetType,
-		*PrimaryAssetName);
-
-	URagnarokAssetManager::Get().LoadPrimaryAsset
-	(
-		CharacterPDAId,
-		{},
-		FStreamableDelegate::CreateUObject(this, &AKratos::AsyncLoadCharacterKratos)
-	);
-}
+//void AKratos::LoadKratosPrimaryDataAsset()
+//{
+//	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
+//	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_Chracter_Kratos)->ToString();
+//
+//	CharacterPDAId = FPrimaryAssetId(
+//		*PrimaryAssetType,
+//		*PrimaryAssetName);
+//
+//	URagnarokAssetManager::Get().LoadPrimaryAsset
+//	(
+//		CharacterPDAId,
+//		{},
+//		FStreamableDelegate::CreateUObject(this, &AKratos::AsyncLoadCharacterKratos)
+//	);
+//}
 
 void AKratos::InputMove(const FInputActionValue& InputActionValue)
 {
@@ -178,32 +193,32 @@ void AKratos::InputLook(const FInputActionValue& InputActionValue)
 
 }
 
-void AKratos::AsyncLoadCharacterKratos()
-{
-	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(CharacterPDAId);
-	CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
-
-	if (nullptr != CharacterPDA && true == CharacterPDA->KratosSkeletalMesh.IsValid())
-	{
-		GetMesh()->SetSkeletalMesh(CharacterPDA->KratosSkeletalMesh.Get());
-	}
-	else if (nullptr != CharacterPDA)
-	{
-		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-		StreamableManager.RequestAsyncLoad
-		(
-			CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(),
-			FStreamableDelegate::CreateLambda([this]()
-				{
-					if (USkeletalMesh* Mesh = CharacterPDA->KratosSkeletalMesh.Get())
-					{
-						GetMesh()->SetSkeletalMesh(Mesh);
-					}
-				}));
-	}
-	else
-	{
-		Debug::Print(TEXT("Kratos config primary data assets is nullptr!!"), FColor::Red);
-
-	}
-}
+//void AKratos::AsyncLoadCharacterKratos()
+//{
+//	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(CharacterPDAId);
+//	CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
+//
+//	if (nullptr != CharacterPDA && true == CharacterPDA->KratosSkeletalMesh.IsValid())
+//	{
+//		GetMesh()->SetSkeletalMesh(CharacterPDA->KratosSkeletalMesh.Get());
+//	}
+//	else if (nullptr != CharacterPDA)
+//	{
+//		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+//		StreamableManager.RequestAsyncLoad
+//		(
+//			CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(),
+//			FStreamableDelegate::CreateLambda([this]()
+//				{
+//					if (USkeletalMesh* Mesh = CharacterPDA->KratosSkeletalMesh.Get())
+//					{
+//						GetMesh()->SetSkeletalMesh(Mesh);
+//					}
+//				}));
+//	}
+//	else
+//	{
+//		Debug::Print(TEXT("Kratos config primary data assets is nullptr!!"), FColor::Red);
+//
+//	}
+//}
