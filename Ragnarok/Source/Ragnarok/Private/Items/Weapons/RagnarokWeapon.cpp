@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
+#include "Manager/Global/RagnarokAssetManager.h"
+
 ARagnarokWeapon::ARagnarokWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -24,7 +26,7 @@ void ARagnarokWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	LoadWeaponDataAsset();
-	LoadWeaponPrimaryDataAsset();
+	//LoadWeaponPrimaryDataAsset();
 }
 
 void ARagnarokWeapon::Tick(float DeltaTime)
@@ -36,7 +38,7 @@ void ARagnarokWeapon::LoadWeaponDataAsset()
 {
 }
 
-void ARagnarokWeapon::LoadWeaponPrimaryDataAsset()
+void ARagnarokWeapon::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 {
 
 }

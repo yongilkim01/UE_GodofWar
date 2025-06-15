@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/RagnarokCharacter.h"
+#include "Core/Types/RagnarokTypes.h"
 #include "Kratos.generated.h"
 
 class USpringArmComponent;
@@ -37,7 +38,6 @@ protected:
 private:
 	void LoadKratosDataAsset();
 	void LoadKratosPrimaryDataAsset(UObject* PDAAssetObject);
-	void AsyncLoadCharacterKratos();
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);

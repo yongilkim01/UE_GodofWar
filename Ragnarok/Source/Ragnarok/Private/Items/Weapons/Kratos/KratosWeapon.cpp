@@ -3,12 +3,22 @@
 
 #include "Items/Weapons/Kratos/KratosWeapon.h"
 
+void AKratosWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void AKratosWeapon::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 void AKratosWeapon::LoadWeaponDataAsset()
 {
 	Super::LoadWeaponDataAsset();
 }
 
-void AKratosWeapon::LoadWeaponPrimaryDataAsset()
+void AKratosWeapon::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 {
-	Super::LoadWeaponPrimaryDataAsset();
+	Super::LoadWeaponPrimaryDataAsset(PDAAssetObject);
 }

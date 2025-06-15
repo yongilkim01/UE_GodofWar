@@ -26,7 +26,7 @@ public:
 
 protected:
 	virtual void LoadWeaponDataAsset();
-	virtual void LoadWeaponPrimaryDataAsset();
+	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")

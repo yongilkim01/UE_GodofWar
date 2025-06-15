@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "RagnarokTypes.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
+
 UENUM(BlueprintType)
 enum class EPrimaryAssetType : uint8
 {

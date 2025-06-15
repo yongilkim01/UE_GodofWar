@@ -75,7 +75,7 @@ UObject* URagnarokAssetManager::GetPDA(EPrimaryAssetType AssetType)
 	return UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
 }
 
-void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType, TFunction<void(UObject* LoadedPDA)> OnLoadedCallback)
+void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType, FOnPrimaryAssetLoadedDelegate OnLoadedCallback)
 {
 	FString PrimaryAssetType = GetPrimaryAssetType(AssetType)->ToString();
 	FString PrimaryAssetName = GetPrimaryAssetName(AssetType)->ToString();
@@ -88,52 +88,14 @@ void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType, TF
 	(
 		PrimaryAssetId,
 		{},
-		FStreamableDelegate::CreateLambda([this, PrimaryAssetId, OnLoadedCallback = MoveTemp(OnLoadedCallback)]()
+		FStreamableDelegate::CreateLambda([this, PrimaryAssetId, OnLoadedCallback]()
+		{
+			UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
+
+			if (true == OnLoadedCallback.IsBound())
 			{
-				UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
-
-				if (nullptr != OnLoadedCallback)
-				{
-					OnLoadedCallback(AssetObject);
-				}
-			})
+				OnLoadedCallback.Execute(AssetObject);
+			}
+		})
 	);
-}
-void URagnarokAssetManager::AsyncLoadPrimaryAssetData(UObject* AssetObject, EPrimaryAssetType AssetType)
-{
-	switch (AssetType)
-	{
-	case EPrimaryAssetType::EPT_Chracter_Kratos:
-	{
-		UCharacterPrimaryAssetKratos* CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(AssetObject);
-
-		if (nullptr != CharacterPDA)
-		{
-			UAssetManager::GetStreamableManager().RequestAsyncLoad(CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(), []() {});
-		}
-		else
-		{
-			Debug::Print(TEXT("UItemPrimaryAssetKratosWeapon primary data assets is nullptr!!"), FColor::Red);
-		}
-		break;
-	}
-	case EPrimaryAssetType::EPT_Item_LeviathanAxe:
-	{
-		UItemPrimaryAssetKratosWeapon* WeaponPDA = Cast<UItemPrimaryAssetKratosWeapon>(AssetObject);
-
-		if (nullptr != WeaponPDA)
-		{
-			UAssetManager::GetStreamableManager().RequestAsyncLoad(WeaponPDA->WeaponMesh.ToSoftObjectPath(), []() {});
-		}
-		else
-		{
-			Debug::Print(TEXT("UItemPrimaryAssetKratosWeapon primary data assets is nullptr!!"), FColor::Red);
-		}
-
-		break;
-	}
-	default:
-		break;
-	}
-
 }

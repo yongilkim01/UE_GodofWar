@@ -7,56 +7,70 @@
 #include "Data/Items/Weapons/ItemPrimaryAssetKratosWeapon.h"
 #include "Core/Tools/RagnarokDebugHelper.h"
 
+void ALeviathanAxe::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FOnPrimaryAssetLoadedDelegate PrimaryAssetDataDelegate;
+
+	PrimaryAssetDataDelegate.BindUObject(this, &ALeviathanAxe::LoadWeaponPrimaryDataAsset);
+
+	URagnarokAssetManager::Get().LoadPrimaryAssetData(
+		EPrimaryAssetType::EPT_Item_LeviathanAxe,
+		PrimaryAssetDataDelegate);
+}
+
+void ALeviathanAxe::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void ALeviathanAxe::LoadWeaponDataAsset()
 {
 	Super::LoadWeaponDataAsset();
 }
 
-void ALeviathanAxe::LoadWeaponPrimaryDataAsset()
+void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 {
-	Super::LoadWeaponPrimaryDataAsset();
+	Super::LoadWeaponPrimaryDataAsset(PDAAssetObject);
 
-	FString PrimaryAssetType = URagnarokAssetManager::Get().GetPrimaryAssetType(EPrimaryAssetType::EPT_Item_LeviathanAxe)->ToString();
-	FString PrimaryAssetName = URagnarokAssetManager::Get().GetPrimaryAssetName(EPrimaryAssetType::EPT_Item_LeviathanAxe)->ToString();
+	UItemPrimaryAssetKratosWeapon* LoadedPDA = Cast<UItemPrimaryAssetKratosWeapon>(PDAAssetObject);
 
-	WeaponPDAId = FPrimaryAssetId(
-		*PrimaryAssetType,
-		*PrimaryAssetName);
-
-	URagnarokAssetManager::Get().LoadPrimaryAsset
-	(
-		WeaponPDAId,
-		{},
-		FStreamableDelegate::CreateUObject(this, &ALeviathanAxe::AsyncLoadItemLeviathanAxe)
-	);
-}
-
-void ALeviathanAxe::AsyncLoadItemLeviathanAxe()
-{
-	UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(WeaponPDAId);
-	WeaponPDA = Cast<UItemPrimaryAssetKratosWeapon>(AssetObject);
-
-	if (nullptr != WeaponPDA && true == WeaponPDA->WeaponMesh.IsValid())
+	if (nullptr == LoadedPDA)
 	{
-		GetWeaponMesh()->SetSkeletalMesh(WeaponPDA->WeaponMesh.Get());
+		Debug::Print(TEXT("Kratos Weapon PDA is nullptr!!"), FColor::Red);
+		return;
 	}
-	else if (nullptr != WeaponPDA)
+
+	KratosWeaponPDA = LoadedPDA;
+
+	if (!KratosWeaponPDA->WeaponMesh.IsValid())
 	{
-		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-		StreamableManager.RequestAsyncLoad
-		(
-			WeaponPDA->WeaponMesh.ToSoftObjectPath(),
+		Debug::Print(TEXT("WeaponMesh is not valid (maybe no asset path set?)"), FColor::Red);
+		Debug::Print(*KratosWeaponPDA->WeaponMesh.ToString()); // 경로 확인용
+	}
+
+	if (nullptr == KratosWeaponPDA->WeaponMesh)
+	{
+		FSoftObjectPath MeshPath = KratosWeaponPDA->WeaponMesh.ToSoftObjectPath();
+
+		UAssetManager::GetStreamableManager().RequestAsyncLoad(
+			MeshPath,
 			FStreamableDelegate::CreateLambda([this]()
 				{
-					if (USkeletalMesh* Mesh = WeaponPDA->WeaponMesh.Get())
+					if (USkeletalMesh* LoadedWeaponMesh = KratosWeaponPDA->WeaponMesh.Get())
 					{
-						GetWeaponMesh()->SetSkeletalMesh(Mesh);
+						GetWeaponMesh()->SetSkeletalMesh(LoadedWeaponMesh);
 					}
-				}));
+				})
+		);
 	}
 	else
 	{
-		Debug::Print(TEXT("Kratos config primary data assets is nullptr!!"), FColor::Red);
-
+		if (USkeletalMesh* LoadedWeaponMesh = KratosWeaponPDA->WeaponMesh.Get())
+		{
+			GetWeaponMesh()->SetSkeletalMesh(LoadedWeaponMesh);
+		}
 	}
 }

@@ -7,6 +7,8 @@
 #include "Core/Types/RagnarokTypes.h"
 #include "RagnarokAssetManager.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnPrimaryAssetLoadedDelegate, UObject* /* LoadedPDA */)
+
 /**
  * 
  */
@@ -27,8 +29,7 @@ public:
 	const FName* GetPrimaryAssetName(EPrimaryAssetType AssetType) const;
 	UObject* GetPDA(EPrimaryAssetType AssetType);
 
-	void LoadPrimaryAssetData(EPrimaryAssetType AssetType, TFunction<void(UObject* LoadedPDA)> OnLoadedCallback);
-	void AsyncLoadPrimaryAssetData(UObject* AssetObject, EPrimaryAssetType AssetType);
+	void LoadPrimaryAssetData(EPrimaryAssetType AssetType, FOnPrimaryAssetLoadedDelegate OnLoadedCallback);
 	
 
 public:	
