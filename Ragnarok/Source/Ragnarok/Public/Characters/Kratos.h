@@ -35,10 +35,9 @@ protected:
 	//~ End APawn Interface.
 
 private:
-	//void AsyncLoadCharacterKratos();
-
 	void LoadKratosDataAsset();
-	//void LoadKratosPrimaryDataAsset();
+	void LoadKratosPrimaryDataAsset(UObject* PDAAssetObject);
+	void AsyncLoadCharacterKratos();
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);

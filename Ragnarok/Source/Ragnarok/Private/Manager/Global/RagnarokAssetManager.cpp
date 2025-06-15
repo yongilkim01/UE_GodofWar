@@ -75,7 +75,7 @@ UObject* URagnarokAssetManager::GetPDA(EPrimaryAssetType AssetType)
 	return UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
 }
 
-void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType)
+void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType, TFunction<void(UObject* LoadedPDA)> OnLoadedCallback)
 {
 	FString PrimaryAssetType = GetPrimaryAssetType(AssetType)->ToString();
 	FString PrimaryAssetName = GetPrimaryAssetName(AssetType)->ToString();
@@ -88,10 +88,14 @@ void URagnarokAssetManager::LoadPrimaryAssetData(EPrimaryAssetType AssetType)
 	(
 		PrimaryAssetId,
 		{},
-		FStreamableDelegate::CreateLambda([this, PrimaryAssetId, AssetType]()
+		FStreamableDelegate::CreateLambda([this, PrimaryAssetId, OnLoadedCallback = MoveTemp(OnLoadedCallback)]()
 			{
 				UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
-				AsyncLoadPrimaryAssetData(AssetObject, AssetType);
+
+				if (nullptr != OnLoadedCallback)
+				{
+					OnLoadedCallback(AssetObject);
+				}
 			})
 	);
 }

@@ -27,7 +27,7 @@ public:
 	const FName* GetPrimaryAssetName(EPrimaryAssetType AssetType) const;
 	UObject* GetPDA(EPrimaryAssetType AssetType);
 
-	void LoadPrimaryAssetData(EPrimaryAssetType AssetType);
+	void LoadPrimaryAssetData(EPrimaryAssetType AssetType, TFunction<void(UObject* LoadedPDA)> OnLoadedCallback);
 	void AsyncLoadPrimaryAssetData(UObject* AssetObject, EPrimaryAssetType AssetType);
 	
 

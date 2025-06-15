@@ -15,8 +15,7 @@ void ARagnarokGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	URagnarokAssetManager::Get().LoadPrimaryAssetData(EPrimaryAssetType::EPT_Chracter_Kratos);
-	URagnarokAssetManager::Get().LoadPrimaryAssetData(EPrimaryAssetType::EPT_Item_LeviathanAxe);
+	//URagnarokAssetManager::Get().LoadPrimaryAssetData(EPrimaryAssetType::EPT_Item_LeviathanAxe);
 }
 
 void ARagnarokGameModeBase::Tick(float DeltaTime)

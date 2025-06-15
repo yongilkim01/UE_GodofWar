@@ -43,20 +43,24 @@ void AKratos::BeginPlay()
 	Debug::Print(TEXT("Start Kratos Beginplay method"));
 
 	//LoadKratosPrimaryDataAsset();
-
-	UCharacterPrimaryAssetKratos* ChracterPDA = Cast<UCharacterPrimaryAssetKratos>(URagnarokAssetManager::Get().GetPDA(EPrimaryAssetType::EPT_Chracter_Kratos));
-
-	if (nullptr != CharacterPDA)
-	{
-		if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+	URagnarokAssetManager::Get().LoadPrimaryAssetData(EPrimaryAssetType::EPT_Chracter_Kratos, [this](UObject* LoadedPDA)
 		{
-			GetMesh()->SetSkeletalMesh(KratosMesh);
-		}
-	}
-	else
-	{
-		Debug::Print(TEXT("CharacterPDA assets is nullptr!!"), FColor::Red);
-	}
+			LoadKratosPrimaryDataAsset(LoadedPDA);
+		});
+
+	//UCharacterPrimaryAssetKratos* ChracterPDA = Cast<UCharacterPrimaryAssetKratos>(URagnarokAssetManager::Get().GetPDA(EPrimaryAssetType::EPT_Chracter_Kratos));
+
+	//if (nullptr != CharacterPDA)
+	//{
+	//	if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+	//	{
+	//		GetMesh()->SetSkeletalMesh(KratosMesh);
+	//	}
+	//}
+	//else
+	//{
+	//	Debug::Print(TEXT("CharacterPDA assets is nullptr!!"), FColor::Red);
+	//}
 
 	LoadKratosDataAsset();
 }
@@ -139,6 +143,28 @@ void AKratos::LoadKratosDataAsset()
 	else
 	{
 		Debug::Print(TEXT("Init data assets is nullptr!!"), FColor::Red);
+	}
+}
+
+void AKratos::LoadKratosPrimaryDataAsset(UObject* PDAAssetObject)
+{
+	CharacterPDA = Cast<UCharacterPrimaryAssetKratos>(PDAAssetObject);
+
+	if (nullptr != CharacterPDA)
+	{
+		UAssetManager::GetStreamableManager().RequestAsyncLoad(CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath(), FStreamableDelegate::CreateUObject(this, &AKratos::AsyncLoadCharacterKratos));
+	}
+	else
+	{
+		Debug::Print(TEXT("UItemPrimaryAssetKratosWeapon primary data assets is nullptr!!"), FColor::Red);
+	}
+}
+
+void AKratos::AsyncLoadCharacterKratos()
+{
+	if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+	{
+		GetMesh()->SetSkeletalMesh(KratosMesh);
 	}
 }
 
