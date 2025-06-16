@@ -37,7 +37,7 @@ protected:
 
 private:
 	void LoadKratosDataAsset();
-	void LoadKratosPrimaryDataAsset(UObject* PDAAssetObject);
+	void InitPrimaryData(UObject* PDAObject);
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);

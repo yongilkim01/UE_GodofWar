@@ -44,7 +44,7 @@ void AKratos::BeginPlay()
 
 	FOnPrimaryAssetLoadedDelegate PrimaryAssetDataDelegate;
 
-	PrimaryAssetDataDelegate.BindUObject(this, &AKratos::LoadKratosPrimaryDataAsset);
+	PrimaryAssetDataDelegate.BindUObject(this, &AKratos::InitPrimaryData);
 
 	URagnarokAssetManager::Get().LoadPrimaryAssetData(
 		EPrimaryAssetType::EPT_Chracter_Kratos,
@@ -134,9 +134,9 @@ void AKratos::LoadKratosDataAsset()
 	}
 }
 
-void AKratos::LoadKratosPrimaryDataAsset(UObject* PDAAssetObject)
+void AKratos::InitPrimaryData(UObject* PDAObject)
 {
-	UCharacterPrimaryAssetKratos* LoadedPDA = Cast<UCharacterPrimaryAssetKratos>(PDAAssetObject);
+	UCharacterPrimaryAssetKratos* LoadedPDA = Cast<UCharacterPrimaryAssetKratos>(PDAObject);
 
 	if (nullptr == LoadedPDA)
 	{
@@ -144,17 +144,15 @@ void AKratos::LoadKratosPrimaryDataAsset(UObject* PDAAssetObject)
 		return;
 	}
 
-	CharacterPDA = LoadedPDA;
-
-	if (nullptr == CharacterPDA->KratosSkeletalMesh)
+	if (nullptr == LoadedPDA->KratosSkeletalMesh)
 	{
-		FSoftObjectPath MeshPath = CharacterPDA->KratosSkeletalMesh.ToSoftObjectPath();
+		FSoftObjectPath MeshPath = LoadedPDA->KratosSkeletalMesh.ToSoftObjectPath();
 
 		UAssetManager::GetStreamableManager().RequestAsyncLoad(
 			MeshPath,
-			FStreamableDelegate::CreateLambda([this]()
+			FStreamableDelegate::CreateLambda([this, LoadedPDA]()
 				{
-					if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+					if (USkeletalMesh* KratosMesh = LoadedPDA->KratosSkeletalMesh.Get())
 					{
 						GetMesh()->SetSkeletalMesh(KratosMesh);
 					}
@@ -163,7 +161,7 @@ void AKratos::LoadKratosPrimaryDataAsset(UObject* PDAAssetObject)
 	}
 	else
 	{
-		if (USkeletalMesh* KratosMesh = CharacterPDA->KratosSkeletalMesh.Get())
+		if (USkeletalMesh* KratosMesh = LoadedPDA->KratosSkeletalMesh.Get())
 		{
 			GetMesh()->SetSkeletalMesh(KratosMesh);
 		}
