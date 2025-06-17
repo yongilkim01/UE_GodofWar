@@ -3,6 +3,10 @@
 
 #include "Manager/Components/LevelAssetManagerComponent.h"
 
+#include "Core/Types/RagnarokTypes.h"
+#include "Manager/Global/RagnarokAssetManager.h"
+#include "Data/Kratos/CharacterPrimaryAssetKratos.h"
+
 // Sets default values for this component's properties
 ULevelAssetManagerComponent::ULevelAssetManagerComponent()
 {
@@ -20,6 +24,8 @@ void ULevelAssetManagerComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	URagnarokAssetManager::Get().LoadAssetData<UCharacterPrimaryAssetKratos>(EPrimaryAssetType::EPT_Chracter_Kratos);
+
 	
 }
 

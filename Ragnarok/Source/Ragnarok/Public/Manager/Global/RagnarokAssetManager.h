@@ -31,6 +31,34 @@ public:
 
 	void LoadPrimaryAssetData(EPrimaryAssetType AssetType, FOnPrimaryAssetLoadedDelegate OnLoadedCallback);
 	
+	template<typename  T>
+	void LoadAssetData(EPrimaryAssetType AssetType)
+	{
+		FString PrimaryAssetType = GetPrimaryAssetType(AssetType)->ToString();
+		FString PrimaryAssetName = GetPrimaryAssetName(AssetType)->ToString();
+
+		FPrimaryAssetId PrimaryAssetId = FPrimaryAssetId(
+			*PrimaryAssetType,
+			*PrimaryAssetName);
+
+		LoadPrimaryAsset
+		(
+			PrimaryAssetId,
+			{},
+			FStreamableDelegate::CreateLambda([this, PrimaryAssetId]()
+				{
+					UObject* AssetObject = UAssetManager::Get().GetPrimaryAssetObject(PrimaryAssetId);
+
+					T* PrimaryAssetData = Cast<T>(AssetObject);
+
+					if (nullptr != PrimaryAssetData)
+					{
+						PrimaryAssetData->LoadAsset();
+					}
+
+				})
+		);
+	}
 
 public:	
 	TMap<EPrimaryAssetType, TPair<FName, FName>> PrimaryIdMap;

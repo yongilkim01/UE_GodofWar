@@ -3,22 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
-#include "RagnarokGameModeBase.generated.h"
+#include "GameFramework/GameMode.h"
+#include "RagnarokGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RAGNAROK_API ARagnarokGameModeBase : public AGameModeBase
+class RAGNAROK_API ARagnarokGameMode : public AGameMode
 {
 	GENERATED_BODY()
-
+	
 public:
-	ARagnarokGameModeBase();
+	ARagnarokGameMode();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	
 };

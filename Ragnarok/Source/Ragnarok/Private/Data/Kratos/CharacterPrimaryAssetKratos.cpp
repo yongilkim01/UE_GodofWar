@@ -3,3 +3,7 @@
 
 #include "Data/Kratos/CharacterPrimaryAssetKratos.h"
 
+void UCharacterPrimaryAssetKratos::LoadAsset()
+{
+	int a = 0;
+}
