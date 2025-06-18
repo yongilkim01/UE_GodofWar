@@ -16,5 +16,4 @@ class RAGNAROK_API URagnarokPrimaryDataAsset : public UPrimaryDataAsset
 
 public:
 	virtual void LoadAsset();
-	
 };

@@ -21,8 +21,8 @@ struct FInputActionValue;
  */
 UCLASS()
 class RAGNAROK_API AKratos : public ARagnarokCharacter
-{
-	GENERATED_BODY()
+	{
+		GENERATED_BODY()
 
 public:
 	AKratos();
