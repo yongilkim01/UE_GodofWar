@@ -22,10 +22,7 @@ void ULevelAssetManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	URagnarokAssetManager::Get().LoadAssetData<UCharacterPrimaryAssetKratos>(EPrimaryAssetType::EPT_Chracter_Kratos);
-
-	
+	// ...	
 }
 
 

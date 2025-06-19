@@ -4,6 +4,12 @@
 #include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
 
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+
+void URagnarokGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
 
 void URagnarokGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -29,4 +35,11 @@ void URagnarokGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handl
 			ActorInfo->AbilitySystemComponent->ClearAbility(Handle);
 		}
 	}
+}
+
+void URagnarokGameplayAbility::BreakAbility(const FString& ErrorMsg, const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Debug::Print(ErrorMsg, FColor::Red);
+	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+	return;
 }
