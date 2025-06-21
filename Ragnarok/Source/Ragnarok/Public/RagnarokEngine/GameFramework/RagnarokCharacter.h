@@ -9,6 +9,7 @@
 
 class URagnarokAbilitySystemComponent;
 class URagnarokAttributeSet;
+class UStartUpDataAsset;
 
 UCLASS()
 class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS|AttributeSets")
 	URagnarokAttributeSet* AttributeSet = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|StartUp")
+	TSoftObjectPtr<UStartUpDataAsset> StartUpData;
 
 public:
 	FORCEINLINE URagnarokAbilitySystemComponent* GetAbilitySystem() const { return AbilitySystemComponent; }

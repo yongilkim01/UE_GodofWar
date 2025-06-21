@@ -17,7 +17,7 @@ void URagnarokGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* Ac
 
 	if (EAbilityActivationEvent::EAE_Given == AbilityActivationEvent)
 	{
-		if (nullptr != ActorInfo && true == Spec.IsActive())
+		if (nullptr != ActorInfo && false == Spec.IsActive())
 		{
 			ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle);
 		}

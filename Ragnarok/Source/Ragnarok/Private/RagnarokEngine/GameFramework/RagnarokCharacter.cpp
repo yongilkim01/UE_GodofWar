@@ -42,6 +42,8 @@ void ARagnarokCharacter::PossessedBy(AController* NewController)
 	if (nullptr != AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+		ensureMsgf(StartUpData.IsNull(), TEXT("ARagnarokCharacter::StartUpData is not ensure. Name : %s"), *GetName());
 	}
 }
 

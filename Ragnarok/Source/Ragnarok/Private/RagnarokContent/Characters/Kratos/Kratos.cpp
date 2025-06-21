@@ -22,6 +22,7 @@
 #include "RagnarokEngine/InputSystem/RagnarokEnhancedInputComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
 
 AKratos::AKratos()
 {
@@ -105,7 +106,7 @@ void AKratos::PossessedBy(AController* NewController)
 			*AbilitySystemComponent->GetAvatarActor()->GetActorLabel());
 
 		Debug::Print(TEXT("Ability system component valid ") + DebugInfoStr, FColor::Green);
-		Debug::Print(TEXT("AttributeSet valid ") + DebugInfoStr, FColor::Green);
+		Debug::Print(TEXT("AttributeSet valid ") + DebugInfoStr, FColor::Green);		
 	}
 }
 
@@ -164,6 +165,16 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 		if (USkeletalMesh* KratosMesh = LoadedPDA->KratosSkeletalMesh.Get())
 		{
 			GetMesh()->SetSkeletalMesh(KratosMesh);
+
+			if (false == StartUpData.IsNull())
+			{
+				UStartUpDataAsset* LoadedData = StartUpData.LoadSynchronous();
+
+				if (nullptr != LoadedData)
+				{
+					LoadedData->GiveToAbilitySystemComponent(AbilitySystemComponent);
+				}
+			}
 		}
 	}
 }
