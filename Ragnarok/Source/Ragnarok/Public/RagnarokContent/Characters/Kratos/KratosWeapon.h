@@ -14,6 +14,9 @@ class RAGNAROK_API AKratosWeapon : public ARagnarokWeapon
 {
 	GENERATED_BODY()
 
+public:
+	virtual void InitWeapon() override;
+
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;

@@ -14,6 +14,9 @@ class RAGNAROK_API ALeviathanAxe : public AKratosWeapon
 {
 	GENERATED_BODY()
 
+public:
+	virtual void InitWeapon() override;
+
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;

@@ -7,6 +7,20 @@
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
+void ALeviathanAxe::InitWeapon()
+{
+	Super::InitWeapon();
+
+	USkeletalMesh* LoadedWeaponMesh = KratosWeaponPDA->WeaponMesh.Get();
+
+	if (nullptr != LoadedWeaponMesh)
+	{
+		GetWeaponMesh()->SetSkeletalMesh(LoadedWeaponMesh);
+	}
+	bInitialized = true;
+	OnWeaponInitialized.Broadcast();
+}
+
 void ALeviathanAxe::BeginPlay()
 {
 	Super::BeginPlay();
@@ -44,12 +58,6 @@ void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 	}
 
 	KratosWeaponPDA = LoadedPDA;
-
-	if (!KratosWeaponPDA->WeaponMesh.IsValid())
-	{
-		Debug::Print(TEXT("WeaponMesh is not valid (maybe no asset path set?)"), FColor::Red);
-		Debug::Print(*KratosWeaponPDA->WeaponMesh.ToString()); // 경로 확인용
-	}
 
 	if (nullptr == KratosWeaponPDA->WeaponMesh)
 	{

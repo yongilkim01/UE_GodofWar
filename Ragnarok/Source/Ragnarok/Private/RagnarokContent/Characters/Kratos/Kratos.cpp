@@ -156,6 +156,16 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 					if (USkeletalMesh* KratosMesh = LoadedPDA->KratosSkeletalMesh.Get())
 					{
 						GetMesh()->SetSkeletalMesh(KratosMesh);
+
+						if (false == StartUpData.IsNull())
+						{
+							UStartUpDataAsset* LoadedData = StartUpData.LoadSynchronous();
+
+							if (nullptr != LoadedData)
+							{
+								LoadedData->GiveToAbilitySystemComponent(AbilitySystemComponent);
+							}
+						}
 					}
 				})
 		);

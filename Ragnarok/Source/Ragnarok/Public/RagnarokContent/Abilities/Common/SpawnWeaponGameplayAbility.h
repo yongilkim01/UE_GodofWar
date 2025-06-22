@@ -30,11 +30,18 @@ public:
 
 	//~ End UGameplayAbility Interface.
 
+private:
+	void AttachWeaponToCharacter();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 	FName SocketNameToAttachTo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<ARagnarokWeapon> WeaponClass;
+
+private:
+	ARagnarokWeapon* RagnarokWeapon = nullptr;
+	const FGameplayAbilityActorInfo* CharacterActorInfo = nullptr;
 
 };

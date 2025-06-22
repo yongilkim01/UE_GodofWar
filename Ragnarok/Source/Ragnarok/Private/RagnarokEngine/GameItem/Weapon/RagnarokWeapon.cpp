@@ -34,6 +34,10 @@ void ARagnarokWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ARagnarokWeapon::InitWeapon()
+{
+}
+
 void ARagnarokWeapon::LoadWeaponDataAsset()
 {
 }

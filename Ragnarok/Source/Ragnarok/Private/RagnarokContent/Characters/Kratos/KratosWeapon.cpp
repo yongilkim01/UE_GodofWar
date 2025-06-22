@@ -3,6 +3,11 @@
 
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 
+void AKratosWeapon::InitWeapon()
+{
+	Super::InitWeapon();
+}
+
 void AKratosWeapon::BeginPlay()
 {
 	Super::BeginPlay();

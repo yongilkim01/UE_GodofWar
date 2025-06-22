@@ -13,5 +13,7 @@ UCLASS()
 class RAGNAROK_API UKratosStartUpDataAsset : public UStartUpDataAsset
 {
 	GENERATED_BODY()
+
+public:
 	
 };

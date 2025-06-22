@@ -41,7 +41,7 @@ void USpawnWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHand
 		return;
 	}
 
-	ARagnarokWeapon* RagnarokWeapon = WorldContext->SpawnActor<ARagnarokWeapon>(
+	RagnarokWeapon = WorldContext->SpawnActor<ARagnarokWeapon>(
 		WeaponClass,
 		SpawnLocation,
 		SpawnRotation,
@@ -54,11 +54,30 @@ void USpawnWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHand
 			Handle, ActorInfo, ActivationInfo, true, false);
 		return;
 	}
-	
-	USkeletalMeshComponent* ParentMesh = nullptr;
-	if (true == ActorInfo->AvatarActor.IsValid())
+
+	CharacterActorInfo = ActorInfo;
+
+	if (false == RagnarokWeapon->IsInitialize())
 	{
-		APawn* Pawn = Cast<APawn>(ActorInfo->AvatarActor.Get());
+		AttachWeaponToCharacter();
+	}
+	else
+	{
+		RagnarokWeapon->OnWeaponInitialized.AddDynamic(this, &USpawnWeaponGameplayAbility::AttachWeaponToCharacter);
+
+	}
+
+
+
+	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+}
+
+void USpawnWeaponGameplayAbility::AttachWeaponToCharacter()
+{
+	USkeletalMeshComponent* ParentMesh = nullptr;
+	if (true == CharacterActorInfo->AvatarActor.IsValid())
+	{
+		APawn* Pawn = Cast<APawn>(CharacterActorInfo->AvatarActor.Get());
 		if (nullptr != Pawn)
 		{
 			ParentMesh = Pawn->FindComponentByClass<USkeletalMeshComponent>();
@@ -80,6 +99,4 @@ void USpawnWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHand
 			SocketNameToAttachTo // FName 타입의 멤버 변수여야 함
 		);
 	}
-
-	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
