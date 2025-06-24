@@ -49,3 +49,8 @@ UCombatComponent* URagnarokGameplayAbility::GetCombatComponentFromActorInfo() co
 {
 	return GetAvatarActorFromActorInfo()->FindComponentByClass<UCombatComponent>();
 }
+
+URagnarokAbilitySystemComponent* URagnarokGameplayAbility::GetASCFromActorInfo() const
+{
+	return Cast<URagnarokAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}

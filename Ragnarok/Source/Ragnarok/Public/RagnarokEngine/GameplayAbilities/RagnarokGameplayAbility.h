@@ -8,6 +8,7 @@
 #include "RagnarokGameplayAbility.generated.h"
 
 class UCombatComponent;
+class URagnarokAbilitySystemComponent;
 
 /**
  * 
@@ -45,6 +46,7 @@ protected:
 		bool bReplicateEndAbility, bool bWasCancelled);
 
 	UCombatComponent* GetCombatComponentFromActorInfo() const;
+	URagnarokAbilitySystemComponent* GetASCFromActorInfo() const;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
