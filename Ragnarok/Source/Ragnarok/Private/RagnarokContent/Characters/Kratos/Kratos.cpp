@@ -4,25 +4,27 @@
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "EnhancedInputSubsystems.h"
+#include "Camera/CameraComponent.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
-#include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
-#include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
 #include "RagnarokEngine/DataAssets/InputConfigDataAsset.h"
+#include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
 #include "RagnarokEngine/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/InputSystem/RagnarokEnhancedInputComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
-#include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
+
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+#include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
+#include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
 
 AKratos::AKratos()
 {
@@ -35,6 +37,8 @@ AKratos::AKratos()
 
 	MainCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+
+	KratosCombatComponent = CreateDefaultSubobject<UKratosCombatComponent>(TEXT("KratosCombat"));
 }
 
 void AKratos::BeginPlay()

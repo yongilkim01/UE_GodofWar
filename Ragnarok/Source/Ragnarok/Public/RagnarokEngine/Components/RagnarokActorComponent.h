@@ -12,17 +12,27 @@ class RAGNAROK_API URagnarokActorComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	URagnarokActorComponent();
-
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	template<class T>
+	T* GetRagnarokOwner() const
+	{
+		static_assert(TPointerIsConvertibleFromTo<T, APawn>::Value, "'T', template parameter is not pawn must be check!!");
+		return CastChecked<T>(GetOwner());
+	}
+	APawn* GetRagnarokOwner()
+	{
+		return GetRagnarokOwner<APawn>();
+	}
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	template <class T>
+	T* GetRagnarokOwnerController() const
+	{
+		static_assert(TPointerIsConvertibleFromTo<T, AController>::Value, "'T', template parameter is not controller must be check!!");
+		return GetRagnarokOwner<APawn>()->GetController<T>();
+	}
+	AController* GetRagnarokOwnerController()
+	{
+		return GetRagnarokOwnerController<AController>();
+	}
 
-		
 };

@@ -13,6 +13,8 @@ class UInitDataAssetKratos;
 class UCharacterPrimaryAssetKratos;
 class UInputConfigDataAsset;
 class UInputComponent;
+class UKratosCombatComponent;
+
 
 struct FInputActionValue;
 
@@ -56,7 +58,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArmComponent = nullptr;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
+	UKratosCombatComponent* KratosCombatComponent = nullptr;
+
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
-	//FPrimaryAssetId CharacterPDAId;
+	
+public:
+	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
 };
