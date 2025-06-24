@@ -5,6 +5,7 @@
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
+#include "RagnarokEngine/Components/Combat/CombatComponent.h"
 
 USpawnWeaponGameplayAbility::USpawnWeaponGameplayAbility()
 {
@@ -68,7 +69,6 @@ void USpawnWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHand
 	}
 
 
-
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
 
@@ -99,4 +99,6 @@ void USpawnWeaponGameplayAbility::AttachWeaponToCharacter()
 			SocketNameToAttachTo // FName 타입의 멤버 변수여야 함
 		);
 	}
+
+	GetCombatComponentFromActorInfo()->RegisterSpawnWeapon(SpawnWeaponTag, RagnarokWeapon, bEquip);
 }

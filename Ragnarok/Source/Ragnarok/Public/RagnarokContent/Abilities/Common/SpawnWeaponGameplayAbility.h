@@ -34,11 +34,17 @@ private:
 	void AttachWeaponToCharacter();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|SpawnWeapon")
 	FName SocketNameToAttachTo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|SpawnWeapon")
 	TSubclassOf<ARagnarokWeapon> WeaponClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|SpawnWeapon")
+	FGameplayTag SpawnWeaponTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|SpawnWeapon")
+	bool bEquip;
 
 private:
 	ARagnarokWeapon* RagnarokWeapon = nullptr;

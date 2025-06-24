@@ -7,6 +7,8 @@
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokGameplayAbility.generated.h"
 
+class UCombatComponent;
+
 /**
  * 
  */
@@ -41,6 +43,8 @@ protected:
 		const FGameplayAbilityActorInfo* ActorInfo, 
 		const FGameplayAbilityActivationInfo ActivationInfo, 
 		bool bReplicateEndAbility, bool bWasCancelled);
+
+	UCombatComponent* GetCombatComponentFromActorInfo() const;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")

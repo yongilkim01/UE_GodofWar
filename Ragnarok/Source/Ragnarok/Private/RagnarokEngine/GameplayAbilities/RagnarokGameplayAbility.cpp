@@ -5,6 +5,7 @@
 
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Components/Combat/CombatComponent.h"
 
 void URagnarokGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -42,4 +43,9 @@ void URagnarokGameplayAbility::BreakAbility(const FString& ErrorMsg, const FGame
 	Debug::Print(ErrorMsg, FColor::Red);
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 	return;
+}
+
+UCombatComponent* URagnarokGameplayAbility::GetCombatComponentFromActorInfo() const
+{
+	return GetAvatarActorFromActorInfo()->FindComponentByClass<UCombatComponent>();
 }

@@ -4,7 +4,7 @@
 
 namespace Debug
 {
-	static void Print(const FString& DebugMessage, const FColor& DisplayColor = FColor::White, int32 InKey = -1, float TimeToDisplay = 7.f )
+	static void Print(const FString& DebugMessage, const FColor& DisplayColor = FColor::White, bool bAssert = false, int32 InKey = -1, float TimeToDisplay = 7.f )
 	{
 		if (nullptr != GEngine)
 		{
@@ -20,7 +20,14 @@ namespace Debug
 			}
 			else if (FColor::Red == DisplayColor)
 			{
-				UE_LOG(RAGNAROK_LOG, Error, TEXT("%s"), *DebugMessage);
+				if (true == bAssert)
+				{
+					UE_LOG(RAGNAROK_LOG, Error, TEXT("%s"), *DebugMessage);
+				}
+				else
+				{
+					UE_LOG(RAGNAROK_LOG, Fatal, TEXT("%s"), *DebugMessage);
+				}
 			}
 		}
 	}
