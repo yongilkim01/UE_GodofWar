@@ -19,7 +19,14 @@ class RAGNAROK_API URagnarokEnhancedInputComponent : public UEnhancedInputCompon
 	
 public:
 	template<class UserObject, typename CallbackFunc>
-	void BindNativeInputAction(const UInputConfigDataAsset* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* MappingContext, CallbackFunc Func);
+	void BindNativeInputAction(
+		const UInputConfigDataAsset* InInputConfig, const FGameplayTag& InInputTag, 
+		ETriggerEvent TriggerEvent, UserObject* MappingContext, CallbackFunc Func);
+
+	template<class UserObject, typename CallbackFunc>
+	void BindAbilityUInputAction(const UInputConfigDataAsset* InInputConfig,
+		UserObject* ContextObject, CallbackFunc InputPressFunc, CallbackFunc InputReleaseFunc);
+
 };
 
 template<class UserObject, typename CallbackFunc>
@@ -32,5 +39,22 @@ inline void URagnarokEnhancedInputComponent::BindNativeInputAction(const UInputC
 	if (nullptr != FoundInputAction)
 	{
 		BindAction(FoundInputAction, TriggerEvent, MappingContext, Func);
+	}
+}
+
+template<class UserObject, typename CallbackFunc>
+inline void URagnarokEnhancedInputComponent::BindAbilityUInputAction(const UInputConfigDataAsset* InInputConfig, UserObject* ContextObject, CallbackFunc InputPressFunc, CallbackFunc InputReleaseFunc)
+{
+	checkf(InInputConfig, TEXT("Input config data asset is null"));
+
+	for (const FRagnarokInputActionConfig& AbilityInputActionConfig : InInputConfig->AbilityInputActionConfigArray)
+	{
+		if (false == AbilityInputActionConfig.IsValid())
+		{
+			continue;
+		}
+
+		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Started, ContextObject, InputPressFunc, AbilityInputActionConfig.InputTag);
+		BindAction(AbilityInputActionConfig.InputAction, ETriggerEvent::Completed, ContextObject, InputReleaseFunc, AbilityInputActionConfig.InputTag);
 	}
 }

@@ -21,6 +21,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputAction;
+
+	bool IsValid() const
+	{
+		return InputTag.IsValid() && nullptr != InputAction;
+	}
 };
 
 /**
@@ -38,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputMappingContext* InputMappingContext;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (TitleProperty = "InputTag"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (TitleProperty = "Ragnarok|InputTag"))
 	TArray<FRagnarokInputActionConfig> InputActionConfigArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (TitleProperty = "Ragnarok|InputTag"))
+	TArray<FRagnarokInputActionConfig> AbilityInputActionConfigArray;
 };

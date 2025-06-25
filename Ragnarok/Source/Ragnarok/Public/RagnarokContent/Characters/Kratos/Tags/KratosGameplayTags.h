@@ -4,5 +4,8 @@
 
 namespace KratosGameplayTags
 {
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_EquipWeapon);
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_UnEquipWeapon);
+
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_Weapon_LeviathanAxe);
 }
