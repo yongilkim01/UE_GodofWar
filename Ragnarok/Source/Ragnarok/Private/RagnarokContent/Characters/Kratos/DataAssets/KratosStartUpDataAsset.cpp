@@ -8,7 +8,7 @@
 
 bool FKratosAbilitySet::IsVaild() const
 {
-	return InputTag.IsValid() && Ability;
+	return true == InputTag.IsValid() && nullptr != Ability;
 }
 
 void UKratosStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)
@@ -29,6 +29,4 @@ void UKratosStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySyste
 
 		InASC->GiveAbility(AbilitySpec);
 	}
-
-
 }

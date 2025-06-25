@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RagnarokEngine/GameFramework/RagnarokCharacter.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
+#include "GameplayTagContainer.h"
 #include "Kratos.generated.h"
 
 class USpringArmComponent;
@@ -43,6 +44,8 @@ private:
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);
+	void InputAbilityPressed(FGameplayTag InputTag);
+	void InputAbilityReleased(FGameplayTag InputTag);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Init")

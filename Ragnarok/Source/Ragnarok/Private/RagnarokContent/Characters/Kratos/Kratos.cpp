@@ -96,6 +96,12 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		this,
 		&ThisClass::InputLook
 	);
+
+	RagnarokInputComponent->BindAbilityInputAction(
+		InputConfigDA,
+		this,
+		&ThisClass::InputAbilityPressed,
+		&ThisClass::InputAbilityReleased);
 }
 
 void AKratos::PossessedBy(AController* NewController)
@@ -225,4 +231,14 @@ void AKratos::InputLook(const FInputActionValue& InputActionValue)
 		AddControllerPitchInput(-LookAxisVector.Y);
 	}
 
+}
+
+void AKratos::InputAbilityPressed(FGameplayTag InputTag)
+{
+	AbilitySystemComponent->OnAbilityInputPressed(InputTag);
+}
+
+void AKratos::InputAbilityReleased(FGameplayTag InputTag)
+{
+	AbilitySystemComponent->OnAbilityInputReleased(InputTag);
 }

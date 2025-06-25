@@ -24,7 +24,7 @@ public:
 		ETriggerEvent TriggerEvent, UserObject* MappingContext, CallbackFunc Func);
 
 	template<class UserObject, typename CallbackFunc>
-	void BindAbilityUInputAction(const UInputConfigDataAsset* InInputConfig,
+	void BindAbilityInputAction(const UInputConfigDataAsset* InInputConfig,
 		UserObject* ContextObject, CallbackFunc InputPressFunc, CallbackFunc InputReleaseFunc);
 
 };
@@ -43,7 +43,7 @@ inline void URagnarokEnhancedInputComponent::BindNativeInputAction(const UInputC
 }
 
 template<class UserObject, typename CallbackFunc>
-inline void URagnarokEnhancedInputComponent::BindAbilityUInputAction(const UInputConfigDataAsset* InInputConfig, UserObject* ContextObject, CallbackFunc InputPressFunc, CallbackFunc InputReleaseFunc)
+inline void URagnarokEnhancedInputComponent::BindAbilityInputAction(const UInputConfigDataAsset* InInputConfig, UserObject* ContextObject, CallbackFunc InputPressFunc, CallbackFunc InputReleaseFunc)
 {
 	checkf(InInputConfig, TEXT("Input config data asset is null"));
 
