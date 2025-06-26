@@ -7,6 +7,11 @@
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 
+void UKratosGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
+
 AKratos* UKratosGameplayAbility::GetKratosFromActorInfo()
 {
 	if (false == Kratos.IsValid())
