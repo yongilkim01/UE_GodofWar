@@ -15,6 +15,7 @@ void URagnarokAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
 
+
 	UDataTable* DataTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/Data/Tables/Global/DT_PrimaryAssetId.DT_PrimaryAssetId"));
 
 	if (DataTable)
@@ -29,7 +30,6 @@ void URagnarokAssetManager::StartInitialLoading()
 			PrimaryIdMap[PrimaryAssetIdDataRow->PrimaryAssetType].Value = PrimaryAssetIdDataRow->AssetName;
 		}
 	}
-
 }
 
 URagnarokAssetManager& URagnarokAssetManager::Get()	
