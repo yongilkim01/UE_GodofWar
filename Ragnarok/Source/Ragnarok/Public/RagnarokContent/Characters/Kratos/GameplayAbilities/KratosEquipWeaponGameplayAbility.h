@@ -6,6 +6,8 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
 #include "KratosEquipWeaponGameplayAbility.generated.h"
 
+class UAbilityTask_WaitGameplayEvent;
+
 /**
  * 
  */
@@ -31,13 +33,20 @@ private:
 	void OnMontageInterrupted();
 	void OnMontageCancelled();
 
+	UFUNCTION()
+	void OnGameplayEventReceived(FGameplayEventData Payload);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability|Animation")
 	UAnimMontage* EquipWeaponMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability|Animation")
+	FGameplayTag WaitForGameplayEventTag;
 
 private:
 	FGameplayAbilitySpecHandle CurrentSpecHandle;
 	const FGameplayAbilityActorInfo* CurrentActorInfo;
 	FGameplayAbilityActivationInfo CurrentActivationInfo;
-	
+
+	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
 };

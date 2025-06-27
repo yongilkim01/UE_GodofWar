@@ -4,6 +4,9 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosEquipWeaponGameplayAbility.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+
+#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -19,7 +22,7 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
-	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
 		EquipWeaponMontage,
@@ -30,13 +33,45 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 		false
 	);
 
-	if (nullptr != Task)
+	if (true == WaitForGameplayEventTag.IsValid())
 	{
-		Task->OnCompleted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCompleted);
-		Task->OnBlendOut.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageBlendOut);
-		Task->OnInterrupted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageInterrupted);
-		Task->OnCancelled.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCancelled);
-		Task->ReadyForActivation();
+		WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this,
+			WaitForGameplayEventTag,
+			nullptr,
+			false,
+			false
+		);
+
+		if (nullptr != WaitEventTask)
+		{
+			Debug::Print(TEXT("WaitEventTask Created"));
+
+			// 바인딩 시도
+			WaitEventTask->EventReceived.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived);
+
+			// 바인딩 성공 여부 확인
+			if (WaitEventTask->EventReceived.IsBound())
+			{
+				Debug::Print(TEXT("Delegate Binding Success"));
+			}
+			else
+			{
+				Debug::Print(TEXT("Delegate Binding Failed"));
+			}
+
+			WaitEventTask->ReadyForActivation();
+		}
+	}
+
+
+	if (nullptr != MontageTask)
+	{
+		MontageTask->OnCompleted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCompleted);
+		MontageTask->OnBlendOut.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageBlendOut);
+		MontageTask->OnInterrupted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageInterrupted);
+		MontageTask->OnCancelled.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCancelled);
+		MontageTask->ReadyForActivation();
 	}
 	else
 	{
@@ -46,24 +81,32 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 
 void UKratosEquipWeaponGameplayAbility::OnMontageCompleted()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
+	if (nullptr == WaitEventTask || false == WaitEventTask->IsActive())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
 }
 
 void UKratosEquipWeaponGameplayAbility::OnMontageBlendOut()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
+	if (nullptr == WaitEventTask || false == WaitEventTask->IsActive())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
 }
 
 void UKratosEquipWeaponGameplayAbility::OnMontageInterrupted()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
 }
 
 void UKratosEquipWeaponGameplayAbility::OnMontageCancelled()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
 
+void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
+{
+	Debug::Print(TEXT("Event Recevied"));
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
