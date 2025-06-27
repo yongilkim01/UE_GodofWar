@@ -112,8 +112,8 @@ void AKratos::PossessedBy(AController* NewController)
 	{
 		const FString DebugInfoStr = 
 			FString::Printf(TEXT("GAS Owner Actor : %s, AvataActor : %s"), 
-			*AbilitySystemComponent->GetOwnerActor()->GetActorLabel(),
-			*AbilitySystemComponent->GetAvatarActor()->GetActorLabel());
+			*AbilitySystemComponent->GetOwnerActor()->GetActorNameOrLabel(),
+			*AbilitySystemComponent->GetAvatarActor()->GetActorNameOrLabel());
 
 		Debug::Print(TEXT("Ability system component valid ") + DebugInfoStr, FColor::Green);
 		Debug::Print(TEXT("AttributeSet valid ") + DebugInfoStr, FColor::Green);		

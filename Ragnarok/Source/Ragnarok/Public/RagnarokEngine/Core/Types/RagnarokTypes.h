@@ -8,7 +8,7 @@
 
 DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
 
-UENUM(BlueprintType)
+UENUM(BlueprintType, meta = (ScriptName = "RagnarokPrimaryAssetType"))
 enum class EPrimaryAssetType : uint8
 {
 	EPT_None				UMETA(DisplayName = "None"),

@@ -28,11 +28,14 @@ public:
 	//~ End UGameplayAbility Interface.
 
 private:
+	UFUNCTION()
 	void OnMontageCompleted();
+	UFUNCTION()
 	void OnMontageBlendOut();
+	UFUNCTION()
 	void OnMontageInterrupted();
+	UFUNCTION()
 	void OnMontageCancelled();
-
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 

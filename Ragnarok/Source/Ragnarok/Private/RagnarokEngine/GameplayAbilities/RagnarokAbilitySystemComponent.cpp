@@ -12,7 +12,7 @@ void URagnarokAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& 
 
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (false  == AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag))
+		if (false  == AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag))
 		{
 			continue;
 		}

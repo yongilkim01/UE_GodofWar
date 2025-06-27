@@ -15,7 +15,12 @@ struct FRagnarokInputActionConfig
 {
 	GENERATED_BODY()
 	
-public:
+	FRagnarokInputActionConfig()
+	{
+		InputAction = nullptr;
+	}
+	~FRagnarokInputActionConfig() {}
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
 	FGameplayTag InputTag;
 

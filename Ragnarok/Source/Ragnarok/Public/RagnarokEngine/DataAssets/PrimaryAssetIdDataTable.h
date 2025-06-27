@@ -13,7 +13,12 @@ struct FPrimaryAssetIdDataTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	FPrimaryAssetIdDataTableRow() {}
+	FPrimaryAssetIdDataTableRow() 
+	{
+		PrimaryAssetType = EPrimaryAssetType::EPT_None;
+		AssetType = NAME_None;
+		AssetName = NAME_None;
+	}
 	~FPrimaryAssetIdDataTableRow() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
