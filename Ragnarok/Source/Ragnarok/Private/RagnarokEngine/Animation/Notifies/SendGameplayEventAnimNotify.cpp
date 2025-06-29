@@ -24,21 +24,14 @@ void USendGameplayEventAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAni
 		return;
 	}
 
-	URagnarokAbilitySystemComponent* ASC = Cast<URagnarokAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner));
-
-	if (nullptr == ASC)
-	{
-		Debug::Print(TEXT("USendGameplayEventAnimNotify::Notify's ASC is nullptr"), FColor::Red);
-		return;
-	}
-
 	if (true == EventTag.IsValid())
 	{
 		FGameplayEventData EventData;
 		EventData.Instigator = Owner;
 		EventData.Target = Owner;
 
-		ASC->HandleGameplayEvent(EventTag, &EventData);
+		// 블루프린트의 "Send Gameplay Event To Actor" 노드와 동일한 방식
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Owner, EventTag, EventData);
 	}
 	else
 	{

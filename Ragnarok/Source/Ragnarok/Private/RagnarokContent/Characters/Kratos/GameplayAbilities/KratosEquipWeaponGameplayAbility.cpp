@@ -7,6 +7,8 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
 
 void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -107,6 +109,36 @@ void UKratosEquipWeaponGameplayAbility::OnMontageCancelled()
 
 void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
-	Debug::Print(TEXT("Event Recevied"));
+	ARagnarokWeapon* RagnarokWeapon =  GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(EquipWeaponTag);
+
+	USkeletalMeshComponent* ParentMesh = nullptr;
+
+	if (true == CurrentActorInfo->AvatarActor.IsValid())
+	{
+		APawn* Pawn = Cast<APawn>(CurrentActorInfo->AvatarActor.Get());
+
+		if (nullptr != Pawn)
+		{
+			ParentMesh = Pawn->FindComponentByClass<USkeletalMeshComponent>();
+		}
+	}
+
+	if (nullptr != ParentMesh)
+	{
+		FAttachmentTransformRules AttachRules(
+			EAttachmentRule::KeepRelative,    // LocationRule
+			EAttachmentRule::KeepRelative,    // RotationRule
+			EAttachmentRule::KeepRelative,       // ScaleRule
+			true						      // bWeldSimulatedBodies
+		);
+
+		RagnarokWeapon->AttachToComponent(
+			ParentMesh,
+			AttachRules,
+			SocketNameToAttachTo // FName 타입의 멤버 변수여야 함
+		);
+	}
+
+
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

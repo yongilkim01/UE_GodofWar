@@ -46,6 +46,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability|Animation")
 	FGameplayTag WaitForGameplayEventTag;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability|Weapon")
+	FGameplayTag EquipWeaponTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability|Weapon")
+	FName SocketNameToAttachTo;
+
 private:
 	FGameplayAbilitySpecHandle CurrentSpecHandle;
 	const FGameplayAbilityActorInfo* CurrentActorInfo;
