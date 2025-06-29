@@ -2,6 +2,8 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosEquipWeaponGameplayAbility.h"
+#include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
+#include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -109,7 +111,7 @@ void UKratosEquipWeaponGameplayAbility::OnMontageCancelled()
 
 void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
-	ARagnarokWeapon* RagnarokWeapon =  GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(EquipWeaponTag);
+	AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(EquipWeaponTag));
 
 	USkeletalMeshComponent* ParentMesh = nullptr;
 
@@ -132,12 +134,16 @@ void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventDa
 			true						      // bWeldSimulatedBodies
 		);
 
-		RagnarokWeapon->AttachToComponent(
+		KratosWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
 			SocketNameToAttachTo // FName 타입의 멤버 변수여야 함
 		);
 	}
+
+	ParentMesh->LinkAnimClassLayers(KratosWeapon->WeaponData.WeaponAnimLayer.Get());
+
+	GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = EquipWeaponTag;
 
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

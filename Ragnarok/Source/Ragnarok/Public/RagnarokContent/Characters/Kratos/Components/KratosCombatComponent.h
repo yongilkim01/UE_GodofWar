@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Components/Combat/CombatComponent.h"
 #include "KratosCombatComponent.generated.h"
 
+class AKratosWeapon;
+
 /**
  * 
  */
@@ -14,4 +16,7 @@ class RAGNAROK_API UKratosCombatComponent : public UCombatComponent
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Combat")
+	AKratosWeapon* GetKratosWeaponByTag(FGameplayTag InFindWeaponTag) const;
 };

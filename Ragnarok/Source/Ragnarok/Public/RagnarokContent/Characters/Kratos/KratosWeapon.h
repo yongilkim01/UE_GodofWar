@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "KratosWeapon.generated.h"
 
 /**
@@ -31,4 +32,7 @@ protected:
 protected:
 	UItemPrimaryAssetKratosWeapon* KratosWeaponPDA = nullptr;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|WeaponData")
+	FKratosWeaponData WeaponData;
 };
