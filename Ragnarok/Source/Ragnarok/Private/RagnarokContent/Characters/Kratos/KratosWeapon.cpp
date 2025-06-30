@@ -8,6 +8,16 @@ void AKratosWeapon::InitWeapon()
 	Super::InitWeapon();
 }
 
+void AKratosWeapon::AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray)
+{
+	GrantedAbilitySpecHandleArray = InSpecHandleArray;
+}
+
+TArray<FGameplayAbilitySpecHandle>& AKratosWeapon::GetGrantedAbilitySpecHandleArray()
+{
+	return GrantedAbilitySpecHandleArray;
+}
+
 void AKratosWeapon::BeginPlay()
 {
 	Super::BeginPlay();

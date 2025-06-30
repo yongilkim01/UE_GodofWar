@@ -34,6 +34,11 @@ public:
 	AKratosController* GetKratosControllerFromActorInfo();
 	UKratosCombatComponent* GetKratosCombatComponent();
 
+protected:
+	FGameplayAbilitySpecHandle CurrentSpecHandle;
+	const FGameplayAbilityActorInfo* CurrentActorInfo;
+	FGameplayAbilityActivationInfo CurrentActivationInfo;
+
 private:
 	TWeakObjectPtr<AKratos> Kratos;
 	TWeakObjectPtr<AKratosController> KratosController;

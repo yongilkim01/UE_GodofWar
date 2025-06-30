@@ -4,22 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
-#include "GameplayTagContainer.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "KratosStartUpDataAsset.generated.h"
-
-USTRUCT()
-struct FKratosAbilitySet
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|InputTag")
-	FGameplayTag InputTag;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<URagnarokGameplayAbility> Ability;
-
-	bool IsVaild() const;
-};
 
 /**
  * 
@@ -35,6 +21,6 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Ragnarok|StartUpData", meta = (TitleProperty = "InputTag"))
-	TArray<FKratosAbilitySet> KratosStartUpAbilitySetArray;
+	TArray<FRagnarokbilitySet> KratosStartUpAbilitySetArray;
 	
 };

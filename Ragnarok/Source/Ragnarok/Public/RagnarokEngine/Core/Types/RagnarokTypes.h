@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GameplayTagContainer.h"
 #include "RagnarokTypes.generated.h"
+
+class URagnarokGameplayAbility;
 
 DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
 
@@ -22,6 +25,20 @@ enum class EAbilityActivationEvent : uint8
 	EAE_None				UMETA(DisplayName = "None"),
 	EAE_Triggered			UMETA(DisplayName = "Triggered"),
 	EAE_Given				UMETA(DisplayName = "Given"),
+};
+
+USTRUCT(BlueprintType)
+struct FRagnarokbilitySet
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|InputTag")
+	FGameplayTag InputTag;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<URagnarokGameplayAbility> Ability;
+
+	bool IsValid() const;
 };
 
 /**

@@ -2,4 +2,9 @@
 
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
 
+bool FRagnarokbilitySet::IsValid() const
+{
+	return true == InputTag.IsValid() && nullptr != Ability;
+}

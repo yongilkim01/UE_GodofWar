@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
 #include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
+#include "GameplayAbilitySpecHandle.h"
 #include "KratosWeapon.generated.h"
 
 /**
@@ -18,6 +19,10 @@ class RAGNAROK_API AKratosWeapon : public ARagnarokWeapon
 public:
 	virtual void InitWeapon() override;
 
+	void AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
+	TArray<FGameplayAbilitySpecHandle>& GetGrantedAbilitySpecHandleArray();
+
+
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
@@ -28,6 +33,9 @@ protected:
 	virtual void LoadWeaponDataAsset() override;
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject) override;
 	//~ End ARagnarokWeapon Interface.
+
+private:
+	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandleArray;
 
 protected:
 	UItemPrimaryAssetKratosWeapon* KratosWeaponPDA = nullptr;

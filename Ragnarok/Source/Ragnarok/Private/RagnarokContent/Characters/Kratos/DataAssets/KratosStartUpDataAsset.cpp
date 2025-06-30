@@ -5,19 +5,15 @@
 
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
-
-bool FKratosAbilitySet::IsVaild() const
-{
-	return true == InputTag.IsValid() && nullptr != Ability;
-}
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 
 void UKratosStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)
 {
 	Super::GiveToAbilitySystemComponent(InASC, ApplyLevel);
 
-	for (const FKratosAbilitySet& KratosAbilitySet : KratosStartUpAbilitySetArray)
+	for (const FRagnarokbilitySet& KratosAbilitySet : KratosStartUpAbilitySetArray)
 	{
-		if (false == KratosAbilitySet.IsVaild())
+		if (false == KratosAbilitySet.IsValid())
 		{
 			continue;
 		}

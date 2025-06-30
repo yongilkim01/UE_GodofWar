@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokAbilitySystemComponent.generated.h"
 
 /**
@@ -16,6 +17,16 @@ class RAGNAROK_API URagnarokAbilitySystemComponent : public UAbilitySystemCompon
 
 public:
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
-	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
-	
+	void OnAbilityInputReleased(const FGameplayTag& InInputTag);	
+
+	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Ability", meta = (ApplyLevel = "1"))
+	void GrantWeaponAbilities(
+		const TArray<FRagnarokbilitySet> InWeaponAbilityArray, 
+		int32 ApplyLevel,
+		TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandleArray);
+
+	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Ability")
+	void RemoveWeaponAbilities(
+		UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
+
 };

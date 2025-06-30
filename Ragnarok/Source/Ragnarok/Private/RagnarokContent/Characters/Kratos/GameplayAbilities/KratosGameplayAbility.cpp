@@ -26,7 +26,12 @@ AKratosController* UKratosGameplayAbility::GetKratosControllerFromActorInfo()
 {
 	if (false == KratosController.IsValid())
 	{
-		KratosController = Cast<AKratosController>(CurrentActorInfo->AvatarActor);;
+		APawn* Pawn = Cast<APawn>(CurrentActorInfo->AvatarActor);
+
+		if (nullptr != Pawn)
+		{
+			KratosController = Cast<AKratosController>(Pawn->GetController());
+		}
 	}
 
 	return KratosController.Get();

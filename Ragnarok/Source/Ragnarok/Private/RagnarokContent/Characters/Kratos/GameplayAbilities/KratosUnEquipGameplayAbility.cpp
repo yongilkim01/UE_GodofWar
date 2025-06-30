@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosEquipWeaponGameplayAbility.h"
+#include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosUnEquipGameplayAbility.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 
 #include "EnhancedInputSubsystems.h"
-#include "GameplayAbilitySpecHandle.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
@@ -16,11 +15,11 @@
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
-void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UKratosUnEquipGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	if (nullptr == EquipWeaponMontage)
+	if (nullptr == UnEquipWeaponMontage)
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 		return;
@@ -33,7 +32,7 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
-		EquipWeaponMontage,
+		UnEquipWeaponMontage,
 		1.0f,
 		NAME_None,
 		false,
@@ -53,41 +52,37 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 
 		if (nullptr != WaitEventTask)
 		{
-			Debug::Print(TEXT("WaitEventTask Created"));
+			WaitEventTask->EventReceived.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnGameplayEventReceived);
 
-			// 바인딩 시도
-			WaitEventTask->EventReceived.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived);
-
-			// 바인딩 성공 여부 확인
-			if (WaitEventTask->EventReceived.IsBound())
+			if (true == WaitEventTask->EventReceived.IsBound())
 			{
-				Debug::Print(TEXT("Equip Delegate Binding Success"));
+				Debug::Print(TEXT("UnEquip Delegate Binding Sucess"));
 			}
 			else
 			{
-				Debug::Print(TEXT("Equip Delegate Binding Failed"));
+				Debug::Print(TEXT("UnEquip Delegate Binding Failed"));
 			}
 
 			WaitEventTask->ReadyForActivation();
 		}
 	}
 
-
 	if (nullptr != MontageTask)
 	{
-		MontageTask->OnCompleted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCompleted);
-		MontageTask->OnBlendOut.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageBlendOut);
-		MontageTask->OnInterrupted.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageInterrupted);
-		MontageTask->OnCancelled.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnMontageCancelled);
+		MontageTask->OnCompleted.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnMontageCompleted);
+		MontageTask->OnBlendOut.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnMontageBlendOut);
+		MontageTask->OnInterrupted.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnMontageInterrupted);
+		MontageTask->OnCancelled.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnMontageCancelled);
 		MontageTask->ReadyForActivation();
 	}
 	else
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 	}
+
 }
 
-void UKratosEquipWeaponGameplayAbility::OnMontageCompleted()
+void UKratosUnEquipGameplayAbility::OnMontageCompleted()
 {
 	if (nullptr == WaitEventTask || false == WaitEventTask->IsActive())
 	{
@@ -95,7 +90,7 @@ void UKratosEquipWeaponGameplayAbility::OnMontageCompleted()
 	}
 }
 
-void UKratosEquipWeaponGameplayAbility::OnMontageBlendOut()
+void UKratosUnEquipGameplayAbility::OnMontageBlendOut()
 {
 	if (nullptr == WaitEventTask || false == WaitEventTask->IsActive())
 	{
@@ -103,19 +98,23 @@ void UKratosEquipWeaponGameplayAbility::OnMontageBlendOut()
 	}
 }
 
-void UKratosEquipWeaponGameplayAbility::OnMontageInterrupted()
+void UKratosUnEquipGameplayAbility::OnMontageInterrupted()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+
 }
 
-void UKratosEquipWeaponGameplayAbility::OnMontageCancelled()
+void UKratosUnEquipGameplayAbility::OnMontageCancelled()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+
 }
 
-void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
+void UKratosUnEquipGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
-	AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(EquipWeaponTag));
+	Debug::Print(TEXT("UnEquip"));
+
+	AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(UnEquipWeaponTag));
 
 	USkeletalMeshComponent* ParentMesh = nullptr;
 
@@ -132,42 +131,32 @@ void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventDa
 	if (nullptr != ParentMesh)
 	{
 		FAttachmentTransformRules AttachRules(
-			EAttachmentRule::KeepRelative,    // LocationRule
+			EAttachmentRule::SnapToTarget,    // LocationRule
 			EAttachmentRule::KeepRelative,    // RotationRule
-			EAttachmentRule::KeepRelative,       // ScaleRule
+			EAttachmentRule::KeepWorld,       // ScaleRule
 			true						      // bWeldSimulatedBodies
 		);
 
-		KratosWeapon->AttachToComponent(
-			ParentMesh,
-			AttachRules,
-			SocketNameToAttachTo // FName 타입의 멤버 변수여야 함
-		);
+		KratosWeapon->AttachToComponent(ParentMesh, AttachRules, SocketNameToAttachTo);
 	}
 
 	{
-		ParentMesh->LinkAnimClassLayers(KratosWeapon->WeaponData.WeaponAnimLayer.Get());
+		ParentMesh->UnlinkAnimClassLayers(KratosWeapon->WeaponData.WeaponAnimLayer.Get());
 	}
-
 
 	{
 		ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
 		UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
-		InputSubsystem->AddMappingContext(KratosWeapon->WeaponData.InputMappingContext, 1);
-
-		TArray<FGameplayAbilitySpecHandle> SpecHandleArray;
-
-		GetASCFromActorInfo()->GrantWeaponAbilities(
-			KratosWeapon->WeaponData.WeaponAbilitySetArray,
-			GetAbilityLevel(),
-			SpecHandleArray);
-
-		KratosWeapon->AssignGratnAbilitySpecHandles(SpecHandleArray);
+		InputSubsystem->RemoveMappingContext(KratosWeapon->WeaponData.InputMappingContext);
 	}
 	{
-		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = EquipWeaponTag;
+		GetASCFromActorInfo()->RemoveWeaponAbilities(KratosWeapon->GetGrantedAbilitySpecHandleArray());
+	}
+
+	{
+		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
