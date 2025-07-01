@@ -13,7 +13,44 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	Debug::Print(TEXT("Heavy Attack"));
 
-	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+	CurrentSpecHandle = Handle;
+	CurrentActorInfo = ActorInfo;
+	CurrentActivationInfo = ActivationInfo;
+
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		NAME_None,
+		HeavyAttackMontageMap[CurComboCount],
+		1.0f,
+		NAME_None,
+		false,
+		0.0f,
+		false
+	);
+
+	if (CurComboCount == HeavyAttackMontageMap.Num())
+	{
+		OnResetAttackComboCount();
+	}
+	else
+	{
+		CurComboCount++;
+	}
+
+	if (nullptr != MontageTask)
+	{
+		MontageTask->OnCompleted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCompleted);
+		MontageTask->OnBlendOut.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageBlendOut);
+		MontageTask->OnInterrupted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageInterrupted);
+		MontageTask->OnCancelled.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCancelled);
+		MontageTask->ReadyForActivation();
+	}
+	else
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+	}
 
 
 }
@@ -22,24 +59,33 @@ void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
+	FTimerDelegate TimerDel;
+
+	TimerDel.BindUFunction(this, FName("OnResetAttackComboCount"));
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.3f, false);
 }
 
 void UKratosHeavyAttackAbility::OnMontageCompleted()
 {
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UKratosHeavyAttackAbility::OnMontageBlendOut()
 {
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UKratosHeavyAttackAbility::OnMontageInterrupted()
 {
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UKratosHeavyAttackAbility::OnMontageCancelled()
 {
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void UKratosHeavyAttackAbility::OnResetAttackComboCount()
 {
+	CurComboCount = 1;
 }
