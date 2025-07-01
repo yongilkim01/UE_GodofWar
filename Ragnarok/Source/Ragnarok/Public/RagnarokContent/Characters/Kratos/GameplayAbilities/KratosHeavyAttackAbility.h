@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
-#include "KratosLightAttackAbility.generated.h"
+#include "KratosHeavyAttackAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RAGNAROK_API UKratosLightAttackAbility : public UKratosGameplayAbility
+class RAGNAROK_API UKratosHeavyAttackAbility : public UKratosGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -46,11 +46,12 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
-	TMap<int, UAnimMontage*> LightAttackMontageMap;
+	TMap<int, UAnimMontage*> HeavyAttackMontageMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
 	int32 CurComboCount = 1;
-	
+
 private:
 	FTimerHandle TimerHandle;
+	
 };
