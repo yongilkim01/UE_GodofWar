@@ -45,12 +45,15 @@ private:
 
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	TMap<int, UAnimMontage*> LightAttackMontageMap;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	int32 CurComboCount = 1;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	FGameplayTag JumpTag;
+
 private:
 	FTimerHandle TimerHandle;
 };

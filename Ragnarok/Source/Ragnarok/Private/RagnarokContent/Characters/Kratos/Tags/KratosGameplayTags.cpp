@@ -17,4 +17,6 @@ namespace KratosGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Weapon_LeviathanAxe, "Kratos.Weapon.LeviathanAxe");
 
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_JumpToFinisher, "Kratos.Status.JumpToFinisher");
+
 }

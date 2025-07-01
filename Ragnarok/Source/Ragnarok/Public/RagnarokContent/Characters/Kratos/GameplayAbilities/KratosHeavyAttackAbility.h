@@ -51,6 +51,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
 	int32 CurComboCount = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	FGameplayTag JumpTag;
+
 private:
 	FTimerHandle TimerHandle;
 	

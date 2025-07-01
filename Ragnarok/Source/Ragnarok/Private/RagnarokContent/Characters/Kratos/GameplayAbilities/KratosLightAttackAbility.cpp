@@ -2,10 +2,12 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosLightAttackAbility.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 
 void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -36,6 +38,12 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	}
 	else
 	{
+		if (CurComboCount + 1 == LightAttackMontageMap.Num())
+		{
+			URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
+				GetKratosFromActorInfo(), JumpTag);
+		}
+
 		CurComboCount++;
 	}
 
@@ -87,4 +95,6 @@ void UKratosLightAttackAbility::OnMontageCancelled()
 void UKratosLightAttackAbility::OnResetAttackComboCount()
 {
 	CurComboCount = 1;
+	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
+	
 }

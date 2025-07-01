@@ -29,7 +29,7 @@ void URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(AActor* InActor, 
 
 	if (true == ASC->HasMatchingGameplayTag(TagToRemove))
 	{
-		ASC->AddLooseGameplayTag(TagToRemove);
+		ASC->RemoveLooseGameplayTag(TagToRemove);
 	}
 }
 

@@ -2,22 +2,27 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosHeavyAttackAbility.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	Debug::Print(TEXT("Heavy Attack"));
 
 	CurrentSpecHandle = Handle;
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+	if (true == URagnarokAbilityFunctionLibrary::HasActorGameplayTag(GetKratosFromActorInfo(), JumpTag))
+	{
+		CurComboCount = HeavyAttackMontageMap.Num();
+	}
 
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
@@ -88,4 +93,6 @@ void UKratosHeavyAttackAbility::OnMontageCancelled()
 void UKratosHeavyAttackAbility::OnResetAttackComboCount()
 {
 	CurComboCount = 1;
+	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
+
 }

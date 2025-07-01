@@ -14,4 +14,6 @@ namespace KratosGameplayTags
 
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_Event_Equip_Weapon);
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_Event_Unequip_Weapon);
+
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_Status_JumpToFinisher);
 }
