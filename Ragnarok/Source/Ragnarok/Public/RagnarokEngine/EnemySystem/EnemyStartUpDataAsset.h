@@ -6,6 +6,9 @@
 #include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
 #include "EnemyStartUpDataAsset.generated.h"
 
+class URagnarokAbilitySystemComponent;
+class UEnemyGameplayAbility;
+
 /**
  * 
  */
@@ -14,4 +17,11 @@ class RAGNAROK_API UEnemyStartUpDataAsset : public UStartUpDataAsset
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void GiveToAbilitySystemComponent(
+		URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel = 1) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Ragnarok|StartUpData")
+	TArray<TSubclassOf<UEnemyGameplayAbility>> EnemyCombatAbilityArray;
 };
