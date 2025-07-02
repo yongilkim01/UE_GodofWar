@@ -8,7 +8,7 @@
 
 class URagnarokGameplayAbility;
 class URagnarokAbilitySystemComponent;
-
+class URagnarokGameplayEffect;
 /**
  * 
  */
@@ -29,9 +29,12 @@ protected:
 		URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel = 1);
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "StartUpData|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|StartUpData")
 	TArray<TSubclassOf<URagnarokGameplayAbility>> ActivateOnGivenAbilityArray;
 
-	UPROPERTY(EditAnywhere, Category = "StartUpData|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|StartUpData")
 	TArray<TSubclassOf<URagnarokGameplayAbility>> ReactiveAbilityArray;
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|StartUpData")
+	TArray<TSubclassOf<URagnarokGameplayEffect>> StartUpGameplayEffectArray;
 };

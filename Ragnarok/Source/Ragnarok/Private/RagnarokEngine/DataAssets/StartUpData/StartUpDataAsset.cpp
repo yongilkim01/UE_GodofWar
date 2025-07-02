@@ -5,6 +5,7 @@
 
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokGameplayEffect.h"
 
 void UStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)
 {
@@ -12,6 +13,25 @@ void UStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemCompo
 
 	GrantAbilities(ActivateOnGivenAbilityArray, InASC, ApplyLevel);
 	GrantAbilities(ReactiveAbilityArray, InASC, ApplyLevel);
+
+	if (false == StartUpGameplayEffectArray.IsEmpty())
+	{
+		for (const TSubclassOf<URagnarokGameplayEffect>& EffectClass : StartUpGameplayEffectArray)
+		{
+			if (!EffectClass)
+			{
+				continue;
+			}
+
+			URagnarokGameplayEffect* GameplayEffect = EffectClass->GetDefaultObject<URagnarokGameplayEffect>();
+
+			InASC->ApplyGameplayEffectToSelf(
+				GameplayEffect,
+				ApplyLevel,
+				InASC->MakeEffectContext()
+			);
+		}
+	}
 }
 
 void UStartUpDataAsset::GrantAbilities(const TArray<TSubclassOf<URagnarokGameplayAbility>>& InGrantAbilityArray, URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)
