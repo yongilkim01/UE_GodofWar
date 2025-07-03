@@ -12,11 +12,10 @@ void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshCo
 
 	UCombatComponent* CombatComponent = UCombatFunctionLibrary::GetCombatComponentFromActor(MeshComp->GetOwner());
 
-	if (CombatComponent != nullptr)
+	if (nullptr != CombatComponent)
 	{
-		Debug::Print(TEXT("Combat component is valid"), FColor::Yellow);
+		CombatComponent->ToggleWeaponCollision(true, ToggleWeaponType);
 	}
-
 }
 
 void UWeaponCollisionAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
@@ -29,4 +28,10 @@ void UWeaponCollisionAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp
 {
 	Super::NotifyEnd(MeshComp, Animation);
 
+	UCombatComponent* CombatComponent = UCombatFunctionLibrary::GetCombatComponentFromActor(MeshComp->GetOwner());
+
+	if (nullptr != CombatComponent)
+	{
+		CombatComponent->ToggleWeaponCollision(false, ToggleWeaponType);
+	}
 }

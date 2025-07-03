@@ -11,6 +11,14 @@ class URagnarokGameplayAbility;
 
 DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
 
+UENUM(BlueprintType)
+enum class EToggleDamageType : uint8
+{
+	ETD_CurrentEquippedWeapon,
+	ETD_LeftHand,
+	ETD_RightHand
+};
+
 UENUM(BlueprintType, meta = (ScriptName = "RagnarokPrimaryAssetType"))
 enum class EPrimaryAssetType : uint8
 {

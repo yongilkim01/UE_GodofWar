@@ -2,9 +2,10 @@
 
 
 #include "RagnarokEngine/Components/Combat/CombatComponent.h"
-
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+
+#include "Components/BoxComponent.h"
 
 void UCombatComponent::RegisterSpawnWeapon(FGameplayTag InRegisterWeaponTag, ARagnarokWeapon* InRegisterWeapon, bool bEquipWeapon)
 {
@@ -40,10 +41,42 @@ ARagnarokWeapon* UCombatComponent::GetCharacterWeaponByTag(FGameplayTag InFindWe
 
 ARagnarokWeapon* UCombatComponent::GetCurrentEquippedWeapon() const
 {
-	if (false == CurrentEquippedWeaponTag.IsValid())
+#if WITH_EDITOR
+	if (true == GIsEditor && nullptr != GetWorld() && false == GetWorld()->IsGameWorld())
+	{
+		return nullptr;
+	}
+#endif
+
+	if (FGameplayTag::EmptyTag == CurrentEquippedWeaponTag)
 	{
 		return nullptr;
 	}
 
 	return GetCharacterWeaponByTag(CurrentEquippedWeaponTag);
+}
+
+void UCombatComponent::ToggleWeaponCollision(bool bCollisionEnable, EToggleDamageType ToggleDamageType)
+{
+	if (EToggleDamageType::ETD_CurrentEquippedWeapon == ToggleDamageType)
+	{
+		ARagnarokWeapon* CurrentWeapon = GetCurrentEquippedWeapon();
+
+		if (nullptr == CurrentWeapon)
+		{
+			return;
+		}
+
+		if (true == bCollisionEnable)
+		{
+			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			Debug::Print(CurrentWeapon->GetName() + TEXT(" collision enabled"), FColor::Green);
+		}
+		else
+		{
+			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Debug::Print(CurrentWeapon->GetName() + TEXT(" collision disabled"), FColor::Orange);
+
+		}
+	}
 }

@@ -14,8 +14,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	Debug::Print(TEXT("Light Attack"));
-
 	CurrentSpecHandle = Handle;
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;

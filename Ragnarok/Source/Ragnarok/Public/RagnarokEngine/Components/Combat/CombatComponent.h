@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/Components/RagnarokActorComponent.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "GameplayTagContainer.h"
 #include "CombatComponent.generated.h"
 
@@ -29,11 +30,14 @@ public:
 
 	UFUNCTION()
 	ARagnarokWeapon* GetCurrentEquippedWeapon() const;
+
+	UFUNCTION()
+	void ToggleWeaponCollision(bool bCollisionEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::ETD_CurrentEquippedWeapon);
 	
 private:
 	TMap<FGameplayTag, ARagnarokWeapon*> CharacterWeaponMap;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Combat")
-	FGameplayTag CurrentEquippedWeaponTag;
+	FGameplayTag CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
 };

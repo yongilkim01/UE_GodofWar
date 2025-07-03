@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/Animation/RagnarokAnimNotifyState.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "WeaponCollisionAnimNotifyState.generated.h"
 
 /**
@@ -18,5 +19,9 @@ public:
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration);
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime);
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation);
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Weapon")
+	EToggleDamageType ToggleWeaponType = EToggleDamageType::ETD_CurrentEquippedWeapon;
 	
 };
