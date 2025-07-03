@@ -56,4 +56,7 @@ protected:
 
 private:
 	FTimerHandle TimerHandle;
+	bool PrevbUseControllerRotationYaw;
+	bool PrevbOrientRotationToMovement;
+	int AttackAbilityActiveCount;
 };

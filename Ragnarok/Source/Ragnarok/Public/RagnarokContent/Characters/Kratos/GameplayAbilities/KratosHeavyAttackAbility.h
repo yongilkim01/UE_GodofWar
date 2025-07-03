@@ -56,5 +56,5 @@ protected:
 
 private:
 	FTimerHandle TimerHandle;
-	
+	int AttackAbilityActiveCount;
 };

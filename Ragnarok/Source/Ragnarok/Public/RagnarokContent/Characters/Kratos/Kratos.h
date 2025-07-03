@@ -66,7 +66,10 @@ private:
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
-	
+	int AttackCount = 0;
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
+	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }
+	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
+	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
 };

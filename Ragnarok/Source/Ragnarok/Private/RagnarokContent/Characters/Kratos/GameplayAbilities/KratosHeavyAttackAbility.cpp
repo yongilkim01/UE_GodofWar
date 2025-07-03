@@ -5,6 +5,7 @@
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
@@ -35,6 +36,16 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		false
 	);
 
+	if (nullptr != GetKratosFromActorInfo())
+	{
+		if (GetKratosFromActorInfo()->GetKratosAttackCount() == 0)
+		{
+			GetKratosFromActorInfo()->GetCharacterMovement()->DisableMovement();
+		}
+
+		GetKratosFromActorInfo()->AddKratosAttackCount(1);
+	}
+
 	if (CurComboCount == HeavyAttackMontageMap.Num())
 	{
 		OnResetAttackComboCount();
@@ -63,6 +74,17 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	if (nullptr != GetKratosFromActorInfo())
+	{
+		GetKratosFromActorInfo()->AddKratosAttackCount(-1);
+
+		if (GetKratosFromActorInfo()->GetKratosAttackCount() <= 0)
+		{
+			GetKratosFromActorInfo()->SetKratosAttackCount(0);
+			GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+	}
 
 	FTimerDelegate TimerDel;
 
