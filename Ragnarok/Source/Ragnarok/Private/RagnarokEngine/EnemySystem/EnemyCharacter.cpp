@@ -44,6 +44,11 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	InitEnemyStartUpData();
 }
 
+UCombatComponent* AEnemyCharacter::GetCombatComponent() const
+{
+	return EnemyCombatComponent;
+}
+
 void AEnemyCharacter::InitEnemyStartUpData()
 {
 	if (true == StartUpData.IsNull())

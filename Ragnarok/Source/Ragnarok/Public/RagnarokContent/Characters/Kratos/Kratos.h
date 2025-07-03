@@ -38,6 +38,10 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	//~ End APawn Interface.
 
+	//~ Begin ICombatInterface Interface.
+	virtual UCombatComponent* GetCombatComponent() const override;
+	//~ End ICombatInterface Interface.
+
 private:
 	void LoadKratosDataAsset();
 	void InitPrimaryData(UObject* PDAObject);

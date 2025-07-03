@@ -23,6 +23,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
 
+	//~ Begin ICombatInterface Interface.
+	virtual UCombatComponent* GetCombatComponent() const override;
+	//~ End ICombatInterface Interface.
+
 private:
 	void InitEnemyStartUpData();
 

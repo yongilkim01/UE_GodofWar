@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "RagnarokEngine/CombatSystem/Interfaces/CombatInterface.h"
 #include "RagnarokCharacter.generated.h"
 
 class URagnarokAbilitySystemComponent;
@@ -12,7 +13,7 @@ class URagnarokAttributeSet;
 class UStartUpDataAsset;
 
 UCLASS()
-class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface
+class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -33,6 +34,10 @@ public:
 	//~ Begin IAbilitySystemInterface Interface.
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface Interface.
+
+	//~ Begin ICombatInterface Interface.
+	virtual UCombatComponent* GetCombatComponent() const override;
+	//~ End ICombatInterface Interface.
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")

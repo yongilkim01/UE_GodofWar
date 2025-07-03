@@ -52,3 +52,8 @@ UAbilitySystemComponent* ARagnarokCharacter::GetAbilitySystemComponent() const
 	return GetAbilitySystem();
 }
 
+UCombatComponent* ARagnarokCharacter::GetCombatComponent() const
+{
+	return nullptr;
+}
+

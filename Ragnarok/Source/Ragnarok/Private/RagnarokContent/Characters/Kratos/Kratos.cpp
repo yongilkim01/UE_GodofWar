@@ -120,6 +120,11 @@ void AKratos::PossessedBy(AController* NewController)
 	}
 }
 
+UCombatComponent* AKratos::GetCombatComponent() const
+{
+	return KratosCombatComponent;
+}
+
 void AKratos::LoadKratosDataAsset()
 {
 	if (nullptr != InitDA)

@@ -1,0 +1,32 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "RagnarokEngine/Animation/Notifies/WeaponCollisionAnimNotifyState.h"
+#include "RagnarokEngine/CombatSystem/CombatFunctionLibrary.h"
+#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+
+void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
+{
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+
+	UCombatComponent* CombatComponent = UCombatFunctionLibrary::GetCombatComponentFromActor(MeshComp->GetOwner());
+
+	if (CombatComponent != nullptr)
+	{
+		Debug::Print(TEXT("Combat component is valid"), FColor::Yellow);
+	}
+
+}
+
+void UWeaponCollisionAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
+{
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+
+}
+
+void UWeaponCollisionAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+{
+	Super::NotifyEnd(MeshComp, Animation);
+
+}
