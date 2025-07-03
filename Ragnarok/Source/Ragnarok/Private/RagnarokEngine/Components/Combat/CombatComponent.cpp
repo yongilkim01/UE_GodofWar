@@ -70,13 +70,10 @@ void UCombatComponent::ToggleWeaponCollision(bool bCollisionEnable, EToggleDamag
 		if (true == bCollisionEnable)
 		{
 			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			Debug::Print(CurrentWeapon->GetName() + TEXT(" collision enabled"), FColor::Green);
 		}
 		else
 		{
 			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			Debug::Print(CurrentWeapon->GetName() + TEXT(" collision disabled"), FColor::Orange);
-
 		}
 	}
 }
