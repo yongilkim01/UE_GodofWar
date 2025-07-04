@@ -34,6 +34,9 @@ public:
 	UFUNCTION()
 	void ToggleWeaponCollision(bool bCollisionEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::ETD_CurrentEquippedWeapon);
 	
+	virtual void OnHitTargetActor(AActor* HitActor);
+	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
+
 private:
 	TMap<FGameplayTag, ARagnarokWeapon*> CharacterWeaponMap;
 

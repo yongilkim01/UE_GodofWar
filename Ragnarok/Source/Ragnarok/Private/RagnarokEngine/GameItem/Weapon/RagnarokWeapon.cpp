@@ -60,7 +60,7 @@ void ARagnarokWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overlapped
 	{
 		if (WeaponOwningPawn != HitPawn)
 		{
-			Debug::Print(GetName() + TEXT(" begin overlap with ") + HitPawn->GetName(), FColor::Green);
+			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 		}
 	}
 }
@@ -75,7 +75,7 @@ void ARagnarokWeapon::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCo
 	{
 		if (WeaponOwningPawn != HitPawn)
 		{
-			Debug::Print(GetName() + TEXT(" end overlap with ") + HitPawn->GetName(), FColor::Orange);
+			OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor);
 		}
 	}
 }

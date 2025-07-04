@@ -19,4 +19,7 @@ class RAGNAROK_API UKratosCombatComponent : public UCombatComponent
 public:
 	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Combat")
 	AKratosWeapon* GetKratosWeaponByTag(FGameplayTag InFindWeaponTag) const;
+
+	virtual void OnHitTargetActor(AActor* HitActor) override;
+	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor) override;
 };

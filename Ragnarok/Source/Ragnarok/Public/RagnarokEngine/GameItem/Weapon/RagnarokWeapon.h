@@ -11,6 +11,7 @@ class UBoxComponent;
 class UItemPrimaryAssetKratosWeapon;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponInitialized);
+DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*);
 
 UCLASS()
 class RAGNAROK_API ARagnarokWeapon : public AActor
@@ -71,4 +72,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Weapon|Delegate")
 	FOnWeaponInitialized OnWeaponInitialized;
+
+	FOnTargetInteractedDelegate OnWeaponHitTarget;
+	FOnTargetInteractedDelegate OnWeaponPulledFromTarget;
 };

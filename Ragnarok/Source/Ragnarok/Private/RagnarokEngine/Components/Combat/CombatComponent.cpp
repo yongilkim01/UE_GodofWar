@@ -16,6 +16,9 @@ void UCombatComponent::RegisterSpawnWeapon(FGameplayTag InRegisterWeaponTag, ARa
 	
 	CharacterWeaponMap.Emplace(InRegisterWeaponTag, InRegisterWeapon);
 
+	InRegisterWeapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+	InRegisterWeapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+
 	if (true == bEquipWeapon)
 	{
 		CurrentEquippedWeaponTag = InRegisterWeaponTag;
@@ -76,4 +79,12 @@ void UCombatComponent::ToggleWeaponCollision(bool bCollisionEnable, EToggleDamag
 			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
+}
+
+void UCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+}
+
+void UCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+{
 }
