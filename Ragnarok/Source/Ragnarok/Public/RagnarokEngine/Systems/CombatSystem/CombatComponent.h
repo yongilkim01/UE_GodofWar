@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Components/RagnarokActorComponent.h"
+#include "RagnarokEngine/Core/Components/RagnarokActorComponent.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "GameplayTagContainer.h"
 #include "CombatComponent.generated.h"

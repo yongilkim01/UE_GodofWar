@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Animation/RagnarokAnimInstance.h"
+#include "RagnarokEngine/Core/Animation/RagnarokAnimInstance.h"
 #include "KratosLinkedAnimLayer.generated.h"
 
 class UKratosAnimInstance;

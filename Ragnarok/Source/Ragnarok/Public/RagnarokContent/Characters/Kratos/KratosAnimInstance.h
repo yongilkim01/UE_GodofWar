@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Animation/CharacterAnimInstance.h"
+#include "RagnarokEngine/Core/Animation/CharacterAnimInstance.h"
 #include "KratosAnimInstance.generated.h"
 
 class AKratos;

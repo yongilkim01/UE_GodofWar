@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
+#include "RagnarokEngine/Core/Items/Weapons/RagnarokWeapon.h"
 #include "EnemyWeapon.generated.h"
 
 /**

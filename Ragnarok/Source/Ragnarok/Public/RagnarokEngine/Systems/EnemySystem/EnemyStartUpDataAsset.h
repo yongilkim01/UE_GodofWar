@@ -4,14 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/Core/DataAssets/StartUpData/StartUpDataAsset.h"
-#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
-#include "KratosStartUpDataAsset.generated.h"
+#include "EnemyStartUpDataAsset.generated.h"
+
+class URagnarokAbilitySystemComponent;
+class UEnemyGameplayAbility;
 
 /**
  * 
  */
 UCLASS()
-class RAGNAROK_API UKratosStartUpDataAsset : public UStartUpDataAsset
+class RAGNAROK_API UEnemyStartUpDataAsset : public UStartUpDataAsset
 {
 	GENERATED_BODY()
 	
@@ -20,7 +22,6 @@ public:
 		URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel = 1) override;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Ragnarok|StartUpData", meta = (TitleProperty = "InputTag"))
-	TArray<FRagnarokbilitySet> KratosStartUpAbilitySetArray;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Ragnarok|StartUpData")
+	TArray<TSubclassOf<UEnemyGameplayAbility>> EnemyCombatAbilityArray;
 };

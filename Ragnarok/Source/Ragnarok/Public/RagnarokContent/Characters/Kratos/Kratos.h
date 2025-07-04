@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/GameFramework/RagnarokCharacter.h"
+#include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "GameplayTagContainer.h"
 #include "Kratos.generated.h"

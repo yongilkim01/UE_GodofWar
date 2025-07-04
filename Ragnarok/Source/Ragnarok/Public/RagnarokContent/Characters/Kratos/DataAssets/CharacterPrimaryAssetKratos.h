@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/DataAssets/RagnarokPrimaryDataAsset.h"
+#include "RagnarokEngine/Core/DataAssets/RagnarokPrimaryDataAsset.h"
 #include "CharacterPrimaryAssetKratos.generated.h"
 
 /**

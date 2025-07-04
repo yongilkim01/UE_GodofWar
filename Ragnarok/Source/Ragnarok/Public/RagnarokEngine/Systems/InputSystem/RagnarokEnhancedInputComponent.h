@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "RagnarokEngine/DataAssets/InputConfigDataAsset.h"
+#include "RagnarokEngine/Core/DataAssets/InputConfigDataAsset.h"
 #include "RagnarokEnhancedInputComponent.generated.h"
 
 class UInputConfigDataAsset;
