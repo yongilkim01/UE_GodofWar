@@ -11,9 +11,9 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
-#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 void UKratosUnEquipGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {

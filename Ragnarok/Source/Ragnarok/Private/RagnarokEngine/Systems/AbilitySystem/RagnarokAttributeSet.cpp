@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
 URagnarokAttributeSet::URagnarokAttributeSet()
 {

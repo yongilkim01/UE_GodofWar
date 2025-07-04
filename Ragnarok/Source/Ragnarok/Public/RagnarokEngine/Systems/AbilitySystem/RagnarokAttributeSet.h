@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \

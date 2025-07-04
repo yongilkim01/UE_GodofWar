@@ -5,7 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 
-#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 void USendGameplayEventAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)

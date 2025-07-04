@@ -4,7 +4,7 @@
 #include "RagnarokEngine/EnemySystem/EnemyCharacter.h"
 #include "RagnarokEngine/EnemySystem/EnemyCombatComponent.h"
 #include "RagnarokEngine/EnemySystem/EnemyStartUpDataAsset.h"
-#include "RagnarokEngine/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/DataAssets/StartUpData/StartUpDataAsset.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "GameFramework/CharacterMovementComponent.h"

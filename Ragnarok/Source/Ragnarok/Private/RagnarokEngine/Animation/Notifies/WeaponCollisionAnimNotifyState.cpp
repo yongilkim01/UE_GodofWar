@@ -2,8 +2,8 @@
 
 
 #include "RagnarokEngine/Animation/Notifies/WeaponCollisionAnimNotifyState.h"
-#include "RagnarokEngine/CombatSystem/CombatFunctionLibrary.h"
-#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/Systems/CombatSystem/CombatFunctionLibrary.h"
+#include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)

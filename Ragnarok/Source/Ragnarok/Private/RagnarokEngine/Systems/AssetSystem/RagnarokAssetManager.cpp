@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/DataAssets/PrimaryAssetIdDataTable.h"
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"

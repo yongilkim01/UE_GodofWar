@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Kratos/Weapons/LeviathanAxe.h"
 
-#include "RagnarokEngine/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 

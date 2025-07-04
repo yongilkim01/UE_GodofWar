@@ -5,7 +5,7 @@
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/GameItem/Weapon/RagnarokWeapon.h"
-#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
 USpawnWeaponGameplayAbility::USpawnWeaponGameplayAbility()
 {

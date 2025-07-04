@@ -3,8 +3,8 @@
 
 #include "RagnarokEngine/GameFramework/RagnarokCharacter.h"
 
-#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
 ARagnarokCharacter::ARagnarokCharacter()
 {

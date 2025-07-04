@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Components/Combat/CombatComponent.h"
+#include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "EnemyCombatComponent.generated.h"
 
 /**

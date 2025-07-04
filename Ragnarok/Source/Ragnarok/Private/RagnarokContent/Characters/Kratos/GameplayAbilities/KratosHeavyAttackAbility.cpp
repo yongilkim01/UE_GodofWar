@@ -8,7 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
-#include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {

@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/InputSystem/RagnarokEnhancedInputComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayEffect.h"
 
