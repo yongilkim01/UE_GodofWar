@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/Animation/Notifies/WeaponCollisionAnimNotifyState.h"
+#include "RagnarokEngine/Systems/CombatSystem/Notifies/WeaponCollisionAnimNotifyState.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatFunctionLibrary.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
