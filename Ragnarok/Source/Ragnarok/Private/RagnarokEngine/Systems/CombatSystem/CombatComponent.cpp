@@ -77,6 +77,7 @@ void UCombatComponent::ToggleWeaponCollision(bool bCollisionEnable, EToggleDamag
 		else
 		{
 			CurrentWeapon->GetWeaponCollision()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			OverlappedActorArray.Empty();
 		}
 	}
 }

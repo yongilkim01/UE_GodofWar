@@ -5,6 +5,9 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 
 AKratosWeapon* UKratosCombatComponent::GetKratosWeaponByTag(FGameplayTag InFindWeaponTag) const
 {
@@ -13,10 +16,27 @@ AKratosWeapon* UKratosCombatComponent::GetKratosWeaponByTag(FGameplayTag InFindW
 
 void UKratosCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-    Debug::Print(GetRagnarokOwner()->GetActorNameOrLabel() + TEXT(" hit ") + HitActor->GetActorNameOrLabel(), FColor::Green);
+
+    if (OverlappedActorArray.Contains(HitActor))
+    {
+        return;
+    }
+
+    OverlappedActorArray.AddUnique(HitActor);
+    
+    FGameplayEventData Data;
+    Data.Instigator = GetRagnarokOwner();
+    Data.Target = HitActor;
+
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        GetRagnarokOwner(),
+        CombatGameplayTags::Combat_Event_MeleeHit,
+        Data
+    );
+  
 }
 
 void UKratosCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
-    Debug::Print(GetRagnarokOwner()->GetActorNameOrLabel() + TEXT(" weapon pull ") + InteractedActor->GetActorNameOrLabel(), FColor::Green);
+    //Debug::Print(GetRagnarokOwner()->GetActorNameOrLabel() + TEXT(" weapon pull ") + InteractedActor->GetActorNameOrLabel(), FColor::Green);
 }

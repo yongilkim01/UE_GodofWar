@@ -40,6 +40,9 @@ public:
 private:
 	TMap<FGameplayTag, ARagnarokWeapon*> CharacterWeaponMap;
 
+protected:
+	TArray<AActor*> OverlappedActorArray;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Combat")
 	FGameplayTag CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;

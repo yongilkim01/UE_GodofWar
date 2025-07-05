@@ -6,6 +6,8 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
 #include "KratosLightAttackAbility.generated.h"
 
+class UAbilityTask_WaitGameplayEvent;
+
 /**
  * 
  */
@@ -42,7 +44,8 @@ private:
 	void OnMontageCancelled();
 	UFUNCTION()
 	void OnResetAttackComboCount();
-
+	UFUNCTION()
+	void OnGameplayEventReceived(FGameplayEventData Payload);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
@@ -50,6 +53,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	int32 CurComboCount = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	int32 UseComboCount = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	FGameplayTag JumpTag;
@@ -59,4 +65,5 @@ private:
 	bool PrevbUseControllerRotationYaw;
 	bool PrevbOrientRotationToMovement;
 	int AttackAbilityActiveCount;
+	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
 };

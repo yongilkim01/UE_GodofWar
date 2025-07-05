@@ -112,8 +112,6 @@ void UKratosUnEquipGameplayAbility::OnMontageCancelled()
 
 void UKratosUnEquipGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
-	Debug::Print(TEXT("UnEquip"));
-
 	AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(UnEquipWeaponTag));
 
 	USkeletalMeshComponent* ParentMesh = nullptr;

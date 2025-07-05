@@ -5,10 +5,12 @@
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -19,6 +21,8 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	CurrentActivationInfo = ActivationInfo;
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+	UseComboCount = CurComboCount;
 
 	if (true == URagnarokAbilityFunctionLibrary::HasActorGameplayTag(GetKratosFromActorInfo(), JumpTag))
 	{
@@ -35,6 +39,30 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		0.0f,
 		false
 	);
+
+	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		CombatGameplayTags::Combat_Event_MeleeHit,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != WaitEventTask)
+	{
+		WaitEventTask->EventReceived.AddDynamic(this, &UKratosHeavyAttackAbility::OnGameplayEventReceived);
+
+		if (true == WaitEventTask->EventReceived.IsBound())
+		{
+			Debug::Print(TEXT("HeavyAttack Delegate Binding Sucess"));
+		}
+		else
+		{
+			Debug::Print(TEXT("HeavyAttack Delegate Binding Failed"));
+		}
+
+		WaitEventTask->ReadyForActivation();
+	}
 
 	if (nullptr != GetKratosFromActorInfo())
 	{
@@ -116,5 +144,11 @@ void UKratosHeavyAttackAbility::OnResetAttackComboCount()
 {
 	CurComboCount = 1;
 	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
+
+}
+
+void UKratosHeavyAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
+{
+	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with heavy attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 
 }

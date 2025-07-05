@@ -5,10 +5,12 @@
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 
 void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -20,6 +22,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 
+	UseComboCount = CurComboCount;
+
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
@@ -30,6 +34,30 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		0.0f,
 		false
 	);
+
+	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		CombatGameplayTags::Combat_Event_MeleeHit,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != WaitEventTask)
+	{
+		WaitEventTask->EventReceived.AddDynamic(this, &UKratosLightAttackAbility::OnGameplayEventReceived);
+
+		if (true == WaitEventTask->EventReceived.IsBound())
+		{
+			Debug::Print(TEXT("LightAttack Delegate Binding Sucess"));
+		}
+		else
+		{
+			Debug::Print(TEXT("LightAttack Delegate Binding Failed"));
+		}
+
+		WaitEventTask->ReadyForActivation();
+	}
 
 	if (nullptr != GetKratosFromActorInfo())
 	{
@@ -71,6 +99,7 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 
 }
+
 void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -117,4 +146,9 @@ void UKratosLightAttackAbility::OnResetAttackComboCount()
 	CurComboCount = 1;
 	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
 	
+}
+
+void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
+{
+	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 }
