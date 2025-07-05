@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/Animation/Notifies/SendGameplayEventAnimNotify.h"
+#include "RagnarokEngine/Systems/AbilitySystem/Notifies/SendGameplayEventAnimNotify.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 

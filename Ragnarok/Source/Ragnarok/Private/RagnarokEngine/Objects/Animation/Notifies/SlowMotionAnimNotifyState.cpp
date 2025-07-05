@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/Animation/Notifies/SlowMotionAnimNotifyState.h"
+#include "RagnarokEngine/Objects/Animation/Notifies/SlowMotionAnimNotifyState.h"
 
 void USlowMotionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
 {
