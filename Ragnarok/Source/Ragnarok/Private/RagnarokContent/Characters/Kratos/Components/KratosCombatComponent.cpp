@@ -14,6 +14,17 @@ AKratosWeapon* UKratosCombatComponent::GetKratosWeaponByTag(FGameplayTag InFindW
     return Cast<AKratosWeapon>(GetCharacterWeaponByTag(InFindWeaponTag));
 }
 
+AKratosWeapon* UKratosCombatComponent::GetKratosEquippedWeapopn() const
+{
+    return GetKratosWeaponByTag(CurrentEquippedWeaponTag);
+
+}
+
+float UKratosCombatComponent::GetKratosEquippedWeaponDamageAtLevel(float Level) const
+{
+    return GetKratosEquippedWeapopn()->WeaponData.WeaponDamage.GetValueAtLevel(Level);
+}
+
 void UKratosCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
 

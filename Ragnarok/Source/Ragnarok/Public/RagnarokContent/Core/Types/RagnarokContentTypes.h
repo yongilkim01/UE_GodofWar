@@ -4,6 +4,7 @@
 
 #include "GameplayTagContainer.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
+#include "ScalableFloat.h"
 #include "RagnarokContentTypes.generated.h"
 
 class UKratosLinkedAnimLayer;
@@ -23,4 +24,6 @@ struct FKratosWeaponData
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputTag"))
 	TArray<FRagnarokbilitySet> WeaponAbilitySetArray;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FScalableFloat WeaponDamage;
 };

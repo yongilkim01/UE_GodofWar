@@ -20,6 +20,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Combat")
 	AKratosWeapon* GetKratosWeaponByTag(FGameplayTag InFindWeaponTag) const;
 
+	AKratosWeapon* GetKratosEquippedWeapopn() const;
+	float GetKratosEquippedWeaponDamageAtLevel(float Level) const;
+
 	virtual void OnHitTargetActor(AActor* HitActor) override;
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor) override;
 };

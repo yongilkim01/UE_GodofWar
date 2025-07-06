@@ -29,23 +29,27 @@ public:
 	FGameplayAttributeData CurrentHealth;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, CurrentHealth)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Health")
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, MaxHealth)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	UPROPERTY(BlueprintReadOnly, Category = "Rage")
 	FGameplayAttributeData CurrentRage;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, CurrentRage)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	UPROPERTY(BlueprintReadOnly, Category = "Rage")
 	FGameplayAttributeData MaxRage;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, MaxRage)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData AttackPower;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, AttackPower)
 
-		UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData DefensePower;
 	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, DefensePower)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	FGameplayAttributeData DamageTaken;
+	ATTRIBUTE_ACCESSORS(URagnarokAttributeSet, DamageTaken)
 };

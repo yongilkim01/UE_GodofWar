@@ -33,6 +33,12 @@ public:
 	AKratos* GetKratosFromActorInfo();
 	AKratosController* GetKratosControllerFromActorInfo();
 	UKratosCombatComponent* GetKratosCombatComponent();
+	FGameplayEffectSpecHandle CreateKratosDamageEffectSpecHandle(
+		TSubclassOf<UGameplayEffect> EffectClass,
+		float Damage,
+		FGameplayTag AttackTypeTag,
+		int32 ComboCount
+	);
 
 protected:
 	FGameplayAbilitySpecHandle CurrentSpecHandle;

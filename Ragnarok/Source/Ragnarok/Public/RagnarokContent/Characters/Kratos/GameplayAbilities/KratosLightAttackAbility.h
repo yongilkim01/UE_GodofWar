@@ -60,6 +60,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	FGameplayTag JumpTag;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	TSubclassOf<UGameplayEffect> EffectClass;
+
 private:
 	FTimerHandle TimerHandle;
 	bool PrevbUseControllerRotationYaw;

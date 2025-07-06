@@ -2,10 +2,12 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
-
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
 void UKratosGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -40,4 +42,29 @@ AKratosController* UKratosGameplayAbility::GetKratosControllerFromActorInfo()
 UKratosCombatComponent* UKratosGameplayAbility::GetKratosCombatComponent()
 {
 	return GetKratosFromActorInfo()->GetKratosCombatComponent();
+}
+
+FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float Damage, FGameplayTag AttackTypeTag, int32 ComboCount)
+{
+	check(EffectClass);
+
+	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle EffectSpecHandle = GetASCFromActorInfo()->MakeOutgoingSpec(
+		EffectClass,
+		GetAbilityLevel(),
+		ContextHandle
+	);
+
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(RagnarokGameplayTags::Global_SetByCaller_BaseDamage, Damage);
+
+	if (true == AttackTypeTag.IsValid())
+	{
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(AttackTypeTag, ComboCount);
+	}
+
+	return EffectSpecHandle;
 }

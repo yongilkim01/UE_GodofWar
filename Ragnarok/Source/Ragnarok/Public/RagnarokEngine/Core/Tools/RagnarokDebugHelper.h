@@ -31,4 +31,15 @@ namespace Debug
 			}
 		}
 	}
+
+	static void Print(const FString& FloatMsg, float Value, int32 InKey = -1, const FColor& DisplayColor = FColor::MakeRandomColor())
+	{
+		if (nullptr != GEngine)
+		{
+			const FString DisplayMsg = FloatMsg + TEXT(": ") + FString::SanitizeFloat(Value);
+			GEngine->AddOnScreenDebugMessage(InKey, 7.f, DisplayColor, DisplayMsg);
+			UE_LOG(RAGNAROK_LOG, Warning, TEXT("%s"), *DisplayMsg);
+
+		}
+	}
 }

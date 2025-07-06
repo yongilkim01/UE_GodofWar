@@ -7,6 +7,8 @@
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+
 void URagnarokGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -53,4 +55,18 @@ UCombatComponent* URagnarokGameplayAbility::GetCombatComponentFromActorInfo() co
 URagnarokAbilitySystemComponent* URagnarokGameplayAbility::GetASCFromActorInfo() const
 {
 	return Cast<URagnarokAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}
+
+FActiveGameplayEffectHandle URagnarokGameplayAbility::ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	check(nullptr != TargetASC && true == InSpecHandle.IsValid());
+
+	FActiveGameplayEffectHandle EffectHandle = GetASCFromActorInfo()->ApplyGameplayEffectSpecToTarget(
+		*InSpecHandle.Data,
+		TargetASC
+	);
+
+	return EffectHandle;
 }

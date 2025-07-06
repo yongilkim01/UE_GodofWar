@@ -3,6 +3,8 @@
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosLightAttackAbility.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -150,5 +152,17 @@ void UKratosLightAttackAbility::OnResetAttackComboCount()
 
 void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
+	float WeaponDamage = GetKratosCombatComponent()->GetKratosEquippedWeaponDamageAtLevel(GetAbilityLevel());
+
+	FGameplayEffectSpecHandle SpecHandle = CreateKratosDamageEffectSpecHandle(
+		EffectClass,
+		WeaponDamage,
+		KratosGameplayTags::Kratos_SetByCaller_AttackType_Light,
+		UseComboCount);
+
+	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
+
+	ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
 	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 }

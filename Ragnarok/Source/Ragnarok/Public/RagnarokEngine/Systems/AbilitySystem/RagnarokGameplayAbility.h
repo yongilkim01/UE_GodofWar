@@ -47,6 +47,7 @@ protected:
 
 	UCombatComponent* GetCombatComponentFromActorInfo() const;
 	URagnarokAbilitySystemComponent* GetASCFromActorInfo() const;
+	FActiveGameplayEffectHandle ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
