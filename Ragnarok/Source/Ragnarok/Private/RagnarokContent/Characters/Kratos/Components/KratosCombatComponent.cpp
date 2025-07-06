@@ -3,6 +3,7 @@
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
@@ -44,10 +45,20 @@ void UKratosCombatComponent::OnHitTargetActor(AActor* HitActor)
         CombatGameplayTags::Combat_Event_MeleeHit,
         Data
     );
+
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        GetRagnarokOwner(),
+        KratosGameplayTags::Kratos_Event_HitPause,
+        FGameplayEventData()
+    );
   
 }
 
 void UKratosCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
-    //Debug::Print(GetRagnarokOwner()->GetActorNameOrLabel() + TEXT(" weapon pull ") + InteractedActor->GetActorNameOrLabel(), FColor::Green);
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        GetRagnarokOwner(),
+        KratosGameplayTags::Kratos_Event_HitPause,
+        FGameplayEventData()
+    );
 }
