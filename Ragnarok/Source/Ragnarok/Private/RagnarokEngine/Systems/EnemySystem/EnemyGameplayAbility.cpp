@@ -10,6 +10,12 @@ void UEnemyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Han
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
+void UEnemyGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+}
+
 AEnemyCharacter* UEnemyGameplayAbility::GetEnemyCharacterFromActorInfo()
 {
     if (false == EnemyCharacter.IsValid())
