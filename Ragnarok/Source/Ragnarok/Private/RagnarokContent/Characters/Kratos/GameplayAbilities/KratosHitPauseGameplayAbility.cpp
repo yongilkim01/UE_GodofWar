@@ -2,6 +2,9 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosHitPauseGameplayAbility.h"
+#include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/Camera/KratosMeleeCameraShake.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void UKratosHitPauseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -13,22 +16,31 @@ void UKratosHitPauseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecH
         FGameplayTag EventTag = TriggerEventData->EventTag;
         float EventMagnitude = TriggerEventData->EventMagnitude;
 
-        if (nullptr != ActorInfo && true == ActorInfo->AvatarActor.IsValid())
+        CurrentActorInfo = ActorInfo;
+
+        if (nullptr != ActorInfo && ActorInfo->AvatarActor.IsValid())
         {
+            AKratosController* CurKratosController = GetKratosControllerFromActorInfo();
             UObject* WorldContextObject = ActorInfo->AvatarActor.Get();
+            TSubclassOf<UCameraShakeBase> LocalCameraShakeClass = CameraShakeClass;
+            FGameplayAbilitySpecHandle LocalHandle = Handle;
+            FGameplayAbilityActivationInfo LocalActivationInfo = ActivationInfo;
+            const FGameplayAbilityActorInfo* LocalActorInfo = ActorInfo;
+
             UGameplayStatics::SetGlobalTimeDilation(WorldContextObject, 0.1f);
 
             FTimerHandle TimerHandle;
             UWorld* World = WorldContextObject->GetWorld();
 
-            if (nullptr != World)
+            if (nullptr != World && CurKratosController)
             {
                 World->GetTimerManager().SetTimer(
                     TimerHandle,
-                    [this, Handle, ActorInfo, ActivationInfo, WorldContextObject]()
+                    [CurKratosController, WorldContextObject, LocalCameraShakeClass, LocalHandle, LocalActorInfo, LocalActivationInfo, this]()
                     {
                         UGameplayStatics::SetGlobalTimeDilation(WorldContextObject, 1.0f);
-                        EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+                        CurKratosController->ClientStartCameraShake(LocalCameraShakeClass);
+                        this->EndAbility(LocalHandle, LocalActorInfo, LocalActivationInfo, true, false);
                     },
                     0.01f,
                     false

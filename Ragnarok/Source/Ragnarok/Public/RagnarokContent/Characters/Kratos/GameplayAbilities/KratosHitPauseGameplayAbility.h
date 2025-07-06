@@ -6,6 +6,8 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
 #include "KratosHitPauseGameplayAbility.generated.h"
 
+class UKratosMeleeCameraShake;
+
 /**
  * 
  */
@@ -40,6 +42,10 @@ private:
 	void OnMontageInterrupted();
 	UFUNCTION()
 	void OnMontageCancelled();
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	TSubclassOf<UKratosMeleeCameraShake> CameraShakeClass;
 
 private:
 	const FGameplayAbilityActorInfo* HitPauseActorInfo = nullptr;
