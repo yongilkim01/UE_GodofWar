@@ -67,7 +67,7 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 		SourceAttackPower
 	);
 
-	Debug::Print(TEXT("Soure Attack Power"), SourceAttackPower);
+	//Debug::Print(TEXT("Soure Attack Power"), SourceAttackPower);
 
 	// GameAbility에서 전달한 무기의 기본 데미지를 계산
 
@@ -76,19 +76,19 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 		if (true == TagMagniture.Key.MatchesTagExact(RagnarokGameplayTags::Global_SetByCaller_BaseDamage))
 		{
 			Damage = TagMagniture.Value;
-			Debug::Print(TEXT("Damage"), Damage);
+			//Debug::Print(TEXT("Damage"), Damage);
 		}
 
 		if (TagMagniture.Key.MatchesTagExact(KratosGameplayTags::Kratos_SetByCaller_AttackType_Light))
 		{
 			LightAttackComboCount = TagMagniture.Value;
-			Debug::Print(TEXT("Light Attack Combo"), LightAttackComboCount);
+			//Debug::Print(TEXT("Light Attack Combo"), LightAttackComboCount);
 		}
 
 		if (TagMagniture.Key.MatchesTagExact(KratosGameplayTags::Kratos_SetByCaller_AttackType_Heavy))
 		{
 			HeavyAttackComboCount = TagMagniture.Value;
-			Debug::Print(TEXT("Heavy Attack Combo"), HeavyAttackComboCount);
+			//Debug::Print(TEXT("Heavy Attack Combo"), HeavyAttackComboCount);
 		}
 	}
 
@@ -98,27 +98,27 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 		TargetDefensePower
 	);
 
-	Debug::Print(TEXT("Target Defense Power"), TargetDefensePower);
+	//Debug::Print(TEXT("Target Defense Power"), TargetDefensePower);
 
 
 	if (0 != LightAttackComboCount)
 	{
 		const float IncreaseDamage = (LightAttackComboCount - 1) * 0.05f + 1.0f;
 		Damage *= IncreaseDamage;
-		Debug::Print(TEXT("Increase Light Attack Damage"), Damage);
+		//Debug::Print(TEXT("Increase Light Attack Damage"), Damage);
 
 	}
 
 	if (0 != HeavyAttackComboCount)
 	{
-		const float IncreaseDamage = (HeavyAttackComboCount - 1) * 0.15f + 1.0f;
-		Damage *= IncreaseDamage;
-		Debug::Print(TEXT("Increase Heavy Attack Damage"), Damage);
+		const float HeavyIncreaseDamage = HeavyAttackComboCount * 0.15f + 1.0f;
+		Damage *= HeavyIncreaseDamage;
+		//Debug::Print(TEXT("Increase Heavy Attack Damage"), Damage);
 	}
 
 	const float FinalDamage = Damage * SourceAttackPower / TargetDefensePower;
 
-	Debug::Print(TEXT("Final Attack Damage"), FinalDamage);
+	//Debug::Print(TEXT("Final Attack Damage"), FinalDamage);
 
 	if (FinalDamage > 0.0f)
 	{

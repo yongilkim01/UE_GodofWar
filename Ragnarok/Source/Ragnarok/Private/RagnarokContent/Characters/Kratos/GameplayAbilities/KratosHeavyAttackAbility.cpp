@@ -3,6 +3,8 @@
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosHeavyAttackAbility.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -149,6 +151,19 @@ void UKratosHeavyAttackAbility::OnResetAttackComboCount()
 
 void UKratosHeavyAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
+	float WeaponDamage = GetKratosCombatComponent()->GetKratosEquippedWeaponDamageAtLevel(GetAbilityLevel());
+
+	FGameplayEffectSpecHandle SpecHandle = CreateKratosDamageEffectSpecHandle(
+		EffectClass,
+		WeaponDamage,
+		KratosGameplayTags::Kratos_SetByCaller_AttackType_Heavy,
+		UseComboCount);
+
+	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
+
+	ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
 	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with heavy attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 
 }
+		

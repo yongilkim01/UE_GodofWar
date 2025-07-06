@@ -50,15 +50,14 @@ private:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
 	TMap<int, UAnimMontage*> HeavyAttackMontageMap;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
 	int32 CurComboCount = 1;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	int32 UseComboCount = 1;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	FGameplayTag JumpTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	TSubclassOf<UGameplayEffect> EffectClass;
 
 private:
 	FTimerHandle TimerHandle;
