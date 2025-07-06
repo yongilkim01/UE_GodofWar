@@ -18,6 +18,17 @@ class RAGNAROK_API UEnemyGameplayAbility : public URagnarokGameplayAbility
 	GENERATED_BODY()
 
 public:
+	//~ Begin UGameplayAbility Interface.
+
+	virtual void ActivateAbility(
+		const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo,
+		const FGameplayEventData* TriggerEventData) override;
+
+	//~ End UGameplayAbility Interface.
+
+public:
 	AEnemyCharacter* GetEnemyCharacterFromActorInfo();
 	UEnemyCombatComponent* GetEnemyCombatComponentFromActorInfo();
 

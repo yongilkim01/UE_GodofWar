@@ -5,6 +5,11 @@
 #include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
 #include "RagnarokEngine/Systems/EnemySystem/EnemyCombatComponent.h"
 
+void UEnemyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+    Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
+
 AEnemyCharacter* UEnemyGameplayAbility::GetEnemyCharacterFromActorInfo()
 {
     if (false == EnemyCharacter.IsValid())

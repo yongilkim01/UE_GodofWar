@@ -9,8 +9,10 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 
@@ -162,7 +164,12 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 
 	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
 
-	ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+	
+	if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
+	}
 
 	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 }
