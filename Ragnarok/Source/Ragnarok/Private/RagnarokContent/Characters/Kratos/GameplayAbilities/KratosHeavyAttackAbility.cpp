@@ -15,6 +15,7 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -164,6 +165,12 @@ void UKratosHeavyAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
 
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+	FGameplayCueParameters CueParams;
+	GetASCFromActorInfo()->ExecuteGameplayCue(
+		FGameplayTag::RequestGameplayTag(TEXT("GameplayCue.Sounds.MeleeHit.Axe")),
+		CueParams
+	);
 
 	if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
 	{
