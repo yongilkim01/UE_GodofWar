@@ -12,5 +12,8 @@ namespace RagnarokGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Global_SetByCaller_BaseDamage, "Global.SetByCaller.BaseDamage")
 	UE_DEFINE_GAMEPLAY_TAG(Global_Ability_HitReact, "Global.Ability.HitReact")
+	UE_DEFINE_GAMEPLAY_TAG(Global_Ability_Death, "Global.Ability.Death")
 	UE_DEFINE_GAMEPLAY_TAG(Global_Event_HitReact, "Global.Event.HitReact")
+
+	UE_DEFINE_GAMEPLAY_TAG(Global_State_Dead, "Global.State.Dead")
 }

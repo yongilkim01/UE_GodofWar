@@ -2,8 +2,10 @@
 
 
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
 URagnarokAttributeSet::URagnarokAttributeSet()
 {
@@ -48,5 +50,13 @@ void URagnarokAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCa
 		);
 
 		Debug::Print(DebugMsg, FColor::Green);
+
+		if (0.0f == CalcHealth)
+		{
+			URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
+				Data.Target.GetAvatarActor(),
+				RagnarokGameplayTags::Global_State_Dead
+			);
+		}
 	}
 }
