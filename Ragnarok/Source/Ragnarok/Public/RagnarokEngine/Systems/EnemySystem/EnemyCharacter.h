@@ -25,6 +25,7 @@ public:
 
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
+	virtual void Die() override;
 	//~ End ICombatInterface Interface.
 
 private:
@@ -33,6 +34,11 @@ private:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enmey")
 	UEnemyCombatComponent* EnemyCombatComponent = nullptr;
+
+private:
+	FTimerHandle DissolveTimerHandle;
+	float DissolveElapsed = 0.0f;
+	float DissolveDuration = 1.0f;
 
 public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }

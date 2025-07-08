@@ -11,6 +11,8 @@ void UEnemyDeathGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+    CurrentActorInfo = ActorInfo;
+
 	if (nullptr != TriggerEventData)
 	{
 		FGameplayTag EventTag = TriggerEventData->EventTag;
@@ -62,6 +64,7 @@ void UEnemyDeathGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
+    GetEnemyCharacterFromActorInfo()->Die();
 }
 
 void UEnemyDeathGameplayAbility::OnMontageCompleted()

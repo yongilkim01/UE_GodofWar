@@ -37,6 +37,7 @@ public:
 
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
+	virtual void Die() override;
 	//~ End ICombatInterface Interface.
 
 protected:

@@ -7,7 +7,10 @@
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "TimerManager.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -47,6 +50,47 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 UCombatComponent* AEnemyCharacter::GetCombatComponent() const
 {
 	return EnemyCombatComponent;
+}
+
+void AEnemyCharacter::Die()
+{
+	Super::Die();
+
+	if (nullptr != GetMesh())
+	{
+		GetMesh()->bPauseAnims = true;
+	}
+
+	if (nullptr != GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	if (nullptr != GetMesh())
+	{
+		DissolveElapsed = 0.0f;
+		GetWorld()->GetTimerManager().SetTimer(DissolveTimerHandle, [this]()
+			{
+				DissolveElapsed += GetWorld()->GetDeltaSeconds();
+				float Alpha = FMath::Clamp(DissolveElapsed / DissolveDuration, 0.0f, 1.0f);
+				GetMesh()->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
+				if (nullptr != GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
+				{
+					GetEnemyCombatComponent()->GetCurrentEquippedWeapon()->GetWeaponMesh()->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
+				}
+				if (Alpha >= 1.0f)
+				{
+					GetWorld()->GetTimerManager().ClearTimer(DissolveTimerHandle);
+					if (nullptr != GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
+					{
+						GetEnemyCombatComponent()->GetCurrentEquippedWeapon()->Destroy();
+					}
+					this->Destroy();
+
+				}
+			}, 0.01f, true);
+	}
+
 }
 
 void AEnemyCharacter::InitEnemyStartUpData()

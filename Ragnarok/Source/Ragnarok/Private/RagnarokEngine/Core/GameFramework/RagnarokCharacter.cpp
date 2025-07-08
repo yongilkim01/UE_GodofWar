@@ -57,3 +57,6 @@ UCombatComponent* ARagnarokCharacter::GetCombatComponent() const
 	return nullptr;
 }
 
+void ARagnarokCharacter::Die()
+{
+}
