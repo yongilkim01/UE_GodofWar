@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Core/Components/RagnarokActorComponent.h"
 #include "RagnarokUIComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangeDelegate, float, NewValue);
+
 /**
  * 
  */
@@ -14,4 +16,6 @@ class RAGNAROK_API URagnarokUIComponent : public URagnarokActorComponent
 {
 	GENERATED_BODY()
 	
+public:
+	FOnValueChangeDelegate OnCurrentHealthChanged;
 };

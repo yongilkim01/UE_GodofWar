@@ -62,6 +62,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Input")
 	UInputConfigDataAsset* InputConfigDA = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Kratos")
+	TSubclassOf<UUserWidget> KratosWidgetClass;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* MainCameraComponent = nullptr;

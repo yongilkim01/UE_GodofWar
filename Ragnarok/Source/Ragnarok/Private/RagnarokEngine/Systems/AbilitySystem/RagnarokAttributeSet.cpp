@@ -7,6 +7,11 @@
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
+#include "RagnarokEngine/Systems/UISystem/UIInterface.h"
+#include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
+
+#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
+
 URagnarokAttributeSet::URagnarokAttributeSet()
 {
 	InitCurrentHealth(1.0f);
@@ -19,18 +24,37 @@ URagnarokAttributeSet::URagnarokAttributeSet()
 
 void URagnarokAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
+	if (false == UIInterfacePtr.IsValid())
+	{
+		UIInterfacePtr = TWeakInterfacePtr<IUIInterface>(Data.Target.GetAvatarActor());
+	}
+
+	checkf(UIInterfacePtr.IsValid(), TEXT("Not implement IUIInterface"));
+
+	URagnarokUIComponent* UIComponent = UIInterfacePtr->GetUIComponent();
+
+	checkf(UIComponent, TEXT("Not implement URagnarokUIComponent"));
+
 	if (GetCurrentHealthAttribute() == Data.EvaluatedData.Attribute)
 	{
 		const float NewHealth = FMath::Clamp(GetCurrentHealth(), 0.0f, GetMaxHealth());
 
 		SetCurrentHealth(NewHealth);
+
+		UIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 	}
 
 	if (GetCurrentRageAttribute() == Data.EvaluatedData.Attribute)
 	{
 		const float NewRage = FMath::Clamp(GetCurrentRage(), 0.0f, GetMaxRage());
 
-		SetCurrentHealth(NewRage);
+		SetCurrentRage(NewRage);
+
+		if (UKratosUIComponent* KratosUIComponent = Cast<UKratosUIComponent>(UIComponent))
+		{
+			KratosUIComponent->OnCurrentRageChanged.Broadcast(GetCurrentRage() / GetMaxRage());
+		}
+
 	}
 
 	if (GetDamageTakenAttribute() == Data.EvaluatedData.Attribute)
@@ -44,12 +68,14 @@ void URagnarokAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCa
 		const FString DebugMsg = FString::Printf
 		(
 			TEXT("Old health : %f, Damage : %f, CalcHealth : %f"),
-			OldHealth, 
+			OldHealth,
 			Damage,
 			CalcHealth
 		);
 
 		Debug::Print(DebugMsg, FColor::Green);
+
+		UIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 
 		if (0.0f == CalcHealth)
 		{

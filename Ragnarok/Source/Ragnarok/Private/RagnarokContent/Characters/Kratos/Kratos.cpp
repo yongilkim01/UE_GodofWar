@@ -11,6 +11,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
@@ -58,6 +60,18 @@ void AKratos::BeginPlay()
 		PrimaryAssetDataDelegate);
 
 	LoadKratosDataAsset();
+
+
+	if (nullptr != KratosWidgetClass)
+	{
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+		UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PC, KratosWidgetClass);
+		if (WidgetInstance)
+		{
+			WidgetInstance->AddToViewport();
+		}
+	}
 }
 
 void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

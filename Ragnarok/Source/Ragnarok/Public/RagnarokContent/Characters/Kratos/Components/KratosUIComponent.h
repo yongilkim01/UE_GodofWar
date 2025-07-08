@@ -13,5 +13,8 @@ UCLASS()
 class RAGNAROK_API UKratosUIComponent : public URagnarokUIComponent
 {
 	GENERATED_BODY()
+
+public:
+	FOnValueChangeDelegate OnCurrentRageChanged;
 	
 };
