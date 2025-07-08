@@ -3,10 +3,10 @@
 
 #include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
 #include "RagnarokEngine/Systems/EnemySystem/EnemyCombatComponent.h"
+#include "RagnarokEngine/Systems/EnemySystem/EnemyUIComponent.h"
 #include "RagnarokEngine/Systems/EnemySystem/EnemyStartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
-#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -31,6 +31,7 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.0f;
 
 	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
+	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
 
 }
 
@@ -119,6 +120,11 @@ void AEnemyCharacter::Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect)
 			}
 		}
 	);
+}
+
+URagnarokUIComponent* AEnemyCharacter::GetUIComponent() const
+{
+	return EnemyUIComponent;
 }
 
 void AEnemyCharacter::InitEnemyStartUpData()

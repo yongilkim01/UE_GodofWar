@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatInterface.h"
+#include "RagnarokEngine/Systems/UISystem/UIInterface.h"
 #include "RagnarokCharacter.generated.h"
 
 class URagnarokAbilitySystemComponent;
@@ -13,7 +14,7 @@ class URagnarokAttributeSet;
 class UStartUpDataAsset;
 
 UCLASS()
-class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
+class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface, public IUIInterface
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,10 @@ public:
 	virtual UCombatComponent* GetCombatComponent() const override;
 	virtual void Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect) override;
 	//~ End ICombatInterface Interface.
+	
+	//~ Begin IUIInterface Interface.
+	virtual URagnarokUIComponent* GetUIComponent() const override;
+	//~ End IUIInterface Interface.
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")

@@ -60,3 +60,8 @@ UCombatComponent* ARagnarokCharacter::GetCombatComponent() const
 void ARagnarokCharacter::Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect)
 {
 }
+
+URagnarokUIComponent* ARagnarokCharacter::GetUIComponent() const
+{
+	return nullptr;
+}

@@ -23,6 +23,7 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
 
@@ -39,6 +40,7 @@ AKratos::AKratos()
 	MainCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 
 	KratosCombatComponent = CreateDefaultSubobject<UKratosCombatComponent>(TEXT("KratosCombat"));
+	KratosUIComponent = CreateDefaultSubobject<UKratosUIComponent>(TEXT("KratosUI"));
 }
 
 void AKratos::BeginPlay()
@@ -123,6 +125,11 @@ void AKratos::PossessedBy(AController* NewController)
 UCombatComponent* AKratos::GetCombatComponent() const
 {
 	return KratosCombatComponent;
+}
+
+URagnarokUIComponent* AKratos::GetUIComponent() const
+{
+	return KratosUIComponent;
 }
 
 void AKratos::LoadKratosDataAsset()

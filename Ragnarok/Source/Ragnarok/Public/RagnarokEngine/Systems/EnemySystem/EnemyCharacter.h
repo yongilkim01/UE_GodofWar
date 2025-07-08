@@ -7,7 +7,7 @@
 #include "EnemyCharacter.generated.h"
 
 class UEnemyCombatComponent;
-//class UNiagaraSystem;
+class UEnemyUIComponent;
 
 /**
  * 
@@ -29,6 +29,10 @@ public:
 	virtual void Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect) override;
 	//~ End ICombatInterface Interface.
 
+	//~ Begin IUIInterface Interface.
+	virtual URagnarokUIComponent* GetUIComponent() const override;
+	//~ End IUIInterface Interface.
+
 private:
 	void InitEnemyStartUpData();
 
@@ -36,8 +40,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enmey")
 	UEnemyCombatComponent* EnemyCombatComponent = nullptr;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enemy")
-	//UNiagaraSystem* EnemyNiagaraSystem = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enmey")
+	UEnemyUIComponent* EnemyUIComponent = nullptr;
 
 private:
 	FTimerHandle DissolveTimerHandle;

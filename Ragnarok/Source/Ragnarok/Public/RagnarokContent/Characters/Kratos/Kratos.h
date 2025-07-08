@@ -15,7 +15,7 @@ class UCharacterPrimaryAssetKratos;
 class UInputConfigDataAsset;
 class UInputComponent;
 class UKratosCombatComponent;
-
+class UKratosUIComponent;
 
 struct FInputActionValue;
 
@@ -42,6 +42,10 @@ protected:
 	virtual UCombatComponent* GetCombatComponent() const override;
 	//~ End ICombatInterface Interface.
 
+	//~ Begin IUIInterface Interface.
+	virtual URagnarokUIComponent* GetUIComponent() const override;
+	//~ End IUIInterface Interface.
+
 private:
 	void LoadKratosDataAsset();
 	void InitPrimaryData(UObject* PDAObject);
@@ -67,6 +71,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
 	UKratosCombatComponent* KratosCombatComponent = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
+	UKratosUIComponent* KratosUIComponent = nullptr;
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
