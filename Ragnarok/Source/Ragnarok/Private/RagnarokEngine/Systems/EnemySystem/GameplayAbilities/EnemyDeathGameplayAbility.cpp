@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 void UEnemyDeathGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -64,7 +66,7 @@ void UEnemyDeathGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-    GetEnemyCharacterFromActorInfo()->Die();
+    GetEnemyCharacterFromActorInfo()->Die(DeathNiagaraEffect);
 }
 
 void UEnemyDeathGameplayAbility::OnMontageCompleted()

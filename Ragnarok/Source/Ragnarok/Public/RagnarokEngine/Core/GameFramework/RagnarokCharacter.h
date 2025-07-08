@@ -37,7 +37,7 @@ public:
 
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
-	virtual void Die() override;
+	virtual void Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect) override;
 	//~ End ICombatInterface Interface.
 
 protected:

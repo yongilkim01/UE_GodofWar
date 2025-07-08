@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Systems/EnemySystem/EnemyGameplayAbility.h"
 #include "EnemyDeathGameplayAbility.generated.h"
 
+class UNiagaraSystem;
+
 /**
  * 
  */
@@ -44,6 +46,9 @@ private:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	TArray<UAnimMontage*> AnimMontageArray;
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect;
 
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	bool bHasDeathMontageToPlay = true;

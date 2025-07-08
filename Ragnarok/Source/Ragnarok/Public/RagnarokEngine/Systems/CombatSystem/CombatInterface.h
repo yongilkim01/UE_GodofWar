@@ -7,6 +7,7 @@
 #include "CombatInterface.generated.h"
 
 class UCombatComponent;
+class UNiagaraSystem;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -25,5 +26,5 @@ class RAGNAROK_API ICombatInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual UCombatComponent* GetCombatComponent() const = 0;
-	virtual void Die() = 0;
+	virtual void Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect) = 0;
 };
