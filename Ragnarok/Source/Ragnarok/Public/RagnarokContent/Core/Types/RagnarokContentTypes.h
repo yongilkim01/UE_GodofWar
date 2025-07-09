@@ -26,4 +26,7 @@ struct FKratosWeaponData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FScalableFloat WeaponDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UTexture2D> WeaponIconTextureSoftPtr;
 };

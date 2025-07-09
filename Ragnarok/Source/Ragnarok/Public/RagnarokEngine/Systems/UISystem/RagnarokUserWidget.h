@@ -7,6 +7,7 @@
 #include "RagnarokUserWidget.generated.h"
 
 class UKratosUIComponent;
+class UEnemyUIComponent;
 
 /**
  * 
@@ -19,13 +20,19 @@ class RAGNAROK_API URagnarokUserWidget : public UUserWidget
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UFUNCTION()
-	void OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
+	//UFUNCTION()
+	//void OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
 
-	//UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Kratos UI Component Initialize"))
-	//void BP_OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
+	//UFUNCTION()
+	//void OnEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Kratos UI Component Initialize"))
+	void BP_OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Enemy UI Component Initialize"))
+	void BP_OnEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent);
 
 public:
 	UFUNCTION()
-	void TestBind(float CurrentHealth);
+	void InitEnemyCreatedWidet(AActor* EnemyActor);
 };

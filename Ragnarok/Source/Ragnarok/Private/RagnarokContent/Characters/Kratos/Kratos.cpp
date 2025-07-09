@@ -62,16 +62,16 @@ void AKratos::BeginPlay()
 	LoadKratosDataAsset();
 
 
-	if (nullptr != KratosWidgetClass)
-	{
-		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//if (nullptr != KratosWidgetClass)
+	//{
+	//	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
-		UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PC, KratosWidgetClass);
-		if (WidgetInstance)
-		{
-			WidgetInstance->AddToViewport();
-		}
-	}
+	//	UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PC, KratosWidgetClass);
+	//	if (WidgetInstance)
+	//	{
+	//		WidgetInstance->AddToViewport();
+	//	}
+	//}
 }
 
 void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

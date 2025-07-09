@@ -29,6 +29,10 @@ class RAGNAROK_API AKratos : public ARagnarokCharacter
 
 public:
 	AKratos();
+
+	//~ Begin IUIInterface Interface.
+	virtual URagnarokUIComponent* GetUIComponent() const override;
+	//~ End IUIInterface Interface.
 	
 protected:
 	virtual void BeginPlay() override;
@@ -41,10 +45,6 @@ protected:
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
 	//~ End ICombatInterface Interface.
-
-	//~ Begin IUIInterface Interface.
-	virtual URagnarokUIComponent* GetUIComponent() const override;
-	//~ End IUIInterface Interface.
 
 private:
 	void LoadKratosDataAsset();
@@ -61,9 +61,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|Input")
 	UInputConfigDataAsset* InputConfigDA = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Kratos")
-	TSubclassOf<UUserWidget> KratosWidgetClass;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))

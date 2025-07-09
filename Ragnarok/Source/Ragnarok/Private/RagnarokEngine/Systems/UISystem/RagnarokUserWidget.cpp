@@ -6,6 +6,7 @@
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Systems/EnemySystem/EnemyUIComponent.h"
 
 void URagnarokUserWidget::NativeOnInitialized()
 {
@@ -15,17 +16,28 @@ void URagnarokUserWidget::NativeOnInitialized()
 	{
 		if (UKratosUIComponent* KratosUIComponent = Cast<UKratosUIComponent>(UIInterface->GetUIComponent()))
 		{
-			OnKratosUIComponentInitialized(KratosUIComponent);
+			BP_OnKratosUIComponentInitialized(KratosUIComponent);
 		}
 	}
 }
 
-void URagnarokUserWidget::OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent)
-{
-	KratosUIComponent->OnCurrentHealthChanged.AddDynamic(this, &URagnarokUserWidget::TestBind);
-}
+//void URagnarokUserWidget::OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent)
+//{
+//	//KratosUIComponent->OnCurrentHealthChanged.AddDynamic(this, &URagnarokUserWidget::TestBind);
+//}
+//
+//void URagnarokUserWidget::OnEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent)
+//{
+//	//EnemyUIComponent->OnCurrentHealthChanged.AddDynamic(this, &URagnarokUserWidget::TestBind);
+//}
 
-void URagnarokUserWidget::TestBind(float CurrentHealth)
+void URagnarokUserWidget::InitEnemyCreatedWidet(AActor* EnemyActor)
 {
-	Debug::Print(TEXT("Test Bind"));
+	if (IUIInterface* UIInterface = Cast<IUIInterface>(EnemyActor))
+	{
+		if (UEnemyUIComponent* EnemyUIComponent = Cast<UEnemyUIComponent>(UIInterface->GetUIComponent()))
+		{
+			BP_OnEnemyUIComponentInitialized(EnemyUIComponent);
+		}
+	}
 }

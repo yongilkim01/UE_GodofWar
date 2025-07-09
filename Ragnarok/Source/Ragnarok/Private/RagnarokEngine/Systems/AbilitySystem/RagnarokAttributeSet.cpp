@@ -41,6 +41,8 @@ void URagnarokAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCa
 
 		SetCurrentHealth(NewHealth);
 
+		float Test = GetCurrentHealth() / GetMaxHealth();
+
 		UIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 	}
 

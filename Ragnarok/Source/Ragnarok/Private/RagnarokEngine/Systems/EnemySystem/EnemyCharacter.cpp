@@ -7,14 +7,21 @@
 #include "RagnarokEngine/Systems/EnemySystem/EnemyStartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
+#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "TimerManager.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+
+#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -32,12 +39,21 @@ AEnemyCharacter::AEnemyCharacter()
 
 	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
 	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
+	EnemyWidgetComponent = CreateDefaultSubobject< UWidgetComponent>(TEXT("EnemyWidgetComponent"));
+	EnemyWidgetComponent->SetupAttachment(GetMesh());
 
 }
 
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	URagnarokUserWidget* EnemyHealthWidget = Cast<URagnarokUserWidget>(EnemyWidgetComponent->GetUserWidgetObject());
+
+	if (nullptr != EnemyHealthWidget)
+	{
+		EnemyHealthWidget->InitEnemyCreatedWidet(this);
+	}
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
@@ -61,66 +77,113 @@ void AEnemyCharacter::Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect)
 {
 	Super::Die(DeathNiagaraEffect);
 
-	if (nullptr != GetMesh())
+	if (USkeletalMeshComponent* EnemyMesh = GetMesh())
 	{
-		GetMesh()->bPauseAnims = true;
+		EnemyMesh->bPauseAnims = true;
 	}
 
-	if (nullptr != GetCapsuleComponent())
+	if (UCapsuleComponent* Capsule = GetCapsuleComponent())
 	{
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	FStreamableManager& StreamableManager = URagnarokAssetManager::GetStreamableManager();
-	USkeletalMeshComponent* MeshComp = GetMesh();
+	TWeakObjectPtr<AEnemyCharacter> WeakThis(this);
+	TWeakObjectPtr<USkeletalMeshComponent> WeakMesh(GetMesh());
 
 	StreamableManager.RequestAsyncLoad(
 		DeathNiagaraEffect.ToSoftObjectPath(),
-		[DeathNiagaraEffect, MeshComp, this]()
+		[WeakThis, WeakMesh, DeathNiagaraEffect]()
 		{
-			UNiagaraSystem* DeathNiagaraSystem = DeathNiagaraEffect.Get();
-			if (nullptr != DeathNiagaraSystem && nullptr != MeshComp)
+			if (!WeakThis.IsValid() || !WeakMesh.IsValid())
 			{
-				UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
-					DeathNiagaraSystem,
-					MeshComp,
-					NAME_None,
-					FVector::ZeroVector,
-					FRotator::ZeroRotator,
-					EAttachLocation::KeepRelativeOffset,
-					true,
+				return;
+			}
+
+			AEnemyCharacter* Enemy = WeakThis.Get();
+			USkeletalMeshComponent* MeshComp = WeakMesh.Get();
+			UNiagaraSystem* NiagaraSystem = DeathNiagaraEffect.Get();
+
+			if (!NiagaraSystem || !MeshComp)
+			{
+				return;
+			}
+
+			UNiagaraComponent* NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				NiagaraSystem,
+				MeshComp,
+				NAME_None,
+				FVector::ZeroVector,
+				FRotator::ZeroRotator,
+				EAttachLocation::KeepRelativeOffset,
+				true,
+				true
+			);
+
+			if (NiagaraComponent)
+			{
+				UMaterialInstanceDynamic* DynMat = MeshComp->CreateDynamicMaterialInstance(0, MeshComp->GetMaterial(0));
+				if (DynMat)
+				{
+					FLinearColor Color;
+					DynMat->GetVectorParameterValue(TEXT("DissolveEdgeColor"), Color);
+					NiagaraComponent->SetNiagaraVariableLinearColor(TEXT("DissolveParticleColor"), Color);
+				}
+			}
+
+			if (UWorld* World = Enemy->GetWorld())
+			{
+				Enemy->DissolveElapsed = 0.0f;
+
+				World->GetTimerManager().SetTimer(
+					Enemy->DissolveTimerHandle,
+					[WeakThis]()
+					{
+						if (!WeakThis.IsValid())
+						{
+							return;
+						}
+
+						AEnemyCharacter* Self = WeakThis.Get();
+						if (UWorld* InnerWorld = Self->GetWorld())
+						{
+							Self->DissolveElapsed += InnerWorld->GetDeltaSeconds();
+							float Alpha = FMath::Clamp(Self->DissolveElapsed / Self->DissolveDuration, 0.0f, 1.0f);
+
+							if (USkeletalMeshComponent* Mesh = Self->GetMesh())
+							{
+								Mesh->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
+							}
+
+							if (ARagnarokWeapon* Weapon = Self->GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
+							{
+								if (USkeletalMeshComponent* WeaponMesh = Weapon->GetWeaponMesh())
+								{
+									WeaponMesh->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
+								}
+							}
+
+							if (Alpha >= 1.0f)
+							{
+								InnerWorld->GetTimerManager().ClearTimer(Self->DissolveTimerHandle);
+
+								if (ARagnarokWeapon* Weapon = Self->GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
+								{
+									Weapon->Destroy();
+								}
+
+								Self->Destroy();
+							}
+						}
+					},
+					0.05f,
 					true
 				);
-				UMaterialInstanceDynamic* InstanceDynamic = MeshComp->CreateDynamicMaterialInstance(0, MeshComp->GetMaterial(0));
-				FLinearColor LinearColor;
-				InstanceDynamic->GetVectorParameterValue(TEXT("DissolveEdgeColor"), LinearColor);
-				NiagaraComponent->SetNiagaraVariableLinearColor(TEXT("DissolveParticleColor"), LinearColor);
-
-				DissolveElapsed = 0.0f;
-				GetWorld()->GetTimerManager().SetTimer(DissolveTimerHandle, [this]()
-					{
-						DissolveElapsed += GetWorld()->GetDeltaSeconds();
-						float Alpha = FMath::Clamp(DissolveElapsed / DissolveDuration, 0.0f, 1.0f);
-						GetMesh()->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
-						if (nullptr != GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
-						{
-							GetEnemyCombatComponent()->GetCurrentEquippedWeapon()->GetWeaponMesh()->SetScalarParameterValueOnMaterials(TEXT("DissolveAmount"), Alpha);
-						}
-						if (Alpha >= 1.0f)
-						{
-							GetWorld()->GetTimerManager().ClearTimer(DissolveTimerHandle);
-							if (nullptr != GetEnemyCombatComponent()->GetCurrentEquippedWeapon())
-							{
-								GetEnemyCombatComponent()->GetCurrentEquippedWeapon()->Destroy();
-							}
-							this->Destroy();
-
-						}
-					}, 0.05f, true);
 			}
 		}
 	);
 }
+
 
 URagnarokUIComponent* AEnemyCharacter::GetUIComponent() const
 {

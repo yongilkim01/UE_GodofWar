@@ -5,6 +5,8 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -155,6 +157,15 @@ void UKratosUnEquipGameplayAbility::OnGameplayEventReceived(FGameplayEventData P
 
 	{
 		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
+	}
+
+	{
+		UKratosUIComponent* KratosUIComponent = Cast<UKratosUIComponent>(GetKratosFromActorInfo()->GetUIComponent());
+
+		if (nullptr != KratosUIComponent)
+		{
+			KratosUIComponent->OnEquippedWeaponChanged.Broadcast(nullptr);
+		}
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

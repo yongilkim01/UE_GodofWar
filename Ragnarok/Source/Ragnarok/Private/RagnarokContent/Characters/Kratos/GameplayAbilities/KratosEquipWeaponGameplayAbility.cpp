@@ -5,6 +5,8 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "GameplayAbilitySpecHandle.h"
@@ -15,6 +17,7 @@
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
 
 void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -168,6 +171,14 @@ void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventDa
 	}
 	{
 		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = EquipWeaponTag;
+	}
+	{
+		UKratosUIComponent* KratosUIComponent = Cast<UKratosUIComponent>(GetKratosFromActorInfo()->GetUIComponent());
+
+		if (nullptr != KratosUIComponent)
+		{
+			KratosUIComponent->OnEquippedWeaponChanged.Broadcast(KratosWeapon->WeaponData.WeaponIconTextureSoftPtr);
+		}
 	}
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

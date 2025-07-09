@@ -8,6 +8,7 @@
 
 class UEnemyCombatComponent;
 class UEnemyUIComponent;
+class UWidgetComponent;
 
 /**
  * 
@@ -42,6 +43,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enmey")
 	UEnemyUIComponent* EnemyUIComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Enemy")
+	UWidgetComponent* EnemyWidgetComponent = nullptr;
 
 private:
 	FTimerHandle DissolveTimerHandle;

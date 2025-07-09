@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
 #include "KratosUIComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEquippedWeaponChangedDelegate, TSoftObjectPtr<UTexture2D>, WeaponIconSoftPtr);
+
 /**
  * 
  */
@@ -15,6 +17,8 @@ class RAGNAROK_API UKratosUIComponent : public URagnarokUIComponent
 	GENERATED_BODY()
 
 public:
-	FOnValueChangeDelegate OnCurrentRageChanged;
-	
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangedDelegate OnCurrentRageChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnEquippedWeaponChangedDelegate OnEquippedWeaponChanged;
 };
