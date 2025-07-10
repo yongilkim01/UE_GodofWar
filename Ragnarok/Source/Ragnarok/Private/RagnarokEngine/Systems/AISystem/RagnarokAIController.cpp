@@ -1,0 +1,21 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "RagnarokEngine/Systems/AISystem/RagnarokAIController.h"
+#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+
+#include "Navigation/CrowdFollowingComponent.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+
+ARagnarokAIController::ARagnarokAIController(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
+{
+	UCrowdFollowingComponent* CFComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
+
+	if (nullptr != CFComponent)
+	{
+		Debug::Print(TEXT("Crowd Following component is valid"), FColor::Green);
+	}
+
+}
