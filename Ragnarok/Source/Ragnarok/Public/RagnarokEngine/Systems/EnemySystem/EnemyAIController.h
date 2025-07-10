@@ -17,6 +17,8 @@ class RAGNAROK_API AEnemyAIController : public ARagnarokAIController
 public:
 	AEnemyAIController(const FObjectInitializer& ObjectInitializer);
 
+	virtual void BeginPlay() override;
+
 	//~ Begin IGenericTeamAgentInterface Interface.
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	//~ End IGenericTeamAgentInterface Interface.

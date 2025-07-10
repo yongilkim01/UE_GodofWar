@@ -29,6 +29,32 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 	SetGenericTeamId(FGenericTeamId(1));
 }
 
+void AEnemyAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
+
+	if (nullptr != CrowdFollowingComponent)
+	{
+		CrowdFollowingComponent->SetCrowdSimulationState(bEnableDetourCrowdAvoidance ? ECrowdSimulationState::Enabled : ECrowdSimulationState::Disabled);
+		
+		switch (DetourCrowdAvoidanceQuality)
+		{
+		case 1: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Low);    break;
+		case 2: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Medium); break;
+		case 3: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good);   break;
+		case 4: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::High);   break;
+		default: break;
+		}
+
+		CrowdFollowingComponent->SetAvoidanceGroup(1);
+		CrowdFollowingComponent->SetGroupsToAvoid(1);
+		CrowdFollowingComponent->SetCrowdCollisionQueryRange(CrowdCollisionQueryRange);
+	}
+
+}
+
 ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
 	const APawn* PawnToCheck = Cast<const APawn>(&Other);

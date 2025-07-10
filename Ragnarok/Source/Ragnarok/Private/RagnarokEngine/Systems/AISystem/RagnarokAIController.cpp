@@ -11,11 +11,5 @@
 ARagnarokAIController::ARagnarokAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
 {
-	UCrowdFollowingComponent* CFComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
-
-	if (nullptr != CFComponent)
-	{
-		//Debug::Print(TEXT("Crowd Following component is valid"), FColor::Green);
-	}
 
 }
