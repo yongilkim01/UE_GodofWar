@@ -7,6 +7,7 @@
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
@@ -24,8 +25,43 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 	AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
 	AIPerceptionComponent->SetDominantSense(UAISenseConfig_Sight::StaticClass());
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &AEnemyAIController::OnEnemyPerceptionUpdated);
+
+	SetGenericTeamId(FGenericTeamId(1));
+}
+
+ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	const APawn* PawnToCheck = Cast<const APawn>(&Other);
+	
+	const IGenericTeamAgentInterface* TeamAgent = Cast<const IGenericTeamAgentInterface>(PawnToCheck->GetController());
+
+	if (nullptr != TeamAgent && GetGenericTeamId() != TeamAgent->GetGenericTeamId())
+	{
+		// 팀 아이디가 서로 다르다면 적대 관계를 반환.
+		return ETeamAttitude::Hostile;
+	}
+
+	// 적대 관계가 아니라면 같은 진영 관계를 반환.
+	return ETeamAttitude::Friendly;
+}
+
+void AEnemyAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if (nullptr != BehaviorTree)
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
 }
 
 void AEnemyAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	if (true == Stimulus.WasSuccessfullySensed() && nullptr != Actor)
+	{
+		if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
+		{
+			BlackboardComponent->SetValueAsObject(FName("TargetActor"), Actor);
+		}
+	}
 }

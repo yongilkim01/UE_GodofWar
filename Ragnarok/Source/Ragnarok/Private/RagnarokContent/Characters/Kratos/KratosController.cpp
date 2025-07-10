@@ -3,3 +3,13 @@
 
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+
+AKratosController::AKratosController()
+{
+	KratosTeamID = FGenericTeamId(0);
+}
+
+FGenericTeamId AKratosController::GetGenericTeamId() const
+{
+	return KratosTeamID;
+}

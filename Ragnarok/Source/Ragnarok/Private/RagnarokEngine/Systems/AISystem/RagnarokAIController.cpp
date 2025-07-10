@@ -15,7 +15,7 @@ ARagnarokAIController::ARagnarokAIController(const FObjectInitializer& ObjectIni
 
 	if (nullptr != CFComponent)
 	{
-		Debug::Print(TEXT("Crowd Following component is valid"), FColor::Green);
+		//Debug::Print(TEXT("Crowd Following component is valid"), FColor::Green);
 	}
 
 }
