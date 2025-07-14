@@ -8,6 +8,8 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 
 AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
@@ -78,6 +80,12 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	if (nullptr != BehaviorTree)
 	{
 		RunBehaviorTree(BehaviorTree);
+
+		if (ACharacter* InCharacter = Cast<ACharacter>(InPawn))
+		{
+			GetBlackboardComponent()->SetValueAsFloat(FName("DefaultMaxWalkSpeed"), InCharacter->GetCharacterMovement()->MaxWalkSpeed);
+
+		}
 	}
 }
 
