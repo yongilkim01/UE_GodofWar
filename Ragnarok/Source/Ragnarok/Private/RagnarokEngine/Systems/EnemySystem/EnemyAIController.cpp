@@ -61,7 +61,7 @@ ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Oth
 	
 	const IGenericTeamAgentInterface* TeamAgent = Cast<const IGenericTeamAgentInterface>(PawnToCheck->GetController());
 
-	if (nullptr != TeamAgent && GetGenericTeamId() != TeamAgent->GetGenericTeamId())
+	if (nullptr != TeamAgent && GetGenericTeamId() > TeamAgent->GetGenericTeamId())
 	{
 		// 팀 아이디가 서로 다르다면 적대 관계를 반환.
 		return ETeamAttitude::Hostile;
@@ -83,11 +83,14 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 
 void AEnemyAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (true == Stimulus.WasSuccessfullySensed() && nullptr != Actor)
+	if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
 	{
-		if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
+		if (nullptr == BlackboardComponent->GetValueAsObject("TargetActor"))
 		{
-			BlackboardComponent->SetValueAsObject(FName("TargetActor"), Actor);
+			if (true == Stimulus.WasSuccessfullySensed() && nullptr != Actor)
+			{
+				BlackboardComponent->SetValueAsObject(FName("TargetActor"), Actor);
+			}
 		}
 	}
 }
