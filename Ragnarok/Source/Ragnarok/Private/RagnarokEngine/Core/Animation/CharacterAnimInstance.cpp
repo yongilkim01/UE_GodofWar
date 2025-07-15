@@ -4,6 +4,7 @@
 #include "RagnarokEngine/Core/Animation/CharacterAnimInstance.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "KismetAnimationLibrary.h"
 
 #include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
 
@@ -27,4 +28,7 @@ void UCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	GroundSpeed = OwnerCharacter->GetVelocity().Size2D();
 
 	bAcceleration = OwnerCharacterMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.0f;
+
+	LocomotionDirection =  UKismetAnimationLibrary::CalculateDirection(OwnerCharacter->GetVelocity(), OwnerCharacter->GetActorRotation());
+
 }

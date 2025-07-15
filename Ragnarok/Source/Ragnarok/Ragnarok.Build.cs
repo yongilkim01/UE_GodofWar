@@ -16,7 +16,8 @@ public class Ragnarok : ModuleRules
 			"EnhancedInput",
 			"GameplayTags",
 			"GameplayTasks",
-            "Niagara"
+            "Niagara",
+            "AnimGraphRuntime"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

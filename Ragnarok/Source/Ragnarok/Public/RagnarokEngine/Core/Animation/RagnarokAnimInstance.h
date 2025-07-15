@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "GameplayTagContainer.h"
 #include "RagnarokAnimInstance.generated.h"
 
 /**
@@ -13,5 +14,9 @@ UCLASS()
 class RAGNAROK_API URagnarokAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
+
+protected:
+	UFUNCTION(BlueprintPure, meta = (BlueprintThreadSafe))
+	bool IsOwnerHaveTag(FGameplayTag FindGameplayTag) const;
 	
 };
