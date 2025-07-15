@@ -29,4 +29,7 @@ public:
 	void RemoveWeaponAbilities(
 		UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
 
+	UFUNCTION(BlueprintCallable, Category = "Ragnarok|Ability")
+	bool TryActivateAbilityByTag(FGameplayTag ActivateTag);
+
 };

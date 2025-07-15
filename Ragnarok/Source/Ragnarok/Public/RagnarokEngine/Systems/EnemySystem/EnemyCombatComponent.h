@@ -13,5 +13,7 @@ UCLASS()
 class RAGNAROK_API UEnemyCombatComponent : public UCombatComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void OnHitTargetActor(AActor* HitActor) override;
 };

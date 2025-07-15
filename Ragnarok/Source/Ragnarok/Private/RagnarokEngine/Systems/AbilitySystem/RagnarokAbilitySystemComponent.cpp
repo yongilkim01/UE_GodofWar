@@ -68,3 +68,27 @@ void URagnarokAbilitySystemComponent::RemoveWeaponAbilities(UPARAM(ref)TArray<FG
 
 	InSpecHandleArray.Empty();
 }
+
+bool URagnarokAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag ActivateTag)
+{
+	check(ActivateTag.IsValid());
+
+	TArray<FGameplayAbilitySpec*> FoundAbilitySpecArray;
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(ActivateTag.GetSingleTagContainer(), FoundAbilitySpecArray);
+
+	if (false == FoundAbilitySpecArray.IsEmpty())
+	{
+		const int32 RandomIndex = FMath::RandRange(0, FoundAbilitySpecArray.Num() - 1);
+		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpecArray[RandomIndex];
+
+		check(SpecToActivate);
+
+		if (false == SpecToActivate->IsActive())
+		{
+			return TryActivateAbility(SpecToActivate->Handle);
+		}
+
+	}
+
+	return false;
+}
