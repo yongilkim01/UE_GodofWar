@@ -2,14 +2,19 @@
 
 
 #include "RagnarokEngine/Systems/EnemySystem/GameplayAbilities/EnemyMeleeAttackGameplayAbility.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 void UEnemyMeleeAttackGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+    CurrentSpecHandle = Handle;
     CurrentActorInfo = ActorInfo;
+    CurrentActivationInfo = ActivationInfo;
 
     UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
         this,
@@ -21,6 +26,33 @@ void UEnemyMeleeAttackGameplayAbility::ActivateAbility(const FGameplayAbilitySpe
         0.0f,
         false
     );
+
+    WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+        this,
+        CombatGameplayTags::Combat_Event_MeleeHit,
+        nullptr,
+        false,
+        false
+    );
+
+    if (nullptr != WaitEventTask)
+    {
+        Debug::Print(TEXT("WaitEventTask Created"));
+
+        WaitEventTask->EventReceived.AddDynamic(this, &UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived);
+
+        if (WaitEventTask->EventReceived.IsBound())
+        {
+            Debug::Print(TEXT("Equip Delegate Binding Success"));
+        }
+        else
+        {
+            Debug::Print(TEXT("Equip Delegate Binding Failed"));
+        }
+
+        WaitEventTask->ReadyForActivation();
+    }
+
 
     if (nullptr != MontageTask)
     {
@@ -64,4 +96,11 @@ void UEnemyMeleeAttackGameplayAbility::OnMontageCancelled()
 {
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 
+}
+
+void UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
+{
+    Debug::Print(Payload.Target.GetName() + TEXT(" ") + Payload.Instigator.GetName());
+
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Systems/EnemySystem/EnemyGameplayAbility.h"
 #include "EnemyMeleeAttackGameplayAbility.generated.h"
 
+class UAbilityTask_WaitGameplayEvent;
+
 /**
  * 
  */
@@ -40,8 +42,14 @@ private:
 	void OnMontageInterrupted();
 	UFUNCTION()
 	void OnMontageCancelled();
+	UFUNCTION()
+	void OnGameplayEventReceived(FGameplayEventData Payload);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* AttackMontage = nullptr;
+
+private:
+	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
+
 };
