@@ -46,8 +46,14 @@ private:
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	UPROPERTY(EditAnywhere, Category = "Enemy|Ability")
 	UAnimMontage* AttackMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Ability")
+	TSubclassOf<UGameplayEffect> EffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Ability")
+	FScalableFloat DamageScalableFloat;
 
 private:
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;

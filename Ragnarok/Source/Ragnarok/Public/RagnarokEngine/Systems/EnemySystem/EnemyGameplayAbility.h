@@ -34,6 +34,10 @@ public:
 
 	//~ End UGameplayAbility Interface.
 
+	FGameplayEffectSpecHandle CreateEnemyDamageEffectSpecHandle(
+		TSubclassOf<UGameplayEffect> EffectClass, 
+		const FScalableFloat& InDamageScalableFloat);
+
 public:
 	AEnemyCharacter* GetEnemyCharacterFromActorInfo();
 	UEnemyCombatComponent* GetEnemyCombatComponentFromActorInfo();

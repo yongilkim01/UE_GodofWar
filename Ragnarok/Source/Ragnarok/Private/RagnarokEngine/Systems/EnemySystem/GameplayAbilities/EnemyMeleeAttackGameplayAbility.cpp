@@ -4,6 +4,7 @@
 #include "RagnarokEngine/Systems/EnemySystem/GameplayAbilities/EnemyMeleeAttackGameplayAbility.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokContent/Characters/Enemy/EnemyGameplayTags.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -100,7 +101,19 @@ void UEnemyMeleeAttackGameplayAbility::OnMontageCancelled()
 
 void UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
-    Debug::Print(Payload.Target.GetName() + TEXT(" ") + Payload.Instigator.GetName());
+    FGameplayEffectSpecHandle SpecHandle = CreateEnemyDamageEffectSpecHandle(
+        EffectClass,
+        DamageScalableFloat
+    );
+
+    AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
+
+    FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+    if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+    {
+        //UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
+    }
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
