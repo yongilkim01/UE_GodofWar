@@ -117,3 +117,4 @@ void UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived(FGameplayEventDat
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
+    
