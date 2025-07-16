@@ -17,7 +17,8 @@ public class Ragnarok : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
             "Niagara",
-            "AnimGraphRuntime"
+            "AnimGraphRuntime",
+            "MotionWarping"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

@@ -12,6 +12,7 @@
 class URagnarokAbilitySystemComponent;
 class URagnarokAttributeSet;
 class UStartUpDataAsset;
+class UMotionWarpingComponent;
 
 UCLASS()
 class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface, public IUIInterface
@@ -52,10 +53,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS|AttributeSets")
 	URagnarokAttributeSet* AttributeSet = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Core|Character")
+	UMotionWarpingComponent* MotionWarpingComponent = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|StartUp")
 	TSoftObjectPtr<UStartUpDataAsset> StartUpData;
 
 public:
 	FORCEINLINE URagnarokAbilitySystemComponent* GetAbilitySystem() const { return AbilitySystemComponent; }
+	FORCEINLINE UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
 	FORCEINLINE URagnarokAttributeSet* GetAttributeSet() const { return AttributeSet; }
 };

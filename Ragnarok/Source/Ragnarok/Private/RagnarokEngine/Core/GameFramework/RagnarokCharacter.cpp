@@ -6,6 +6,8 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
+#include "MotionWarpingComponent.h"
+
 ARagnarokCharacter::ARagnarokCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,6 +17,7 @@ ARagnarokCharacter::ARagnarokCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<URagnarokAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<URagnarokAttributeSet>(TEXT("AttributeSet"));
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 void ARagnarokCharacter::BeginPlay()
