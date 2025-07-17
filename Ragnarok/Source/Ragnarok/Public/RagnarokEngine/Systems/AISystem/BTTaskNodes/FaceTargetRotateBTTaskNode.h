@@ -39,6 +39,13 @@ class RAGNAROK_API UFaceTargetRotateBTTaskNode : public URagnarokBTTaskNode
 	virtual FString GetStaticDescription() const override;
 	//~ End UBTNode Interface
 
+	//~ Begin UBTTaskNode Interface
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	//~ End UBTTaskNode Interface
+
+	bool HasReachedAnglePercision(APawn* QueryPawn, AActor* TargetActor) const;
+
 	UPROPERTY(EditAnywhere, Category = "AI|FaceTarget")
 	float AnglePrecision;
 
