@@ -50,4 +50,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	bool bRotateToATargetActor = true;
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	TSubclassOf<UGameplayEffect> HitEffectClass;
 };

@@ -1,0 +1,148 @@
+Source/
+└─ Ragnarok/
+    └─ Public/
+        ├─ RagnarokContent/
+        │   └─ Characters/
+        │       ├─ Enemy/
+        │       │   ├─ EnemyGameplayTags.h
+        │       │   ├─ EnemyWeapon.h
+        │       │   └─ Gruntling/
+        │       │       ├─ GruntlingEnemyCharacter.h
+        │       │       └─ Guardian/
+        │       │           ├─ GruntlingGuardianAIController.h
+        │       │           └─ GruntlingGuardianCharacter.h
+        │       └─ Kratos/
+        │           ├─ KratosController.h
+        │           ├─ Kratos.h
+        │           ├─ KratosWeapon.h
+        │           ├─ KratosAnimInstance.h
+        │           ├─ Components/
+        │           │   ├─ KratosUIComponent.h
+        │           │   └─ KratosCombatComponent.h
+        │           ├─ GameplayAbilities/
+        │           │   ├─ KratosEquipWeaponGameplayAbility.h
+        │           │   ├─ KratosLightAttackAbility.h
+        │           │   ├─ KratosDrawOverlayWidgetAbility.h
+        │           │   ├─ KratosGameplayAbility.h
+        │           │   ├─ KratosHitPauseGameplayAbility.h
+        │           │   ├─ KratosHeavyAttackAbility.h
+        │           │   └─ KratosUnEquipGameplayAbility.h
+        │           ├─ GameplayCues/
+        │           │   ├─ KratosAxeHitGameplayCueNotify.h
+        │           │   └─ KratoAxeHitGameplayCueNotify.h
+        │           ├─ Camera/
+        │           │   └─ KratosMeleeCameraShake.h
+        │           ├─ Tags/
+        │           │   └─ KratosGameplayTags.h
+        │           ├─ DataAssets/
+        │           │   ├─ KratosStartUpDataAsset.h
+        │           │   ├─ CharacterPrimaryAssetKratos.h
+        │           │   └─ InitDataAssetKratos.h
+        │           ├─ Animation/
+        │           │   ├─ KratosLinkedAnimLayer.h
+        │           │   └─ Notifies/
+        │           │       └─ KratosEquipWeaponEventAnimNotify.h
+        │           └─ Weapons/
+        │               ├─ LeviathanAxe.h
+        │               └─ DataAssets/
+        │                   └─ ItemPrimaryAssetKratosWeapon.h
+        └─ RagnarokEngine/
+            ├─ Kismet/
+            │   └─ RagnarokFunctionLibrary.h
+            ├─ Core/
+            │   ├─ GameFramework/
+            │   │   ├─ RagnarokCharacter.h
+            │   │   ├─ RagnarokGameMode.h
+            │   │   └─ RagnarokGameState.h
+            │   ├─ Animation/
+            │   │   ├─ RagnarokAnimInstance.h
+            │   │   ├─ CharacterAnimInstance.h
+            │   │   ├─ RagnarokAnimNotifyState.h
+            │   │   └─ RagnarokAnimNotify.h
+            │   ├─ Tags/
+            │   │   └─ RagnarokGameplayTags.h
+            │   ├─ Tools/
+            │   │   └─ RagnarokDebugHelper.h
+            │   ├─ AbilitySystem/
+            │   ├─ Components/
+            │   │   ├─ RagnarokActorComponent.h
+            │   │   └─ RagnarokSceneComponent.h
+            │   ├─ DataAssets/
+            │   │   ├─ RagnarokPrimaryDataAsset.h
+            │   │   ├─ PrimaryAssetIdDataTable.h
+            │   │   └─ RagnarokDataAsset.h
+            │   └─ Types/
+            │       └─ RagnarokTypes.h
+            ├─ Objects/
+            │   ├─ Animation/
+            │   │   └─ Notifies/
+            │   │       └─ SlowMotionAnimNotifyState.h
+            │   └─ Items/
+            │       └─ Weapons/
+            │           └─ RagnarokWeapon.h
+            ├─ Camera/
+            │   └─ Shakes/
+            └─ Systems/
+                ├─ AISystem/
+                │   ├─ BTDecorators/
+                │   │   ├─ HasGameplayTagBTDecorator.h
+                │   │   └─ ComputeSucessChanceBTDecorator.h
+                │   ├─ BTTaskNodes/
+                │   │   └─ FaceTargetRotateBTTaskNode.h
+                │   ├─ BTServices/
+                │   │   ├─ MotionWrapAttackTargetBTService.h
+                │   │   └─ OrientToTargetActorBTService.h
+                │   ├─ RagnarokBTDecorator.h
+                │   ├─ RagnarokBTTaskNode.h
+                │   ├─ RagnarokBTService.h
+                │   └─ RagnarokAIController.h
+                ├─ EnemySystem/
+                │   ├─ GameplayAbilities/
+                │   │   ├─ EnemyMeleeAttackGameplayAbility.h
+                │   │   ├─ EnemyDeathGameplayAbility.h
+                │   │   └─ EnemyHitReactGameplayAbility.h
+                │   ├─ BTTasks/
+                │   │   ├─ ActivateAbilityByTagBTTaskNode.h
+                │   │   └─ ToggleStrafingStateBTTaskNode.h
+                │   ├─ EnemyGameplayAbility.h
+                │   ├─ EnemyCombatComponent.h
+                │   ├─ EnemyBTTaskNode.h
+                │   ├─ EnemyAIController.h
+                │   ├─ EnemyCharacter.h
+                │   ├─ EnemyUIComponent.h
+                │   ├─ EnemyStartUpDataAsset.h
+                │   └─ EnemyAnimInstance.h
+                ├─ AbilitySystem/
+                │   ├─ RagnarokAbilitySystemComponent.h
+                │   ├─ RagnarokAttributeSet.h
+                │   ├─ RagnarokGameplayCueNotify_Static.h
+                │   ├─ RagnarokGameplayAbility.h
+                │   ├─ RagnarokGameplayEffect.h
+                │   ├─ RagnarokAbilityFunctionLibrary.h
+                │   ├─ GameplayCues/
+                │   │   └─ SoundPlayGameplayCueNotify.h
+                │   ├─ EffectExecCalcs/
+                │   │   └─ DamageTakenEffectExecCalc.h
+                │   ├─ Notifies/
+                │   │   └─ SendGameplayEventAnimNotify.h
+                │   └─ DataAssets/
+                │       └─ StartUpDataAsset.h
+                ├─ UISystem/
+                │   ├─ RagnarokUserWidget.h
+                │   ├─ RagnarokUIComponent.h
+                │   └─ UIInterface.h
+                ├─ CombatSystem/
+                │   ├─ CombatInterface.h
+                │   ├─ CombatComponent.h
+                │   ├─ CombatFunctionLibrary.h
+                │   ├─ Tags/
+                │   │   └─ CombatGameplayTags.h
+                │   └─ Notifies/
+                │       └─ WeaponCollisionAnimNotifyState.h
+                ├─ InputSystem/
+                │   ├─ RagnarokEnhancedInputComponent.h
+                │   └─ DataAssets/
+                │       └─ InputConfigDataAsset.h
+                └─ AssetSystem/
+                    ├─ RagnarokAssetManager.h
+                    └─ LevelAssetManagerComponent.h 

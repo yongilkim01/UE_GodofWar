@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameplayTagContainer.h"
 #include "RagnarokFunctionLibrary.generated.h"
+
+class URagnarokAbilitySystemComponent;
 
 /**
  * 
@@ -17,5 +20,11 @@ class RAGNAROK_API URagnarokFunctionLibrary : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintCallable, Category = "Kismet|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
+
+	UFUNCTION(BlueprintCallable, Category = "Kismet|FunctionLibrary")
+	static URagnarokAbilitySystemComponent* GetRagnarokASCFromActor(AActor* InActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Kismet|FunctionLibrary")
+	static bool HasActorGameplayTag(AActor* InActor, FGameplayTag TagToCheck);
 	
 };

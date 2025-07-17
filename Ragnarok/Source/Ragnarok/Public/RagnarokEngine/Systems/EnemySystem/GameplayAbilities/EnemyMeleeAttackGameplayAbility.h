@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/Systems/EnemySystem/EnemyGameplayAbility.h"
+#include "GameplayTagContainer.h"
 #include "EnemyMeleeAttackGameplayAbility.generated.h"
 
 class UAbilityTask_WaitGameplayEvent;
@@ -54,6 +55,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Ability")
 	FScalableFloat DamageScalableFloat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Ability")
+	FGameplayTag WeaponHitSoundTag;
 
 private:
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;

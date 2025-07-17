@@ -2,6 +2,7 @@
 
 
 #include "RagnarokEngine/Systems/EnemySystem/GameplayAbilities/EnemyMeleeAttackGameplayAbility.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokContent/Characters/Enemy/EnemyGameplayTags.h"
@@ -112,8 +113,13 @@ void UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived(FGameplayEventDat
 
     if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
     {
-        //UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
     }
+
+    FGameplayCueParameters CueParams;
+    GetASCFromActorInfo()->ExecuteGameplayCue(
+        WeaponHitSoundTag,
+        CueParams
+    );
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

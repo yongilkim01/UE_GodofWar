@@ -97,6 +97,9 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
                 false
             );
         }
+
+        FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(HitEffectClass);
+        ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, EffectSpecHandle);
     }
 
 }

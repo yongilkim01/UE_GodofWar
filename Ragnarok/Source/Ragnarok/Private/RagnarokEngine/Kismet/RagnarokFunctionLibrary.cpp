@@ -2,7 +2,10 @@
 
 
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+
 #include "GenericTeamAgentInterface.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 bool URagnarokFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn)
 {
@@ -17,4 +20,19 @@ bool URagnarokFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* Targ
 	}
 
 	return false;
+}
+
+URagnarokAbilitySystemComponent* URagnarokFunctionLibrary::GetRagnarokASCFromActor(AActor* InActor)
+{
+	check(InActor);
+
+	return CastChecked<URagnarokAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor));
+}
+
+
+bool URagnarokFunctionLibrary::HasActorGameplayTag(AActor* InActor, FGameplayTag TagToCheck)
+{
+	URagnarokAbilitySystemComponent* ASC = GetRagnarokASCFromActor(InActor);
+
+	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
