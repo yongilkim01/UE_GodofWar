@@ -41,6 +41,16 @@ public:
 	);
 
 protected:
+	UFUNCTION()
+	virtual void OnMontageCompleted();
+	UFUNCTION()
+	virtual void OnMontageBlendOut();
+	UFUNCTION()
+	virtual void OnMontageInterrupted();
+	UFUNCTION()
+	virtual void OnMontageCancelled();
+
+protected:
 	FGameplayAbilitySpecHandle CurrentSpecHandle;
 	const FGameplayAbilityActorInfo* CurrentActorInfo;
 	FGameplayAbilityActivationInfo CurrentActivationInfo;

@@ -54,27 +54,3 @@ void UKratosHitPauseGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 }
-
-void UKratosHitPauseGameplayAbility::OnMontageCompleted()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
-}
-
-void UKratosHitPauseGameplayAbility::OnMontageBlendOut()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
-}
-
-void UKratosHitPauseGameplayAbility::OnMontageInterrupted()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
-}
-
-void UKratosHitPauseGameplayAbility::OnMontageCancelled()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
-}

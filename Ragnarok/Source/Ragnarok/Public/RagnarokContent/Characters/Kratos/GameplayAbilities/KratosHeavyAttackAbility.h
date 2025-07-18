@@ -35,14 +35,6 @@ public:
 
 private:
 	UFUNCTION()
-	void OnMontageCompleted();
-	UFUNCTION()
-	void OnMontageBlendOut();
-	UFUNCTION()
-	void OnMontageInterrupted();
-	UFUNCTION()
-	void OnMontageCancelled();
-	UFUNCTION()
 	void OnResetAttackComboCount();
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);

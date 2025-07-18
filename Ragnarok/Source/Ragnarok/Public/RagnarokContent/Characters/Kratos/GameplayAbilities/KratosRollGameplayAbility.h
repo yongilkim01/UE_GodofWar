@@ -28,5 +28,9 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 	//~ End UGameplayAbility Interface.
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingAnimMontage = nullptr;
 	
 };

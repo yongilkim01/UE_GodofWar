@@ -4,6 +4,9 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+
+
 void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -12,9 +15,36 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
-	Debug::Print(TEXT("Rolling Ability is atviated"));
+	if (nullptr != RollingAnimMontage)
+	{
+		UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+			this,
+			NAME_None,
+			RollingAnimMontage,
+			1.0f,
+			NAME_None,
+			false,
+			0.0f,
+			false
+		);
 
-	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		if (nullptr != MontageTask)
+		{
+			MontageTask->OnCompleted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCompleted);
+			MontageTask->OnBlendOut.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageBlendOut);
+			MontageTask->OnInterrupted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageInterrupted);
+			MontageTask->OnCancelled.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCancelled);
+			MontageTask->ReadyForActivation();
+		}
+		else
+		{
+			EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		}
+	}
+	else
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+	}
 }
 
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

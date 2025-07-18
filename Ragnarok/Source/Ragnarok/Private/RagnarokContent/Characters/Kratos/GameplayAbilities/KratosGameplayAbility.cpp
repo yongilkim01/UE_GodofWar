@@ -68,3 +68,23 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 
 	return EffectSpecHandle;
 }
+
+void UKratosGameplayAbility::OnMontageCompleted()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UKratosGameplayAbility::OnMontageBlendOut()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UKratosGameplayAbility::OnMontageInterrupted()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UKratosGameplayAbility::OnMontageCancelled()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}

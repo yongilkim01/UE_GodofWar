@@ -27,15 +27,10 @@ public:
 
 	//~ End UGameplayAbility Interface.
 
-private:
-	UFUNCTION()
-	void OnMontageCompleted();
-	UFUNCTION()
-	void OnMontageBlendOut();
-	UFUNCTION()
-	void OnMontageInterrupted();
-	UFUNCTION()
-	void OnMontageCancelled();
+protected:
+	virtual void OnMontageCompleted() override;
+	virtual void OnMontageBlendOut() override;
+
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 

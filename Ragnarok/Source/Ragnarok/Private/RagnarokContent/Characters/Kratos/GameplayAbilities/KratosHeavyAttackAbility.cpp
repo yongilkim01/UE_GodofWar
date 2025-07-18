@@ -125,26 +125,6 @@ void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.3f, false);
 }
 
-void UKratosHeavyAttackAbility::OnMontageCompleted()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-void UKratosHeavyAttackAbility::OnMontageBlendOut()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-void UKratosHeavyAttackAbility::OnMontageInterrupted()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-void UKratosHeavyAttackAbility::OnMontageCancelled()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
 void UKratosHeavyAttackAbility::OnResetAttackComboCount()
 {
 	CurComboCount = 1;

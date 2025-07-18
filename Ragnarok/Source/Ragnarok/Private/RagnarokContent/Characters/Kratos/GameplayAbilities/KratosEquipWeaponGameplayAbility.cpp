@@ -106,16 +106,6 @@ void UKratosEquipWeaponGameplayAbility::OnMontageBlendOut()
 	}
 }
 
-void UKratosEquipWeaponGameplayAbility::OnMontageInterrupted()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
-void UKratosEquipWeaponGameplayAbility::OnMontageCancelled()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-}
-
 void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
 	AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCharacterWeaponByTag(EquipWeaponTag));

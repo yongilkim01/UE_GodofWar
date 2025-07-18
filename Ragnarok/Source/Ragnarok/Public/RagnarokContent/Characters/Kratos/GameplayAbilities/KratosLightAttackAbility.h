@@ -31,15 +31,7 @@ public:
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 	//~ End UGameplayAbility Interface.
 
-private:
-	UFUNCTION()
-	void OnMontageCompleted();
-	UFUNCTION()
-	void OnMontageBlendOut();
-	UFUNCTION()
-	void OnMontageInterrupted();
-	UFUNCTION()
-	void OnMontageCancelled();
+protected:
 	UFUNCTION()
 	void OnResetAttackComboCount();
 	UFUNCTION()

@@ -33,16 +33,6 @@ public:
 
 	//~ End UGameplayAbility Interface.
 
-private:
-	UFUNCTION()
-	void OnMontageCompleted();
-	UFUNCTION()
-	void OnMontageBlendOut();
-	UFUNCTION()
-	void OnMontageInterrupted();
-	UFUNCTION()
-	void OnMontageCancelled();
-
 protected:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	TSubclassOf<UKratosMeleeCameraShake> CameraShakeClass;
