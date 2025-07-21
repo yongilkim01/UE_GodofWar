@@ -24,8 +24,8 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 			1.0f,
 			NAME_None,
 			false,
-			0.0f,
-			false
+			1.0f, 
+			0.0f
 		);
 
 		if (nullptr != MontageTask)
