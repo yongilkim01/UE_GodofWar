@@ -2,9 +2,11 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameplayTagContainer.h"
 
 
 void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -14,6 +16,11 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 	CurrentSpecHandle = Handle;
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
+
+	FGameplayTagContainer Container;
+	GetASCFromActorInfo()->GetBlockedAbilityTags(Container);
+	FGameplayTagContainer AssetTagContainer = GetAssetTags();
+
 
 	if (nullptr != RollingAnimMontage)
 	{

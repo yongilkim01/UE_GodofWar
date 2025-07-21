@@ -10,6 +10,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayTagContainer.h"
 
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
@@ -25,6 +26,10 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
+	FGameplayTagContainer Container;
+	GetASCFromActorInfo()->GetBlockedAbilityTags(Container);
+	FGameplayTagContainer AssetTagContainer = GetAssetTags();
+
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 
 	UseComboCount = CurComboCount;
@@ -39,6 +44,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		0.0f,
 		false
 	);
+
+	const FGameplayTagContainer Conatiner = GetASCFromActorInfo()->GetBlockedAbilityTags();
 
 	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
