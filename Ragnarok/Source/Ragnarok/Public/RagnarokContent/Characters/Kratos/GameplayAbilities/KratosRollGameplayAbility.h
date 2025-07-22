@@ -34,5 +34,8 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	UAnimMontage* RollingAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	FRotator PrevRotator = FRotator::ZeroRotator;
 	
 };

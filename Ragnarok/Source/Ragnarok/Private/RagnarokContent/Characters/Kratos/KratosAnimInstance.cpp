@@ -27,6 +27,8 @@ void UKratosAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
+	//Debug::Print(TEXT("Kratos is nullptr check owner character type"), FColor::Red);
+
 	if (true == bAcceleration)
 	{
 		bRelax = false;

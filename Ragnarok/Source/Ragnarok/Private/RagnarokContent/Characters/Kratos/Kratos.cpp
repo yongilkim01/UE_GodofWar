@@ -160,7 +160,7 @@ void AKratos::LoadKratosDataAsset()
 
 		// Character Movement Component ¼³Á¤
 		//GetCharacterMovement()->RootMotionMode = ERootMotionMode::RootMotionFromEverything;
-		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
 		
