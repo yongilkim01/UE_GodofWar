@@ -17,6 +17,8 @@ class RAGNAROK_API UKratosLightAttackAbility : public UKratosGameplayAbility
 	GENERATED_BODY()
 
 public:
+	UKratosLightAttackAbility();
+
 	//~ Begin UGameplayAbility Interface.
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
