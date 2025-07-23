@@ -160,7 +160,7 @@ void AKratos::LoadKratosDataAsset()
 
 		// Character Movement Component ¼³Á¤
 		//GetCharacterMovement()->RootMotionMode = ERootMotionMode::RootMotionFromEverything;
-		GetCharacterMovement()->bOrientRotationToMovement = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
 		
@@ -229,6 +229,8 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 
 void AKratos::InputMove(const FInputActionValue& InputActionValue)
 {
+	if (true == bRolling) return;
+
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
 
@@ -236,6 +238,16 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 	{
 		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
 		AddMovementInput(ForwardDirection, MovementVector.Y);
+
+		if (MovementVector.Y > 0.0f)
+		{
+			FRotator CurrentRotation = GetActorRotation();
+			FRotator TargetRotation = FRotator(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+
+			float RotationInterpSpeed = 15.0f;
+			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), RotationInterpSpeed);
+			SetActorRotation(TargetRotation);
+		}
 	}
 
 
@@ -248,6 +260,8 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 
 void AKratos::InputLook(const FInputActionValue& InputActionValue)
 {
+	if (true == bRolling) return;
+
 	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
 
 	if(0.0f != LookAxisVector.X)

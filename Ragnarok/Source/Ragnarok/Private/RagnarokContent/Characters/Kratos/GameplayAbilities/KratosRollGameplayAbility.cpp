@@ -2,6 +2,7 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
@@ -44,6 +45,8 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 
 		if (nullptr != MontageTask)
 		{
+			GetKratosFromActorInfo()->SetIsRolling(true);
+
 			MontageTask->OnCompleted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCompleted);
 			MontageTask->OnBlendOut.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageBlendOut);
 			MontageTask->OnInterrupted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageInterrupted);
@@ -64,7 +67,7 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
 	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
+	GetKratosFromActorInfo()->SetIsRolling(false);
 
 }

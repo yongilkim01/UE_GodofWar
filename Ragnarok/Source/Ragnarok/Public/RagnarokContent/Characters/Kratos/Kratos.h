@@ -78,9 +78,12 @@ private:
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
 	int AttackCount = 0;
+	bool bRolling = false;
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
 	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }
 	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
 	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
+	FORCEINLINE bool IsRolling() { return bRolling; }
+	FORCEINLINE void SetIsRolling(bool NewValue) { bRolling = NewValue; }
 };
