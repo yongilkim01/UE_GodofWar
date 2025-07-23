@@ -2,6 +2,7 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
@@ -87,7 +88,6 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 
 void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 {
-<<<<<<< HEAD
 	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
 
@@ -99,10 +99,4 @@ void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 			RollingDirection.ToOrientationRotator()
 		);
 	}
-=======
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
-	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
-
->>>>>>> parent of e0a66d4 (feat: update kratos input move, look method)
 }
