@@ -2,12 +2,13 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
-#include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "GameplayTagContainer.h"
+#include "MotionWarpingComponent.h"
 
 
 UKratosRollGameplayAbility::UKratosRollGameplayAbility()
@@ -23,12 +24,34 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
-	FGameplayTagContainer Container;
-	GetASCFromActorInfo()->GetBlockedAbilityTags(Container);
-	FGameplayTagContainer AssetTagContainer = GetAssetTags();
+	UAbilityTask_WaitDelay* DelayTask = UAbilityTask_WaitDelay::WaitDelay(this, 0.05f);
 
-	PrevRotator = ActorInfo->OwnerActor.Get()->GetActorRotation();
+	if (nullptr != DelayTask)
+	{
+		DelayTask->OnFinish.AddDynamic(this, &UKratosRollGameplayAbility::OnDelayFinished);
+		DelayTask->ReadyForActivation();
+	}
+	else
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
 
+}
+
+void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
+	GetKratosFromActorInfo()->SetIsRolling(false);
+
+}
+
+void UKratosRollGameplayAbility::OnDelayFinished()
+{
+	PrevRotator = CurrentActorInfo->OwnerActor.Get()->GetActorRotation();
+	GetKratosFromActorInfo()->SetIsRolling(true);
+
+	ComputeRollDirectionAndDistance();
 
 	if (nullptr != RollingAnimMontage)
 	{
@@ -38,15 +61,13 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 			RollingAnimMontage,
 			1.0f,
 			NAME_None,
-			false,
-			1.0f, 
-			0.0f
-		);
+			true,
+			1.0f,
+			0.0f,
+			false);
 
 		if (nullptr != MontageTask)
 		{
-			GetKratosFromActorInfo()->SetIsRolling(true);
-
 			MontageTask->OnCompleted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCompleted);
 			MontageTask->OnBlendOut.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageBlendOut);
 			MontageTask->OnInterrupted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageInterrupted);
@@ -55,19 +76,33 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 		}
 		else
 		{
-			EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+			EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 		}
 	}
 	else
 	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
 }
 
-void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
-	GetKratosFromActorInfo()->SetIsRolling(false);
+<<<<<<< HEAD
+	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
+	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
 
+	if (nullptr != MortionWarpingComponent)
+	{
+		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
+			WarpTargetName,
+			FVector::ZeroVector,
+			RollingDirection.ToOrientationRotator()
+		);
+	}
+=======
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
+
+>>>>>>> parent of e0a66d4 (feat: update kratos input move, look method)
 }

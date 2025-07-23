@@ -32,10 +32,23 @@ public:
 	//~ End UGameplayAbility Interface.
 
 private:
+	UFUNCTION()
+	void OnDelayFinished();
+
+	UFUNCTION()
+	void ComputeRollDirectionAndDistance();
+
+private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	UAnimMontage* RollingAnimMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	FRotator PrevRotator = FRotator::ZeroRotator;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	FName WarpTargetName;
+
+private:
+	FVector RollingDirection = FVector::ZeroVector;
 	
 };
