@@ -91,6 +91,9 @@ void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
 
+	Debug::Print(FString::Printf(TEXT("Last Input Vector : %s"), *RollingDirection.ToString()), FColor::Yellow);
+	Debug::Print(FString::Printf(TEXT("Forward Vector : %s"), *GetKratosFromActorInfo()->GetActorForwardVector().ToString()), FColor::Yellow);
+
 	if (nullptr != MortionWarpingComponent)
 	{
 		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
@@ -99,4 +102,54 @@ void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 			RollingDirection.ToOrientationRotator()
 		);
 	}
+
+	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
+	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
+
+	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
+	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
+	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
+
+	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
+	{
+		RollingAnimMontage = RollingForwardAnimMontage;
+	}
+	else if (22.5f < AngleDeg, 67.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			RollingAnimMontage = RollingRFAnimMontage;
+		}
+		else
+		{
+			RollingAnimMontage = RollingLFAnimMontage;
+		}
+	}
+	else if (67.5f < AngleDeg && 112.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			RollingAnimMontage = RollingRightAnimMontage;
+		}
+		else
+		{
+			RollingAnimMontage = RollingLeftAnimMontage;
+		}
+	}
+	else if (112.5f < AngleDeg, 157.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			RollingAnimMontage = RollingRBAnimMontage;
+		}
+		else
+		{
+			RollingAnimMontage = RollingLBAnimMontage;
+		}
+	}
+	else
+	{
+		RollingAnimMontage = RollingBackwardAnimMontage;
+	}
+
 }

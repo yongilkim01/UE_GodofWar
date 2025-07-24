@@ -39,14 +39,39 @@ private:
 	void ComputeRollDirectionAndDistance();
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
-	UAnimMontage* RollingAnimMontage = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	FRotator PrevRotator = FRotator::ZeroRotator;
 
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	FName WarpTargetName;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingForwardAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingRightAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingLeftAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingBackwardAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingRFAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingLFAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingRBAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* RollingLBAnimMontage = nullptr;
 
 private:
 	FVector RollingDirection = FVector::ZeroVector;
