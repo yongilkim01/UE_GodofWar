@@ -36,6 +36,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 	//~ Begin APawn Interface.
@@ -79,6 +80,7 @@ private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
 	int AttackCount = 0;
 	bool bRolling = false;
+	float FixedCameraWorldZLocation = 0.0f;
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
 	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }

@@ -10,6 +10,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "GameplayTagContainer.h"
 #include "MotionWarpingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 UKratosRollGameplayAbility::UKratosRollGameplayAbility()
@@ -44,6 +45,7 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
 	GetKratosFromActorInfo()->SetIsRolling(false);
+	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 }
 
@@ -51,8 +53,21 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 {
 	PrevRotator = CurrentActorInfo->OwnerActor.Get()->GetActorRotation();
 	GetKratosFromActorInfo()->SetIsRolling(true);
+	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	ComputeRollDirectionAndDistance();
+
+	// 1. 구르기 방향을 결정합니다.
+	const FVector RollDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
+
+	// 2. 구르기 속도를 설정합니다. (이 값을 조절해 세기 조절)
+	const float RollSpeed = 1500.0f;
+
+	// 3. LaunchCharacter를 호출하여 캐릭터에게 속도를 부여합니다.
+	GetKratosFromActorInfo()->LaunchCharacter(RollDirection * RollSpeed, true, true);
+
+	// 캐릭터가 입력 방향을 즉시 바라보게 합니다.
+	//Kratos->SetActorRotation(RollDirection.ToOrientationRotator());
 
 	if (nullptr != RollingAnimMontage)
 	{
@@ -96,10 +111,12 @@ void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 
 	if (nullptr != MortionWarpingComponent)
 	{
+		const FVector StartLocation = GetKratosFromActorInfo()->GetActorLocation();
+		const FVector TargetLocation = StartLocation + (RollingDirection * RollDistance);
 		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
 			WarpTargetName,
-			FVector::ZeroVector,
-			RollingDirection.ToOrientationRotator()
+			TargetLocation,
+			FRotator::ZeroRotator
 		);
 	}
 

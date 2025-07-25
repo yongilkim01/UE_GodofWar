@@ -73,6 +73,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	UAnimMontage* RollingLBAnimMontage = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "Roll")
+	float RollDistance = 1000.f; // 구르기 거리 (예: 400cm)
+
 private:
 	FVector RollingDirection = FVector::ZeroVector;
 	

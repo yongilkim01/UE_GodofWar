@@ -61,6 +61,7 @@ void AKratos::BeginPlay()
 
 	LoadKratosDataAsset();
 
+	FixedCameraWorldZLocation = MainCameraComponent->GetComponentLocation().Z;
 
 	//if (nullptr != KratosWidgetClass)
 	//{
@@ -71,6 +72,24 @@ void AKratos::BeginPlay()
 	//	{
 	//		WidgetInstance->AddToViewport();
 	//	}
+	//}
+}
+
+void AKratos::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//if (bRolling) // Kratos.h에 bIsRolling 변수가 있다고 가정합니다.
+	//{
+	//	//float CurrentZLocation = GetActorLocation().Z;
+	//	//Debug::Print(FString::Printf(TEXT("Kratos Z-Location (Rolling): %.2f"), CurrentZLocation));
+	//	FVector CurrentCameraLocation = MainCameraComponent->GetComponentLocation();
+	//	CurrentCameraLocation.Z = FixedCameraWorldZLocation;
+	//	MainCameraComponent->SetWorldLocation(CurrentCameraLocation);
+	//}
+	//else
+	//{
+	//	FixedCameraWorldZLocation = MainCameraComponent->GetComponentLocation().Z;
 	//}
 }
 
