@@ -64,8 +64,8 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 
 	if (bEvasion)
 	{
-		Debug::Print(TEXT("bEvasion is true"), FColor::Yellow);
 		ComputeRollingDirection();
+		bEvasion = false;
 	}
 	else
 	{
@@ -73,9 +73,6 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 		bEvasion = true;
 
 	}
-
-	// 캐릭터가 입력 방향을 즉시 바라보게 합니다.
-	//Kratos->SetActorRotation(RollDirection.ToOrientationRotator());
 
 	if (nullptr != AbilityAnimMontage)
 	{
@@ -188,18 +185,22 @@ void UKratosRollGameplayAbility::ComputeDodgeDirection()
 
 void UKratosRollGameplayAbility::ComputeRollingDirection()
 {
+	const float RollSpeed = 5000.0f;
+
 	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
-	if (nullptr != MortionWarpingComponent)
+	GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
+
+	/*if (nullptr != MortionWarpingComponent)
 	{
 		const FVector StartLocation = GetKratosFromActorInfo()->GetActorLocation();
 		const FVector TargetLocation = StartLocation + (RollingDirection * RollDistance);
 		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
 			WarpTargetName,
-			TargetLocation,
-			FRotator::ZeroRotator
+			FVector::ZeroVector,
+			RollingDirection.ToOrientationRotator()
 		);
-	}
+	}*/
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
@@ -207,6 +208,9 @@ void UKratosRollGameplayAbility::ComputeRollingDirection()
 	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
 	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
 	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
+
+	//AbilityAnimMontage = RollingForwardAnimMontage;
+
 
 	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
 	{
