@@ -36,7 +36,13 @@ private:
 	void OnDelayFinished();
 
 	UFUNCTION()
-	void ComputeRollDirectionAndDistance();
+	void OnResetEvasion();
+
+	UFUNCTION()
+	void ComputeDodgeDirection();
+
+	UFUNCTION()
+	void ComputeRollingDirection();
 
 private:
 
@@ -46,9 +52,36 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	FName WarpTargetName;
 
+private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
-	UAnimMontage* RollingAnimMontage = nullptr;
+	UAnimMontage* AbilityAnimMontage = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeForwardAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeRightAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeLeftAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeBackwardAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeRFAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeLFAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeRBAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UAnimMontage* DodgeLBAnimMontage = nullptr;
+
+
+private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	UAnimMontage* RollingForwardAnimMontage = nullptr;
 
@@ -73,10 +106,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
 	UAnimMontage* RollingLBAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Roll")
-	float RollDistance = 1000.f; // 구르기 거리 (예: 400cm)
-
 private:
+	float RollDistance = 1000.f;
 	FVector RollingDirection = FVector::ZeroVector;
-	
+	FTimerHandle TimerHandle;
+	bool bEvasion = false;
 };

@@ -31,10 +31,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
-	FGameplayTagContainer Container;
-	GetASCFromActorInfo()->GetBlockedAbilityTags(Container);
-	FGameplayTagContainer AssetTagContainer = GetAssetTags();
-
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 
 	UseComboCount = CurComboCount;

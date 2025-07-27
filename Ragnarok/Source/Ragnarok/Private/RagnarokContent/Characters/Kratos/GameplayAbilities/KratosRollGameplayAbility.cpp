@@ -26,6 +26,8 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
 	UAbilityTask_WaitDelay* DelayTask = UAbilityTask_WaitDelay::WaitDelay(this, 0.05f);
 
 	if (nullptr != DelayTask)
@@ -47,6 +49,11 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 	GetKratosFromActorInfo()->SetIsRolling(false);
 	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
+	FTimerDelegate TimerDel;
+
+	TimerDel.BindUFunction(this, FName("OnResetEvasion"));
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.5f, false);
+
 }
 
 void UKratosRollGameplayAbility::OnDelayFinished()
@@ -55,26 +62,27 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 	GetKratosFromActorInfo()->SetIsRolling(true);
 	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
-	ComputeRollDirectionAndDistance();
+	if (bEvasion)
+	{
+		Debug::Print(TEXT("bEvasion is true"), FColor::Yellow);
+		ComputeRollingDirection();
+	}
+	else
+	{
+		ComputeDodgeDirection();
+		bEvasion = true;
 
-	// 1. 구르기 방향을 결정합니다.
-	const FVector RollDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
-
-	// 2. 구르기 속도를 설정합니다. (이 값을 조절해 세기 조절)
-	const float RollSpeed = 1500.0f;
-
-	// 3. LaunchCharacter를 호출하여 캐릭터에게 속도를 부여합니다.
-	GetKratosFromActorInfo()->LaunchCharacter(RollDirection * RollSpeed, true, true);
+	}
 
 	// 캐릭터가 입력 방향을 즉시 바라보게 합니다.
 	//Kratos->SetActorRotation(RollDirection.ToOrientationRotator());
 
-	if (nullptr != RollingAnimMontage)
+	if (nullptr != AbilityAnimMontage)
 	{
 		UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 			this,
 			NAME_None,
-			RollingAnimMontage,
+			AbilityAnimMontage,
 			1.0f,
 			NAME_None,
 			true,
@@ -101,13 +109,20 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 	}
 }
 
-void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
+void UKratosRollGameplayAbility::OnResetEvasion()
 {
-	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
-	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
+	bEvasion = false;
+}
 
-	Debug::Print(FString::Printf(TEXT("Last Input Vector : %s"), *RollingDirection.ToString()), FColor::Yellow);
-	Debug::Print(FString::Printf(TEXT("Forward Vector : %s"), *GetKratosFromActorInfo()->GetActorForwardVector().ToString()), FColor::Yellow);
+void UKratosRollGameplayAbility::ComputeDodgeDirection()
+{
+	const float RollSpeed = 1000.0f;
+
+	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
+
+	GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
+
+	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
 
 	if (nullptr != MortionWarpingComponent)
 	{
@@ -129,44 +144,110 @@ void UKratosRollGameplayAbility::ComputeRollDirectionAndDistance()
 
 	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
 	{
-		RollingAnimMontage = RollingForwardAnimMontage;
+		AbilityAnimMontage = DodgeForwardAnimMontage;
 	}
 	else if (22.5f < AngleDeg, 67.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			RollingAnimMontage = RollingRFAnimMontage;
+			AbilityAnimMontage = DodgeRFAnimMontage;
 		}
 		else
 		{
-			RollingAnimMontage = RollingLFAnimMontage;
+			AbilityAnimMontage = DodgeLFAnimMontage;
 		}
 	}
 	else if (67.5f < AngleDeg && 112.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			RollingAnimMontage = RollingRightAnimMontage;
+			AbilityAnimMontage = DodgeRightAnimMontage;
 		}
 		else
 		{
-			RollingAnimMontage = RollingLeftAnimMontage;
+			AbilityAnimMontage = DodgeLeftAnimMontage;
 		}
 	}
 	else if (112.5f < AngleDeg, 157.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			RollingAnimMontage = RollingRBAnimMontage;
+			AbilityAnimMontage = DodgeRBAnimMontage;
 		}
 		else
 		{
-			RollingAnimMontage = RollingLBAnimMontage;
+			AbilityAnimMontage = DodgeLBAnimMontage;
 		}
 	}
 	else
 	{
-		RollingAnimMontage = RollingBackwardAnimMontage;
+		AbilityAnimMontage = DodgeBackwardAnimMontage;
+	}
+
+}
+
+void UKratosRollGameplayAbility::ComputeRollingDirection()
+{
+	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
+	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
+	if (nullptr != MortionWarpingComponent)
+	{
+		const FVector StartLocation = GetKratosFromActorInfo()->GetActorLocation();
+		const FVector TargetLocation = StartLocation + (RollingDirection * RollDistance);
+		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
+			WarpTargetName,
+			TargetLocation,
+			FRotator::ZeroRotator
+		);
+	}
+
+	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
+	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
+
+	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
+	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
+	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
+
+	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
+	{
+		AbilityAnimMontage = RollingForwardAnimMontage;
+	}
+	else if (22.5f < AngleDeg, 67.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			AbilityAnimMontage = RollingRFAnimMontage;
+		}
+		else
+		{
+			AbilityAnimMontage = RollingLFAnimMontage;
+		}
+	}
+	else if (67.5f < AngleDeg && 112.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			AbilityAnimMontage = RollingRightAnimMontage;
+		}
+		else
+		{
+			AbilityAnimMontage = RollingLeftAnimMontage;
+		}
+	}
+	else if (112.5f < AngleDeg, 157.5f >= AngleDeg)
+	{
+		if (DotRight >= 0.0f)
+		{
+			AbilityAnimMontage = RollingRBAnimMontage;
+		}
+		else
+		{
+			AbilityAnimMontage = RollingLBAnimMontage;
+		}
+	}
+	else
+	{
+		AbilityAnimMontage = RollingBackwardAnimMontage;
 	}
 
 }
