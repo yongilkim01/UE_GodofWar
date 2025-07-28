@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "KratosLightAttackAbility.generated.h"
 
 class UAbilityTask_WaitGameplayEvent;
+class UAbilityTask_PlayMontageAndWait;
 
 /**
  * 
@@ -39,6 +41,21 @@ protected:
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 
+	UFUNCTION()
+	void OnAttackMontageCompleted();
+
+	UFUNCTION()
+	void OnAttackWaitTimeOut();
+
+	UFUNCTION()
+	void OnNextComboInput();
+
+	UFUNCTION()
+	void StartAttackWaitState();
+	void ExitAttackWaitState();
+	void PauseMontageAtPosition(float Position);
+	void ResumeMontage();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	TMap<int, UAnimMontage*> LightAttackMontageMap;
@@ -55,7 +72,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	TSubclassOf<UGameplayEffect> EffectClass;
 
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	ERagnarokAttackState CurAttackState = ERagnarokAttackState::ERAS_None;
+
 private:
+	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
+	FTimerHandle AttackWaitTimerHandle;
+	float ComboWaitDuration = 1.0f;
+	TMap<int32, float> AttackWaitPositionMap;
+
 	FTimerHandle TimerHandle;
 	bool PrevbUseControllerRotationYaw;
 	bool PrevbOrientRotationToMovement;

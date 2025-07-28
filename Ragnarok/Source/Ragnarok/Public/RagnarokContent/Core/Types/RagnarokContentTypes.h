@@ -10,6 +10,15 @@
 class UKratosLinkedAnimLayer;
 class UInputMappingContext;
 
+UENUM(BlueprintType)
+enum class ERagnarokAttackState : uint8
+{
+	ERAS_None		UMETA(DisplayName = "None"),
+	ERAS_Attacking	UMETA(DisplayName = "Attacking"),
+	ERAS_AttackWait	UMETA(DisplayName = "AttackWait"),
+	ERAS_Recovery	UMETA(DisplayName = "Recovery")
+};
+
 USTRUCT(BlueprintType)
 struct FKratosWeaponData
 {
