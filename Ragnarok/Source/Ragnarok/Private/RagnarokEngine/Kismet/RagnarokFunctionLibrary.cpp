@@ -36,3 +36,13 @@ bool URagnarokFunctionLibrary::HasActorGameplayTag(AActor* InActor, FGameplayTag
 
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
+
+void URagnarokFunctionLibrary::AddGameplayTagToActor(AActor* InActor, FGameplayTag TagToAdd)
+{
+	URagnarokAbilitySystemComponent* ASC = GetRagnarokASCFromActor(InActor);
+
+	if (false == ASC->HasMatchingGameplayTag(TagToAdd))
+	{
+		ASC->AddLooseGameplayTag(TagToAdd);
+	}
+}

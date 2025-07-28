@@ -48,7 +48,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	// Timer 초기화
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	GetWorld()->GetTimerManager().ClearTimer(AttackWaitTimerHandle);
 
 	// 사용하는 콤보 카운트와 현재 콤보 카운트 분리, 현재 공격상태 공격 모드로 설정
 	UseComboCount = CurComboCount;
@@ -103,20 +102,20 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	//}
 
 	// 현재 코보 카운트가 약공격의 개수하고 같다면 Reset 메소드 호출
-	if (CurComboCount == LightAttackMontageMap.Num())
-	{
-		OnResetAttackComboCount();
-	}
-	else
-	{
-		if (CurComboCount + 1 == LightAttackMontageMap.Num())
-		{
-			URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
-				GetKratosFromActorInfo(), JumpTag);
-		}
+	//if (CurComboCount == LightAttackMontageMap.Num())
+	//{
+	//	OnResetAttackComboCount();
+	//}
+	//else
+	//{
+	//	if (CurComboCount + 1 == LightAttackMontageMap.Num())
+	//	{
+	//		URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
+	//			GetKratosFromActorInfo(), JumpTag);
+	//	}
 
-		CurComboCount++;
-	}
+	//	CurComboCount++;
+	//}
 
 	if (nullptr != AttackMontageTask)
 	{
@@ -125,20 +124,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		AttackMontageTask->OnInterrupted.AddDynamic(this, &UKratosLightAttackAbility::OnMontageInterrupted);
 		AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCancelled);
 		AttackMontageTask->ReadyForActivation();
-
-		// 몽타주의 길이의 일정 비율 시간 후에 현재 공격 상태를 AttackWait 상태로 변경
-		if (true == AttackWaitPositionMap.Contains(UseComboCount))
-		{
-			float WaitPosition = AttackWaitPositionMap[UseComboCount];
-
-			FTimerDelegate PauseDelegate;
-			PauseDelegate.BindUFunction(this, FName("StartAttackWaitState"));
-
-			float MontageLength = LightAttackMontageMap[UseComboCount]->GetPlayLength();
-			float TimeToWait = MontageLength * WaitPosition;
-
-			GetWorld()->GetTimerManager().SetTimer(AttackWaitTimerHandle, PauseDelegate, TimeToWait, false);
-		}	
 	}
 	else
 	{
