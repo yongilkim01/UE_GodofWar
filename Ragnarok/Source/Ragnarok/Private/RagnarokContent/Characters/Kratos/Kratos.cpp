@@ -16,7 +16,7 @@
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
@@ -79,7 +79,7 @@ void AKratos::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//if (bRolling) // Kratos.h¿¡ bIsRolling º¯¼ö°¡ ÀÖ´Ù°í °¡Á¤ÇÕ´Ï´Ù.
+	//if (bRolling) // Kratos.hï¿½ï¿½ bIsRolling ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	//{
 	//	//float CurrentZLocation = GetActorLocation().Z;
 	//	//Debug::Print(FString::Printf(TEXT("Kratos Z-Location (Rolling): %.2f"), CurrentZLocation));
@@ -97,25 +97,25 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDA, TEXT("Check input config data asset"));
 
-	// ÇöÀç ÄÁÆ®·Ñ·¯°¡ APlayerControllerÀÎÁö È®ÀÎ ÈÄ, ±×¿¡ ÇØ´çÇÏ´Â LocalPlayer¸¦ °¡Á®¿È
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ APlayerControllerï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½, ï¿½×¿ï¿½ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ LocalPlayerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
-	// EnhancedInput ½Ã½ºÅÛÀ» »ç¿ëÇÏ±â À§ÇÑ ¼­ºê½Ã½ºÅÛÀ» °¡Á®¿È
+	// EnhancedInput ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(InputSubsystem);
 
-	// InputConfigDA¿¡ ÀúÀåµÈ MappingContext¸¦ InputSubsystem¿¡ µî·Ï (¿ì¼±¼øÀ§ 0)
+	// InputConfigDAï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ MappingContextï¿½ï¿½ InputSubsystemï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½ 0)
 	InputSubsystem->AddMappingContext(InputConfigDA->InputMappingContext, 0);
 
-	// ÀÔ·ÂÀ» Ã³¸®ÇÒ ÄÄÆ÷³ÍÆ®¸¦ Ä³½ºÆÃ
+	// ï¿½Ô·ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½
 	URagnarokEnhancedInputComponent* RagnarokInputComponent
 		= CastChecked<URagnarokEnhancedInputComponent>(PlayerInputComponent);
 
 	check(RagnarokInputComponent);
 
-	// InputConfigDA¿¡ Á¤ÀÇµÈ "Move" InputTag¿¡ ´ëÇØ, Triggered ½Ã InputMove ÇÔ¼ö¸¦ ¹ÙÀÎµù
+	// InputConfigDAï¿½ï¿½ ï¿½ï¿½ï¿½Çµï¿½ "Move" InputTagï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, Triggered ï¿½ï¿½ InputMove ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
 	RagnarokInputComponent->BindNativeInputAction(
 		InputConfigDA,
 		RagnarokGameplayTags::InputTag_Move,

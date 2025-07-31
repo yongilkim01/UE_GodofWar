@@ -13,7 +13,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"

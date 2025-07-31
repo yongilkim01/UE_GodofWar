@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 
 void UCharacterPrimaryAssetKratos::LoadAsset()

@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Abilities/Common/SpawnWeaponGameplayAbility.h"
 
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
@@ -96,7 +96,7 @@ void USpawnWeaponGameplayAbility::AttachWeaponToCharacter()
 		RagnarokWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
-			SocketNameToAttachTo // FName Å¸ÀÔÀÇ ¸â¹ö º¯¼ö¿©¾ß ÇÔ
+			SocketNameToAttachTo // FName Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		);
 	}
 

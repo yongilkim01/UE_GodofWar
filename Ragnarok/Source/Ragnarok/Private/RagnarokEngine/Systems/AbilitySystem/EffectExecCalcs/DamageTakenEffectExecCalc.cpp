@@ -5,7 +5,7 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 struct FRagnarokDamageCapture
 {

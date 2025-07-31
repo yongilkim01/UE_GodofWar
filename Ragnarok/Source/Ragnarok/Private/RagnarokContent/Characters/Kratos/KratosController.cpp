@@ -2,7 +2,7 @@
 
 
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 AKratosController::AKratosController()
 {

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
+#include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
 #include "GruntlingEnemyCharacter.generated.h"
 
 /**

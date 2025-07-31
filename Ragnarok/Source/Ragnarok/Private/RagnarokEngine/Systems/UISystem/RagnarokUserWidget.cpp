@@ -5,8 +5,8 @@
 #include "RagnarokEngine/Systems/UISystem/UIInterface.h"
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Objects/Characters/Components/EnemyUIComponent.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
+#include "RagnarokContent/Characters/Enemy/Components/EnemyUIComponent.h"
 
 void URagnarokUserWidget::NativeOnInitialized()
 {

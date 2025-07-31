@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Systems/AISystem/RagnarokAIController.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"

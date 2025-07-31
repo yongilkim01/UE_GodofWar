@@ -4,7 +4,7 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayAbility.h"
 
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
 #include "AbilitySystemGlobals.h"

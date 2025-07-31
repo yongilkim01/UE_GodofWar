@@ -4,7 +4,7 @@
 #include "RagnarokEngine/Systems/AISystem/BTDecorators/AbortConditionBTDecorator.h"
 
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
 #include "BehaviorTree/BlackboardComponent.h"

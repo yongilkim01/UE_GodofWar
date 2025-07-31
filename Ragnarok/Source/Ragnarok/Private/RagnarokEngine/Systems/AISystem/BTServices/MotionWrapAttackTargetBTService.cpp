@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Systems/AISystem/BTServices/MotionWrapAttackTargetBTService.h"
-#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
+#include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
 
 #include "AIController.h"
 #include "MotionWarpingComponent.h"

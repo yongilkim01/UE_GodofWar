@@ -5,7 +5,7 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 
 #include "AbilitySystemBlueprintLibrary.h"

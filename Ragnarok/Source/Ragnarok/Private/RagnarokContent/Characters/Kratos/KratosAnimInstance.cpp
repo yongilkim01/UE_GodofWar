@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Kratos/KratosAnimInstance.h"
 
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 void UKratosAnimInstance::NativeInitializeAnimation()

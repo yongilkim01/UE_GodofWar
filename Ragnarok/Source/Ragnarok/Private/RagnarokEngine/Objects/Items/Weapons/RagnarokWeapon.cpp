@@ -3,7 +3,7 @@
 
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
-#include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 
 #include "Components/BoxComponent.h"
