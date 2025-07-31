@@ -33,11 +33,19 @@ public:
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	virtual void InputPressed(
+		const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo, 
+		const FGameplayAbilityActivationInfo ActivationInfo) override;
 	//~ End UGameplayAbility Interface.
 
+	//~ Begin UKratosGameplayAbility Interface.
+	virtual void OnMontageCompleted() override;
+	virtual void OnMontageBlendOut() override;
+	//~ End UKratosGameplayAbility Interface.
+
 protected:
-	UFUNCTION()
-	void OnResetAttackComboCount();
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 
@@ -52,9 +60,15 @@ protected:
 
 	UFUNCTION()
 	void StartAttackWaitState();
+
 	void ExitAttackWaitState();
 	void PauseMontageAtPosition(float Position);
-	void ResumeMontage();
+
+private:
+	void ExecuteAttackMontage(int32 ComboCount);
+	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
+	void ResetAttackComboCount();
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")

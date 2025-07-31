@@ -19,7 +19,17 @@ void URagnarokAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& 
 			continue;
 		}
 
-		TryActivateAbility(AbilitySpec.Handle);
+		UGameplayAbility* ActiveAbility = AbilitySpec.GetPrimaryInstance();
+
+		if (nullptr != ActiveAbility && true == ActiveAbility->IsActive())
+		{
+			ActiveAbility->InputPressed(AbilitySpec.Handle, AbilityActorInfo.Get(), FGameplayAbilityActivationInfo());
+		}
+		else
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
+
 	}
 }
 

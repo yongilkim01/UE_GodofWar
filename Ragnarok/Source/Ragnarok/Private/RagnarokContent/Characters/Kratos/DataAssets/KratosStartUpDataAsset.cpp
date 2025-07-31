@@ -19,10 +19,11 @@ void UKratosStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySyste
 		}
 
 		FGameplayAbilitySpec AbilitySpec(KratosAbilitySet.Ability);
+
 		AbilitySpec.SourceObject = InASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
 		AbilitySpec.GetDynamicSpecSourceTags().AddTag(KratosAbilitySet.InputTag);
 
-		InASC->GiveAbility(AbilitySpec);
+		FGameplayAbilitySpecHandle SpecHandle = InASC->GiveAbility(AbilitySpec);
 	}
 }
