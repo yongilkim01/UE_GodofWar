@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyAIController.h"
+#include "RagnarokEngine/AI/Controllers/EnemyAIController.h"
 #include "GruntlingGuardianAIController.generated.h"
 
 /**

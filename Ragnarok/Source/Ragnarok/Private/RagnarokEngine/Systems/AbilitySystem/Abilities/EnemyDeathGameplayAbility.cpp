@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/GameplayAbilities/EnemyDeathGameplayAbility.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
+#include "RagnarokEngine/Systems/AbilitySystem/Abilities/EnemyDeathGameplayAbility.h"
+#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"

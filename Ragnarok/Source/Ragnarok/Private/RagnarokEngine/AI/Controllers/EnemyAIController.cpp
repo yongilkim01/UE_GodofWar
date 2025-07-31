@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/EnemyAIController.h"
+#include "RagnarokEngine/AI/Controllers/EnemyAIController.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 #include "Navigation/CrowdFollowingComponent.h"
@@ -65,11 +65,11 @@ ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Oth
 
 	if (nullptr != TeamAgent && GetGenericTeamId() > TeamAgent->GetGenericTeamId())
 	{
-		// ÆÀ ¾ÆÀÌµð°¡ ¼­·Î ´Ù¸£´Ù¸é Àû´ë °ü°è¸¦ ¹ÝÈ¯.
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½è¸¦ ï¿½ï¿½È¯.
 		return ETeamAttitude::Hostile;
 	}
 
-	// Àû´ë °ü°è°¡ ¾Æ´Ï¶ó¸é °°Àº Áø¿µ °ü°è¸¦ ¹ÝÈ¯.
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½è°¡ ï¿½Æ´Ï¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½è¸¦ ï¿½ï¿½È¯.
 	return ETeamAttitude::Friendly;
 }
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyGameplayAbility.h"
+#include "RagnarokEngine/Systems/AbilitySystem/Abilities/EnemyGameplayAbility.h"
 #include "EnemyDeathGameplayAbility.generated.h"
 
 class UNiagaraSystem;

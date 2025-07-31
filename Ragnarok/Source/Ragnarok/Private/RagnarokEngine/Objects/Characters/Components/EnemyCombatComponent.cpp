@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCombatComponent.h"
+#include "RagnarokEngine/Objects/Characters/Components/EnemyCombatComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 
@@ -9,23 +9,23 @@
 
 void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	// ÀÌ¹Ì ÄÝ¸®Àü Ã³¸®°¡µÈ ¾×ÅÍ¿¡ Æ÷ÇÔÀÌ µÈ´Ù¸é ÇÔ¼ö Áß´Ü
+	// ï¿½Ì¹ï¿½ ï¿½Ý¸ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È´Ù¸ï¿½ ï¿½Ô¼ï¿½ ï¿½ß´ï¿½
 	if (true == OverlappedActorArray.Contains(HitActor))
 	{
 		return;
 	}
 	OverlappedActorArray.AddUnique(HitActor);
 
-	// TODO: °ø°Ý ºí·Ï ±â´É ±¸Çö
+	// TODO: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	bool bVaildBlock = false;
 
 	const bool bTargetBlock= false;
 	const bool bAttackUnblockable = false;
 
-	// »ó´ë¹æÀÇ °ø°Ý ºí·ÏÀÌ ½ÇÇà ¶Ç´Â È°¼ºÈ­µÇ¾î ÀÖ°í ³» °ø°ÝÀÌ ºí·ÏÇÒ ¼ö ÀÖ´Â °ø°ÝÀÎ °æ¿ì
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (true == bTargetBlock && false == bAttackUnblockable)
 	{
-		// TODO: ºí·ÏÀÌ À¯È¿ÇÑÁö È®ÀÎ
+		// TODO: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	}
 
 	FGameplayEventData EventData;
@@ -34,7 +34,7 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	
 	if (true == bVaildBlock)
 	{
-		// TODO: ºí·Ï Ã³¸® ¼º°ø ±¸Çö
+		// TODO: ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 	else
 	{

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/EnemyBTTaskNode.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
+#include "RagnarokEngine/AI/BehaviorTree/Tasks/EnemyBTTaskNode.h"
+#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
 
 #include "AIController.h"
@@ -38,13 +38,13 @@ EBTNodeResult::Type UEnemyBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerC
                     return EBTNodeResult::Failed;
                 }
             }
-            else // ControlledPawnÀÌ ¾øÀ½
+            else // ControlledPawnï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             {
                 Debug::Print(TEXT("UEnemyBTTaskNode: No Controlled Pawn found."), FColor::Yellow);
                 return EBTNodeResult::Failed;
             }
         }
-        else // AIController°¡ ¾øÀ½
+        else // AIControllerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             Debug::Print(TEXT("UEnemyBTTaskNode: No AIController found."), FColor::Yellow);
             return EBTNodeResult::Failed;

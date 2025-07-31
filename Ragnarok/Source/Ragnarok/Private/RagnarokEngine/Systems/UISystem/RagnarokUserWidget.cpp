@@ -6,7 +6,7 @@
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokEngine/Core/Tools/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyUIComponent.h"
+#include "RagnarokEngine/Objects/Characters/Components/EnemyUIComponent.h"
 
 void URagnarokUserWidget::NativeOnInitialized()
 {

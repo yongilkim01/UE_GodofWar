@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/EnemyStartUpDataAsset.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyGameplayAbility.h"
+#include "RagnarokEngine/Objects/Characters/DataAssets/EnemyStartUpDataAsset.h"
+#include "RagnarokEngine/Systems/AbilitySystem/Abilities/EnemyGameplayAbility.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 void UEnemyStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)

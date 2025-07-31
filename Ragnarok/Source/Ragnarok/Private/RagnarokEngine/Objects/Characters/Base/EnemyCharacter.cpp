@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCombatComponent.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyUIComponent.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyStartUpDataAsset.h"
+#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
+#include "RagnarokEngine/Objects/Characters/Components/EnemyCombatComponent.h"
+#include "RagnarokEngine/Objects/Characters/Components/EnemyUIComponent.h"
+#include "RagnarokEngine/Objects/Characters/DataAssets/EnemyStartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"

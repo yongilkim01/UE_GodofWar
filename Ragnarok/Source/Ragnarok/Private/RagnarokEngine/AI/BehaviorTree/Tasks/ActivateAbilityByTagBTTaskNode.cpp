@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/EnemySystem/BTTasks/ActivateAbilityByTagBTTaskNode.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyCharacter.h"
+#include "RagnarokEngine/AI/BehaviorTree/Tasks/ActivateAbilityByTagBTTaskNode.h"
+#include "RagnarokEngine/Objects/Characters/Base/EnemyCharacter.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
 EBTNodeResult::Type UActivateAbilityByTagBTTaskNode::ExecuteEnemyTask(AEnemyCharacter* EnemyCharacter)

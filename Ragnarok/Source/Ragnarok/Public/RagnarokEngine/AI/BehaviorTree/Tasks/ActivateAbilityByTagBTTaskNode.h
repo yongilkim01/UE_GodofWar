@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/EnemySystem/EnemyBTTaskNode.h"
+#include "RagnarokEngine/AI/BehaviorTree/Tasks/EnemyBTTaskNode.h"
 #include "ActivateAbilityByTagBTTaskNode.generated.h"
 
 /**
