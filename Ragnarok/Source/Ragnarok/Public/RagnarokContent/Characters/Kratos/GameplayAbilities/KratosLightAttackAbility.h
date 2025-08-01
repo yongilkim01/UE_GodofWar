@@ -43,6 +43,7 @@ public:
 	//~ Begin UKratosGameplayAbility Interface.
 	virtual void OnMontageCompleted() override;
 	virtual void OnMontageBlendOut() override;
+	virtual void OnMontageInterrupted() override;
 	//~ End UKratosGameplayAbility Interface.
 
 protected:

@@ -43,6 +43,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
+
 	CurrentSpecHandle = Handle;
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
@@ -63,16 +65,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	if (nullptr != WaitEventTask)
 	{
 		WaitEventTask->EventReceived.AddDynamic(this, &UKratosLightAttackAbility::OnGameplayEventReceived);
-
-		if (true == WaitEventTask->EventReceived.IsBound())
-		{
-			Debug::Print(TEXT("LightAttack Delegate Binding Sucess"));
-		}
-		else
-		{
-			Debug::Print(TEXT("LightAttack Delegate Binding Failed"));
-		}
-
 		WaitEventTask->ReadyForActivation();
 	}
 
@@ -107,6 +99,9 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	Debug::Print(TEXT("UKratosLightAttackAbility::EndAbility"));
+
 
 	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
 	{
@@ -143,6 +138,8 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+
 	if (ERagnarokAttackState::ERAS_Attacking == CurAttackState)
 	{
 		// TODO: 현재 상태가 공격 대기 상태중일떄 콤보 카운트를 1 증가시키고 새로운 애니메이션 몽타주를 실행.
@@ -160,7 +157,10 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 			}
 
 			CurComboCount++;
+
 		}
+
+		Debug::Print(TEXT("Cur Combo Count"), CurComboCount);
 
 		ExecuteAttackMontage(CurComboCount);
 	}
@@ -168,6 +168,8 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 
 void UKratosLightAttackAbility::OnMontageCompleted()
 {
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
+
 	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
@@ -176,10 +178,17 @@ void UKratosLightAttackAbility::OnMontageCompleted()
 
 void UKratosLightAttackAbility::OnMontageBlendOut()
 {
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+
 	//if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	//{
 		//EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	//}
+}
+
+void UKratosLightAttackAbility::OnMontageInterrupted()
+{
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::ResetAttackComboCount()
