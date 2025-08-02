@@ -138,7 +138,7 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+	//Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
 
 	if (ERagnarokAttackState::ERAS_Attacking == CurAttackState)
 	{
@@ -168,7 +168,7 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 
 void UKratosLightAttackAbility::OnMontageCompleted()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
+	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
 
 	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	{
@@ -178,7 +178,7 @@ void UKratosLightAttackAbility::OnMontageCompleted()
 
 void UKratosLightAttackAbility::OnMontageBlendOut()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 
 	//if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	//{
@@ -188,7 +188,7 @@ void UKratosLightAttackAbility::OnMontageBlendOut()
 
 void UKratosLightAttackAbility::OnMontageInterrupted()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::ResetAttackComboCount()
