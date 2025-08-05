@@ -49,27 +49,21 @@ public:
 protected:
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
-
 	UFUNCTION()
-	void OnAttackMontageCompleted();
+	void OnAttackWaitStartEventRecived(FGameplayEventData Payload);
+	UFUNCTION()
+	void OnAttackWaitEndEventRecived(FGameplayEventData Payload);
 
 	UFUNCTION()
 	void OnAttackWaitTimeOut();
-
-	UFUNCTION()
-	void OnNextComboInput();
-
 	UFUNCTION()
 	void StartAttackWaitState();
-
-	void ExitAttackWaitState();
-	void PauseMontageAtPosition(float Position);
 
 private:
 	void ExecuteAttackMontage(int32 ComboCount);
 	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
 	void ResetAttackComboCount();
-
+	void ProcessNextCombo();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
@@ -101,4 +95,7 @@ private:
 	bool PrevbOrientRotationToMovement;
 	int AttackAbilityActiveCount;
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
+	bool bReserveComboAttack = false;
 };

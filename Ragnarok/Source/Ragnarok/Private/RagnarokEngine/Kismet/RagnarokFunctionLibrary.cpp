@@ -46,3 +46,17 @@ void URagnarokFunctionLibrary::AddGameplayTagToActor(AActor* InActor, FGameplayT
 		ASC->AddLooseGameplayTag(TagToAdd);
 	}
 }
+
+void URagnarokFunctionLibrary::SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag, float EventMagnitude)
+{
+	if (nullptr == InActor)
+	{
+		return;
+	}
+
+	FGameplayEventData EventData;
+	EventData.EventTag = EventTag;
+	EventData.EventMagnitude = EventMagnitude;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(InActor, EventTag, EventData);
+}
