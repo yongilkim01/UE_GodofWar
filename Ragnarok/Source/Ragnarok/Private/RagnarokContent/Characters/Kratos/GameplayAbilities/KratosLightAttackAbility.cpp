@@ -20,16 +20,6 @@
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
-/*
-	크레토스가 첫번째 공격을 했다 
-	-> CurComboCount, UseComboCount는 둘다 1이다 
-	-> CurComboCount를 1을 더해서 2가 된다.
-	-> 애니메이션 실행 도중 현재 공격 상태가 AttackWait상태가 됀다.
-	-> Attack Wait 도중 추가적인 공격을 할 경우와 아닌 경우로 나뉘게 된다.
-
-		-> 다음 공격이 들어왔을 경우에는 현재
-*/
-
 UKratosLightAttackAbility::UKratosLightAttackAbility()
 {
 	AttackWaitPositionMap.Add(1, 0.7f);
@@ -43,7 +33,7 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	//Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
+	Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
 	CurrentSpecHandle = Handle;
 	CurrentActorInfo = ActorInfo;
@@ -105,35 +95,31 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 	Debug::Print(TEXT("UKratosLightAttackAbility::EndAbility"));
 
-
-	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
-	{
-		SetPlayRateAttackMontage(CurComboCount, 1);
-		//ExitAttackWaitState();
-	}
-
-	CurAttackState = ERagnarokAttackState::ERAS_None;
-
 	if (nullptr != AttackMontageTask)
 	{
 		AttackMontageTask->EndTask();
 		AttackMontageTask = nullptr;
 	}
 
-	//if (nullptr != GetKratosFromActorInfo())
-	//{
-	//	GetKratosFromActorInfo()->AddKratosAttackCount(-1);
+	if (nullptr != WaitEventTask)
+	{
+		WaitEventTask->EndTask();
+		WaitEventTask = nullptr;
+	}
 
-	//	if (GetKratosFromActorInfo()->GetKratosAttackCount() <= 0)
-	//	{
-	//		GetKratosFromActorInfo()->SetKratosAttackCount(0);
-	//		GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-	//	}
-	//}
+	if (nullptr != AttackWaitStartTask)
+	{
+		AttackWaitStartTask->EndTask();
+		AttackWaitStartTask = nullptr;
+	}
 
-	//FTimerDelegate TimerDel;
-	//TimerDel.BindUFunction(this, FName("OnResetAttackComboCount"));
-	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.3f, false);
+	if (nullptr != AttackWaitEndTask)
+	{
+		AttackWaitEndTask->EndTask();
+		AttackWaitEndTask = nullptr;
+	}
+
+	bReserveComboAttack = false;
 
 	ResetAttackComboCount();
 }
@@ -184,12 +170,6 @@ void UKratosLightAttackAbility::ResetAttackComboCount()
 
 void UKratosLightAttackAbility::ProcessNextCombo()
 {
-	//if (CurComboCount >= LightAttackMontageMap.Num())
-	//{
-	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-	//	return;
-	//}
-
 	if (nullptr != AttackMontageTask)
 	{
 		AttackMontageTask->EndTask();
@@ -204,7 +184,7 @@ void UKratosLightAttackAbility::ProcessNextCombo()
 			GetKratosFromActorInfo(), JumpTag);
 	}
 
-	if (CurComboCount >= LightAttackMontageMap.Num())
+	if (CurComboCount > LightAttackMontageMap.Num())
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
@@ -264,44 +244,6 @@ void UKratosLightAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData P
 	bReserveComboAttack = false;
 }
 
-
-void UKratosLightAttackAbility::StartAttackWaitState()
-{
-	if (ERagnarokAttackState::ERAS_Attacking != CurAttackState)
-	{
-		return;
-	}
-
-	CurAttackState = ERagnarokAttackState::ERAS_AttackWait;
-
-	UAnimInstance* AnimInstance = GetKratosFromActorInfo()->GetMesh()->GetAnimInstance();
-
-	if (nullptr != AnimInstance && nullptr != LightAttackMontageMap[UseComboCount])
-	{
-		AnimInstance->Montage_SetPlayRate(LightAttackMontageMap[UseComboCount], 0.0f);
-	}
-
-	FTimerDelegate TimerDelegate;
-	TimerDelegate.BindUFunction(this, FName("OnAttackWaitTimeOut"));
-	GetWorld()->GetTimerManager().SetTimer(AttackWaitTimerHandle, TimerDelegate, ComboWaitDuration, false);
-}
-
-void UKratosLightAttackAbility::OnAttackWaitTimeOut()
-{
-	// 현재 공격 상태가 기다리고 있는 상태가 아니라면
-	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
-	{
-		//ExitAttackWaitState();
-		SetPlayRateAttackMontage(CurComboCount, 0.0f);
-	}
-}
-
-//void UKratosLightAttackAbility::ExitAttackWaitState()
-//{
-//	CurAttackState = ERagnarokAttackState::ERAS_Recovery;
-//	GetWorld()->GetTimerManager().ClearTimer(AttackWaitTimerHandle);
-//}
-
 void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 {
 	if (false == LightAttackMontageMap.Contains(ComboCount))
@@ -318,9 +260,10 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		LightAttackMontageMap[ComboCount],
 		1.0f,
 		NAME_None,
-		false,
+		true,
+		1.0f,
 		0.0f,
-		0.0f
+		false
 	);
 
 	if (nullptr != AttackMontageTask)

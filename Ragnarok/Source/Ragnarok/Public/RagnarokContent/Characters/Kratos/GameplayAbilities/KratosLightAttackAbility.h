@@ -54,11 +54,6 @@ protected:
 	UFUNCTION()
 	void OnAttackWaitEndEventRecived(FGameplayEventData Payload);
 
-	UFUNCTION()
-	void OnAttackWaitTimeOut();
-	UFUNCTION()
-	void StartAttackWaitState();
-
 private:
 	void ExecuteAttackMontage(int32 ComboCount);
 	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
