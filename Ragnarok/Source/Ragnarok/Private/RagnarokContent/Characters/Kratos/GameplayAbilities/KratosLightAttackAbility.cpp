@@ -52,7 +52,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	bReserveComboAttack = false;
 
-	// 첫번째 콤보 어택 실행
 	ExecuteAttackMontage(CurComboCount);
 
 	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -98,33 +97,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		AttackWaitEndTask->ReadyForActivation();
 
 	}
-
-	
-	//if (nullptr != GetKratosFromActorInfo())
-	//{
-	//	if (0 == GetKratosFromActorInfo()->GetKratosAttackCount())
-	//	{
-	//		GetKratosFromActorInfo()->GetCharacterMovement()->DisableMovement();
-	//	}
-
-	//	GetKratosFromActorInfo()->AddKratosAttackCount(1);
-	//}
-
-	// 현재 코보 카운트가 약공격의 개수하고 같다면 Reset 메소드 호출
-	//if (CurComboCount == LightAttackMontageMap.Num())
-	//{
-	//	OnResetAttackComboCount();
-	//}
-	//else
-	//{
-	//	if (CurComboCount + 1 == LightAttackMontageMap.Num())
-	//	{
-	//		URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
-	//			GetKratosFromActorInfo(), JumpTag);
-	//	}
-
-	//	CurComboCount++;
-	//}
 }
 
 void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -148,7 +120,6 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 		AttackMontageTask = nullptr;
 	}
 
-
 	//if (nullptr != GetKratosFromActorInfo())
 	//{
 	//	GetKratosFromActorInfo()->AddKratosAttackCount(-1);
@@ -169,36 +140,24 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	//Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
 
-	if (ERagnarokAttackState::ERAS_Attacking == CurAttackState)
+	switch (CurAttackState)
 	{
-		// TODO: 현재 상태가 공격 대기 상태중일떄 콤보 카운트를 1 증가시키고 새로운 애니메이션 몽타주를 실행.
-		
-		if (CurComboCount == LightAttackMontageMap.Num())
-		{
-			EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-		}
-		else
-		{
-			if (CurComboCount + 1 == LightAttackMontageMap.Num())
-			{
-				URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
-					GetKratosFromActorInfo(), JumpTag);
-			}
-
-			CurComboCount++;		
-			
-			Debug::Print(TEXT("Cur Combo Count"), CurComboCount);
-
-			ExecuteAttackMontage(CurComboCount);
-		}
+	case ERagnarokAttackState::ERAS_Attacking:
+		bReserveComboAttack = true;
+		break;
+	case ERagnarokAttackState::ERAS_AttackWait:
+		ProcessNextCombo();
+		break;
+	default:
+		break;
 	}
 }
 
 void UKratosLightAttackAbility::OnMontageCompleted()
 {
-	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
 
 	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	{
@@ -208,17 +167,12 @@ void UKratosLightAttackAbility::OnMontageCompleted()
 
 void UKratosLightAttackAbility::OnMontageBlendOut()
 {
-	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
-
-	//if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
-	//{
-		//EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-	//}
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::OnMontageInterrupted()
 {
-	//Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::ResetAttackComboCount()
@@ -230,6 +184,34 @@ void UKratosLightAttackAbility::ResetAttackComboCount()
 
 void UKratosLightAttackAbility::ProcessNextCombo()
 {
+	//if (CurComboCount >= LightAttackMontageMap.Num())
+	//{
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//	return;
+	//}
+
+	if (nullptr != AttackMontageTask)
+	{
+		AttackMontageTask->EndTask();
+		AttackMontageTask = nullptr;
+	}
+
+	CurComboCount++;
+
+	if (LightAttackMontageMap.Num() == CurComboCount + 1)
+	{
+		URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
+			GetKratosFromActorInfo(), JumpTag);
+	}
+
+	if (CurComboCount >= LightAttackMontageMap.Num())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+	else
+	{
+		ExecuteAttackMontage(CurComboCount);
+	}
 }
 
 void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
@@ -257,7 +239,7 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
 	}
 
-	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
+	//Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 }
 
 void UKratosLightAttackAbility::OnAttackWaitStartEventRecived(FGameplayEventData Payload)
@@ -273,6 +255,13 @@ void UKratosLightAttackAbility::OnAttackWaitStartEventRecived(FGameplayEventData
 
 void UKratosLightAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData Payload)
 {
+	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
+	{
+		CurAttackState = ERagnarokAttackState::ERAS_Attacking;
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+
+	bReserveComboAttack = false;
 }
 
 
