@@ -45,69 +45,95 @@ private:
 	void ComputeRollingDirection();
 
 private:
+	void BeginSmoothMovement();
+	void TickSmoothMovement();
+	void EndSmmothMovement();
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+private:
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	FRotator PrevRotator = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	FName WarpTargetName;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* AbilityAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeForwardAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeRightAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeLeftAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeBackwardAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeRFAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeLFAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeRBAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeLBAnimMontage = nullptr;
 
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingForwardAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingRightAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingLeftAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingBackwardAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingRFAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingLFAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingRBAnimMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Kratos|Ability")
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* RollingLBAnimMontage = nullptr;
 
 private:
-	float RollDistance = 1000.f;
+	/** 회피 거리 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	float DodgeDistance = 300.0f;
+
+	/** 회피 거리 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	float RollDistance = 500.f;
+
+	/** 이동 시간 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	float MovementDuration = 0.5f;
+
+	/** 이동 속도 커브 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	UCurveFloat* MovementDurationCurve;
+
+	/** 이동 관련 변수 */
+	FVector StartLocation = FVector::ZeroVector;
+	FVector TargetLocation = FVector::ZeroVector;
+	float ElapsedTime = 0.0;
+	FTimerHandle MovementTimerHandle;
+
 	FVector RollingDirection = FVector::ZeroVector;
 	FTimerHandle TimerHandle;
 	bool bEvasion = false;

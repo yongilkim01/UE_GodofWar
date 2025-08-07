@@ -22,11 +22,8 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	CurrentSpecHandle = Handle;
-	CurrentActorInfo = ActorInfo;
-	CurrentActivationInfo = ActivationInfo;
-
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
 	UAbilityTask_WaitDelay* DelayTask = UAbilityTask_WaitDelay::WaitDelay(this, 0.05f);
 
@@ -45,9 +42,9 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
+
 	SetKratosRollingState(false);
-	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	EndSmmothMovement();
 
 	FTimerDelegate TimerDel;
 
@@ -58,11 +55,9 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 
 void UKratosRollGameplayAbility::OnDelayFinished()
 {
-	PrevRotator = CurrentActorInfo->OwnerActor.Get()->GetActorRotation();
 	SetKratosRollingState(true);
-	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
-	if (bEvasion)
+	if (true == bEvasion)
 	{
 		ComputeRollingDirection();
 		bEvasion = false;
@@ -76,6 +71,8 @@ void UKratosRollGameplayAbility::OnDelayFinished()
 
 	if (nullptr != AbilityAnimMontage)
 	{
+		BeginSmoothMovement();
+
 		UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 			this,
 			NAME_None,
@@ -117,20 +114,9 @@ void UKratosRollGameplayAbility::ComputeDodgeDirection()
 
 	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 
-	GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
+	//GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
 
 	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
-
-	if (nullptr != MortionWarpingComponent)
-	{
-		const FVector StartLocation = GetKratosFromActorInfo()->GetActorLocation();
-		const FVector TargetLocation = StartLocation + (RollingDirection * RollDistance);
-		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
-			WarpTargetName,
-			TargetLocation,
-			FRotator::ZeroRotator
-		);
-	}
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
@@ -189,18 +175,7 @@ void UKratosRollGameplayAbility::ComputeRollingDirection()
 
 	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
-	GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
-
-	/*if (nullptr != MortionWarpingComponent)
-	{
-		const FVector StartLocation = GetKratosFromActorInfo()->GetActorLocation();
-		const FVector TargetLocation = StartLocation + (RollingDirection * RollDistance);
-		MortionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(
-			WarpTargetName,
-			FVector::ZeroVector,
-			RollingDirection.ToOrientationRotator()
-		);
-	}*/
+	//GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
@@ -208,9 +183,6 @@ void UKratosRollGameplayAbility::ComputeRollingDirection()
 	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
 	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
 	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
-
-	//AbilityAnimMontage = RollingForwardAnimMontage;
-
 
 	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
 	{
@@ -254,4 +226,49 @@ void UKratosRollGameplayAbility::ComputeRollingDirection()
 		AbilityAnimMontage = RollingBackwardAnimMontage;
 	}
 
+}
+
+void UKratosRollGameplayAbility::BeginSmoothMovement()
+{
+	StartLocation = Kratos->GetActorLocation();
+	
+	float Distance = bEvasion ? DodgeDistance : RollDistance;
+	TargetLocation = StartLocation + (RollingDirection * Distance);
+
+	ElapsedTime = 0.0f;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		MovementTimerHandle,
+		this,
+		&UKratosRollGameplayAbility::TickSmoothMovement,
+		0.016f,
+		true
+	);
+}
+
+void UKratosRollGameplayAbility::TickSmoothMovement()
+{
+	ElapsedTime += GetWorld()->GetDeltaSeconds();
+
+	float Alpha = FMath::Clamp(ElapsedTime / MovementDuration, 0.0f, 1.0f);
+
+	if(nullptr != MovementDurationCurve)
+	{
+		Alpha = MovementDurationCurve->GetFloatValue(Alpha);
+	}
+
+	FVector CalLocation = FMath::Lerp(StartLocation, TargetLocation, Alpha);
+
+	FHitResult HitResult;
+	Kratos->SetActorLocation(CalLocation, true, &HitResult);
+
+	if (Alpha >= 1.0f)
+	{
+		EndSmmothMovement();
+	}
+}
+
+void UKratosRollGameplayAbility::EndSmmothMovement()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 }
