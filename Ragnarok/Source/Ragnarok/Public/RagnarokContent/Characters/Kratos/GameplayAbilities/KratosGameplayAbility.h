@@ -50,12 +50,10 @@ protected:
 	UFUNCTION()
 	virtual void OnMontageCancelled();
 
-protected:
-	FGameplayAbilitySpecHandle CurrentSpecHandle;
-	const FGameplayAbilityActorInfo* CurrentActorInfo;
-	FGameplayAbilityActivationInfo CurrentActivationInfo;
+	void SetKratosAttackingState(bool bAttacking);
+	void SetKratosRollingState(bool bRolling);
 
-private:
+protected:
 	TWeakObjectPtr<AKratos> Kratos;
 	TWeakObjectPtr<AKratosController> KratosController;
 };

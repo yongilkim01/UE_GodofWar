@@ -16,6 +16,7 @@ class UInputConfigDataAsset;
 class UInputComponent;
 class UKratosCombatComponent;
 class UKratosUIComponent;
+class UKratosGameplayAbility;
 
 struct FInputActionValue;
 
@@ -24,8 +25,10 @@ struct FInputActionValue;
  */
 UCLASS()
 class RAGNAROK_API AKratos : public ARagnarokCharacter
-	{
+{
 		GENERATED_BODY()
+public:
+	friend class UKratosGameplayAbility;
 
 public:
 	AKratos();
@@ -80,6 +83,7 @@ private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
 	int AttackCount = 0;
 	bool bRolling = false;
+	bool bAttacking = false;
 	float FixedCameraWorldZLocation = 0.0f;
 
 public:
@@ -87,6 +91,4 @@ public:
 	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }
 	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
 	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
-	FORCEINLINE bool IsRolling() { return bRolling; }
-	FORCEINLINE void SetIsRolling(bool NewValue) { bRolling = NewValue; }
 };

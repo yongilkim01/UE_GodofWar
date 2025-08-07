@@ -46,7 +46,7 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	CurrentActorInfo->OwnerActor.Get()->SetActorRotation(PrevRotator);
-	GetKratosFromActorInfo()->SetIsRolling(false);
+	SetKratosRollingState(false);
 	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 	FTimerDelegate TimerDel;
@@ -59,7 +59,7 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 void UKratosRollGameplayAbility::OnDelayFinished()
 {
 	PrevRotator = CurrentActorInfo->OwnerActor.Get()->GetActorRotation();
-	GetKratosFromActorInfo()->SetIsRolling(true);
+	SetKratosRollingState(true);
 	GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	if (bEvasion)

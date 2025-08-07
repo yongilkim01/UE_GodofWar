@@ -8,10 +8,18 @@
 
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 void UKratosGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	Kratos = GetKratosFromActorInfo();
+
+	if (nullptr == Kratos)
+	{
+		Debug::Print(TEXT("UKratosGameplayAbility::Kratos is nullptr"), FColor::Red);
+	}
 }
 
 AKratos* UKratosGameplayAbility::GetKratosFromActorInfo()
@@ -87,4 +95,14 @@ void UKratosGameplayAbility::OnMontageInterrupted()
 void UKratosGameplayAbility::OnMontageCancelled()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UKratosGameplayAbility::SetKratosAttackingState(bool bAttacking)
+{
+	Kratos->bAttacking = bAttacking;
+}
+
+void UKratosGameplayAbility::SetKratosRollingState(bool bRolling)
+{
+	Kratos->bRolling = bRolling;
 }

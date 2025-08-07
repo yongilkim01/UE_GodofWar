@@ -59,6 +59,8 @@ private:
 	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
 	void ResetAttackComboCount();
 	void ProcessNextCombo();
+	void LaunchCharacterForward(int32 ComboCount);
+	void LaunchCharacterForwardSmoothly(int32 ComboCount);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
@@ -83,7 +85,6 @@ private:
 	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
 	FTimerHandle AttackWaitTimerHandle;
 	float ComboWaitDuration = 1.0f;
-	TMap<int32, float> AttackWaitPositionMap;
 
 	FTimerHandle TimerHandle;
 	bool PrevbUseControllerRotationYaw;
@@ -93,4 +94,6 @@ private:
 	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
 	bool bReserveComboAttack = false;
+
+	TMap<int32, float> LaunchPowerMap;
 };

@@ -62,60 +62,31 @@ void AKratos::BeginPlay()
 	LoadKratosDataAsset();
 
 	FixedCameraWorldZLocation = MainCameraComponent->GetComponentLocation().Z;
-
-	//if (nullptr != KratosWidgetClass)
-	//{
-	//	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	//	UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PC, KratosWidgetClass);
-	//	if (WidgetInstance)
-	//	{
-	//		WidgetInstance->AddToViewport();
-	//	}
-	//}
 }
 
 void AKratos::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//if (bRolling) // Kratos.h�� bIsRolling ������ �ִٰ� �����մϴ�.
-	//{
-	//	//float CurrentZLocation = GetActorLocation().Z;
-	//	//Debug::Print(FString::Printf(TEXT("Kratos Z-Location (Rolling): %.2f"), CurrentZLocation));
-	//	FVector CurrentCameraLocation = MainCameraComponent->GetComponentLocation();
-	//	CurrentCameraLocation.Z = FixedCameraWorldZLocation;
-	//	MainCameraComponent->SetWorldLocation(CurrentCameraLocation);
-	//}
-	//else
-	//{
-	//	FixedCameraWorldZLocation = MainCameraComponent->GetComponentLocation().Z;
-	//}
 }
 
 void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	checkf(InputConfigDA, TEXT("Check input config data asset"));
 
-	// ���� ��Ʈ�ѷ��� APlayerController���� Ȯ�� ��, �׿� �ش��ϴ� LocalPlayer�� ������
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 
-	// EnhancedInput �ý����� ����ϱ� ���� ����ý����� ������
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
 	check(InputSubsystem);
 
-	// InputConfigDA�� ����� MappingContext�� InputSubsystem�� ��� (�켱���� 0)
 	InputSubsystem->AddMappingContext(InputConfigDA->InputMappingContext, 0);
 
-	// �Է��� ó���� ������Ʈ�� ĳ����
 	URagnarokEnhancedInputComponent* RagnarokInputComponent
 		= CastChecked<URagnarokEnhancedInputComponent>(PlayerInputComponent);
 
 	check(RagnarokInputComponent);
 
-	// InputConfigDA�� ���ǵ� "Move" InputTag�� ����, Triggered �� InputMove �Լ��� ���ε�
 	RagnarokInputComponent->BindNativeInputAction(
 		InputConfigDA,
 		RagnarokGameplayTags::InputTag_Move,
@@ -246,7 +217,7 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 
 void AKratos::InputMove(const FInputActionValue& InputActionValue)
 {
-	if (true == bRolling) return;
+	if (true == bRolling || true == bAttacking) return;
 
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);

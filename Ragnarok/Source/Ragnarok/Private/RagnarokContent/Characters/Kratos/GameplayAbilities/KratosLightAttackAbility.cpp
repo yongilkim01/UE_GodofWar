@@ -22,9 +22,10 @@
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()
 {
-	AttackWaitPositionMap.Add(1, 0.7f);
-	AttackWaitPositionMap.Add(2, 0.8f);
-	AttackWaitPositionMap.Add(3, 0.75f);
+	LaunchPowerMap.Add(1, 1600.0f);
+	LaunchPowerMap.Add(2, 1600.0f);
+	LaunchPowerMap.Add(3, 1600.0f);
+	LaunchPowerMap.Add(4, 1600.0f);
 
 	CurComboCount = 1;
 }
@@ -35,10 +36,7 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
-	CurrentSpecHandle = Handle;
-	CurrentActorInfo = ActorInfo;
-	CurrentActivationInfo = ActivationInfo;
-
+	SetKratosAttackingState(true);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	bReserveComboAttack = false;
 
@@ -120,6 +118,7 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	}
 
 	bReserveComboAttack = false;
+	SetKratosAttackingState(false);
 
 	ResetAttackComboCount();
 }
@@ -192,6 +191,43 @@ void UKratosLightAttackAbility::ProcessNextCombo()
 	{
 		ExecuteAttackMontage(CurComboCount);
 	}
+}
+
+void UKratosLightAttackAbility::LaunchCharacterForward(int32 ComboCount)
+{
+	if (nullptr == Kratos || false == LaunchPowerMap.Contains(ComboCount))
+	{
+		return;
+	}
+
+	float LaunchPower = LaunchPowerMap[ComboCount];
+
+	FVector ForwardVector = Kratos->GetActorForwardVector();
+	FVector LaunchVelocity = ForwardVector * LaunchPower;
+	LaunchVelocity.Z = 0.0f;
+
+	Kratos->LaunchCharacter(LaunchVelocity, true, false);
+}
+
+void UKratosLightAttackAbility::LaunchCharacterForwardSmoothly(int32 ComboCount)
+{
+	if (nullptr == Kratos || false == LaunchPowerMap.Contains(ComboCount))
+	{
+		return;
+	}
+	
+	UCharacterMovementComponent* KratosMovementComponent = Kratos->GetCharacterMovement();
+
+	float LaunchPower = LaunchPowerMap[ComboCount];
+
+	FVector CurVelocity = KratosMovementComponent->Velocity;
+	FVector ForwardVector = Kratos->GetActorForwardVector();
+	FVector AddVelocity = ForwardVector * LaunchPower;
+
+	FVector CalVelocity = CurVelocity + AddVelocity;
+	CalVelocity.Z = CurVelocity.Z;
+
+	KratosMovementComponent->Velocity = CalVelocity;
 }
 
 void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
@@ -273,6 +309,9 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		AttackMontageTask->OnInterrupted.AddDynamic(this, &UKratosLightAttackAbility::OnMontageInterrupted);
 		AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCancelled);
 		AttackMontageTask->ReadyForActivation();
+
+		LaunchCharacterForwardSmoothly(CurComboCount);
+
 	}
 	else
 	{
