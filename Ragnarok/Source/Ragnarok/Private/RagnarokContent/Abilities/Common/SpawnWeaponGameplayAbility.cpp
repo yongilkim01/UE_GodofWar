@@ -96,7 +96,7 @@ void USpawnWeaponGameplayAbility::AttachWeaponToCharacter()
 		RagnarokWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
-			SocketNameToAttachTo // FName Ÿ���� ��� �������� ��
+			SocketNameToAttachTo // FName 타입의 소켓 이름으로 무기 부착
 		);
 	}
 

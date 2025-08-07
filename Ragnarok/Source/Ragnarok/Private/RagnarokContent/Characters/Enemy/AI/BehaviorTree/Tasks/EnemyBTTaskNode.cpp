@@ -38,13 +38,13 @@ EBTNodeResult::Type UEnemyBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerC
                     return EBTNodeResult::Failed;
                 }
             }
-            else // ControlledPawn�� ����
+            else // ControlledPawn이 없음
             {
                 Debug::Print(TEXT("UEnemyBTTaskNode: No Controlled Pawn found."), FColor::Yellow);
                 return EBTNodeResult::Failed;
             }
         }
-        else // AIController�� ����
+        else // AIController가 없음
         {
             Debug::Print(TEXT("UEnemyBTTaskNode: No AIController found."), FColor::Yellow);
             return EBTNodeResult::Failed;

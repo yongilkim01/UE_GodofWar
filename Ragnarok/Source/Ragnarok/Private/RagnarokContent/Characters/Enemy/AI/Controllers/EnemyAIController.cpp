@@ -65,11 +65,11 @@ ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Oth
 
 	if (nullptr != TeamAgent && GetGenericTeamId() > TeamAgent->GetGenericTeamId())
 	{
-		// �� ���̵� ���� �ٸ��ٸ� ���� ���踦 ��ȯ.
+		// 두 팀아이디가 서로 다르다면 적대 관계를 반환.
 		return ETeamAttitude::Hostile;
 	}
 
-	// ���� ���谡 �ƴ϶�� ���� ���� ���踦 ��ȯ.
+	// 적대 관계가 아니라면 우호 관계 태도를 반환.
 	return ETeamAttitude::Friendly;
 }
 
