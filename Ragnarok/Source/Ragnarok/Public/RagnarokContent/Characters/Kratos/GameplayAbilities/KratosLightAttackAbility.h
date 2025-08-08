@@ -68,9 +68,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	int32 CurComboCount = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
-	int32 UseComboCount = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	FGameplayTag JumpTag;
@@ -87,9 +84,6 @@ private:
 	float ComboWaitDuration = 1.0f;
 
 	FTimerHandle TimerHandle;
-	bool PrevbUseControllerRotationYaw;
-	bool PrevbOrientRotationToMovement;
-	int AttackAbilityActiveCount;
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;

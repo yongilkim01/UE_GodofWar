@@ -238,7 +238,7 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 		EffectClass,
 		WeaponDamage,
 		KratosGameplayTags::Kratos_SetByCaller_AttackType_Light,
-		UseComboCount);
+		CurComboCount);
 
 	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
 
