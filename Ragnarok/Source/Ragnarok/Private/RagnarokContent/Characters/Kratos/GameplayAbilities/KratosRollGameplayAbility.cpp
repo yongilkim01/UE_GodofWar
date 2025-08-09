@@ -22,29 +22,47 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	Debug::Print(TEXT("UKratosRollGameplayAbility::ActivateAbility"));
+
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
-	UAbilityTask_WaitDelay* DelayTask = UAbilityTask_WaitDelay::WaitDelay(this, 0.05f);
+	SetKratosRollingState(true);
+	ComputeDodgeDirection();
+	BeginSmoothMovement();
 
-	if (nullptr != DelayTask)
+	RollMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		NAME_None,
+		RollAnimMontage,
+		1.0f,
+		NAME_None,
+		true,
+		1.0f,
+		0.0f,
+		false);
+
+	if (nullptr != RollMontageTask)
 	{
-		DelayTask->OnFinish.AddDynamic(this, &UKratosRollGameplayAbility::OnDelayFinished);
-		DelayTask->ReadyForActivation();
+		RollMontageTask->OnCompleted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCompleted);
+		RollMontageTask->OnBlendOut.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageBlendOut);
+		RollMontageTask->OnInterrupted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageInterrupted);
+		RollMontageTask->OnCancelled.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCancelled);
+		RollMontageTask->ReadyForActivation();
 	}
 	else
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
-
 }
 
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	Debug::Print(TEXT("UKratosRollGameplayAbility::EndAbility"));
 
-	SetKratosRollingState(false);
 	EndSmmothMovement();
+	SetKratosRollingState(false);
 
 	FTimerDelegate TimerDel;
 
@@ -53,118 +71,84 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 
 }
 
-void UKratosRollGameplayAbility::OnDelayFinished()
+void UKratosRollGameplayAbility::OnMontageCompleted()
 {
-	SetKratosRollingState(true);
+	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageCompleted"));
 
-	if (true == bEvasion)
-	{
-		ComputeRollingDirection();
-		bEvasion = false;
-	}
-	else
-	{
-		ComputeDodgeDirection();
-		bEvasion = true;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 
-	}
+}
 
-	if (nullptr != AbilityAnimMontage)
-	{
-		BeginSmoothMovement();
+void UKratosRollGameplayAbility::OnMontageBlendOut()
+{
+	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageBlendOut"));
 
-		UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-			this,
-			NAME_None,
-			AbilityAnimMontage,
-			1.0f,
-			NAME_None,
-			true,
-			1.0f,
-			0.0f,
-			false);
+}
 
-		if (nullptr != MontageTask)
-		{
-			MontageTask->OnCompleted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCompleted);
-			MontageTask->OnBlendOut.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageBlendOut);
-			MontageTask->OnInterrupted.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageInterrupted);
-			MontageTask->OnCancelled.AddDynamic(this, &UKratosRollGameplayAbility::OnMontageCancelled);
-			MontageTask->ReadyForActivation();
-		}
-		else
-		{
-			EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-		}
-	}
-	else
-	{
-		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-	}
+void UKratosRollGameplayAbility::OnMontageInterrupted()
+{
+	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageInterrupted"));
+
 }
 
 void UKratosRollGameplayAbility::OnResetEvasion()
 {
-	bEvasion = false;
+	Debug::Print(TEXT("UKratosRollGameplayAbility::OnResetEvasion"));
 }
 
 void UKratosRollGameplayAbility::ComputeDodgeDirection()
 {
 	const float RollSpeed = 1000.0f;
 
-	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
-
-	//GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
-
-	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
+	RollDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
 
-	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
+	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollDirection));
 	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
-	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
+	float DotRight = FVector::DotProduct(ActorRightVector, RollDirection);
 
 	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
 	{
-		AbilityAnimMontage = DodgeForwardAnimMontage;
+		RollAnimMontage = DodgeForwardAnimMontage;
 	}
-	else if (22.5f < AngleDeg, 67.5f >= AngleDeg)
+	else if (22.5f < AngleDeg && 67.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = DodgeRFAnimMontage;
+			RollAnimMontage = DodgeRFAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = DodgeLFAnimMontage;
+			RollAnimMontage = DodgeLFAnimMontage;
 		}
 	}
 	else if (67.5f < AngleDeg && 112.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = DodgeRightAnimMontage;
+			RollAnimMontage = DodgeRightAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = DodgeLeftAnimMontage;
+			RollAnimMontage = DodgeLeftAnimMontage;
 		}
 	}
-	else if (112.5f < AngleDeg, 157.5f >= AngleDeg)
+	else if (112.5f < AngleDeg && 157.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = DodgeRBAnimMontage;
+			RollAnimMontage = DodgeRBAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = DodgeLBAnimMontage;
+			RollAnimMontage = DodgeLBAnimMontage;
 		}
 	}
 	else
 	{
-		AbilityAnimMontage = DodgeBackwardAnimMontage;
+		RollAnimMontage = DodgeBackwardAnimMontage;
 	}
 
 }
@@ -173,57 +157,55 @@ void UKratosRollGameplayAbility::ComputeRollingDirection()
 {
 	const float RollSpeed = 5000.0f;
 
-	RollingDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
-	UMotionWarpingComponent* MortionWarpingComponent = GetKratosFromActorInfo()->GetMotionWarpingComponent();
-	//GetKratosFromActorInfo()->LaunchCharacter(RollingDirection * RollSpeed, true, true);
+	RollDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
 
-	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollingDirection));
+	float AngleRad = FMath::Acos(FVector::DotProduct(ActorForwardVector, RollDirection));
 	float AngleDeg = FMath::RadiansToDegrees(AngleRad);
-	float DotRight = FVector::DotProduct(ActorRightVector, RollingDirection);
+	float DotRight = FVector::DotProduct(ActorRightVector, RollDirection);
 
 	if (0.0f <= AngleDeg && 22.5f >= AngleDeg)
 	{
-		AbilityAnimMontage = RollingForwardAnimMontage;
+		RollAnimMontage = RollingForwardAnimMontage;
 	}
-	else if (22.5f < AngleDeg, 67.5f >= AngleDeg)
+	else if (22.5f < AngleDeg && 67.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = RollingRFAnimMontage;
+			RollAnimMontage = RollingRFAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = RollingLFAnimMontage;
+			RollAnimMontage = RollingLFAnimMontage;
 		}
 	}
 	else if (67.5f < AngleDeg && 112.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = RollingRightAnimMontage;
+			RollAnimMontage = RollingRightAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = RollingLeftAnimMontage;
+			RollAnimMontage = RollingLeftAnimMontage;
 		}
 	}
-	else if (112.5f < AngleDeg, 157.5f >= AngleDeg)
+	else if (112.5f < AngleDeg && 157.5f >= AngleDeg)
 	{
 		if (DotRight >= 0.0f)
 		{
-			AbilityAnimMontage = RollingRBAnimMontage;
+			RollAnimMontage = RollingRBAnimMontage;
 		}
 		else
 		{
-			AbilityAnimMontage = RollingLBAnimMontage;
+			RollAnimMontage = RollingLBAnimMontage;
 		}
 	}
 	else
 	{
-		AbilityAnimMontage = RollingBackwardAnimMontage;
+		RollAnimMontage = RollingBackwardAnimMontage;
 	}
 
 }
@@ -232,8 +214,8 @@ void UKratosRollGameplayAbility::BeginSmoothMovement()
 {
 	StartLocation = Kratos->GetActorLocation();
 	
-	float Distance = bEvasion ? DodgeDistance : RollDistance;
-	TargetLocation = StartLocation + (RollingDirection * Distance);
+	float Distance = bEvasion ? RollDistance : DodgeDistance;
+	TargetLocation = StartLocation + (RollDirection * Distance);
 
 	ElapsedTime = 0.0f;
 
@@ -249,6 +231,8 @@ void UKratosRollGameplayAbility::BeginSmoothMovement()
 void UKratosRollGameplayAbility::TickSmoothMovement()
 {
 	ElapsedTime += GetWorld()->GetDeltaSeconds();
+
+	float MovementDuration = bEvasion ? RollMovementDuration : DodgeMovementDuration;
 
 	float Alpha = FMath::Clamp(ElapsedTime / MovementDuration, 0.0f, 1.0f);
 

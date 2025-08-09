@@ -6,6 +6,8 @@
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
 #include "KratosRollGameplayAbility.generated.h"
 
+class UAbilityTask_PlayMontageAndWait;
+
 /**
  * 
  */
@@ -31,10 +33,13 @@ public:
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 	//~ End UGameplayAbility Interface.
 
-private:
-	UFUNCTION()
-	void OnDelayFinished();
+	//~ Begin UKratosGameplayAbility Interface.
+	virtual void OnMontageCompleted() override;
+	virtual void OnMontageBlendOut() override;
+	virtual void OnMontageInterrupted() override;
+	//~ End UKratosGameplayAbility Interface.
 
+private:
 	UFUNCTION()
 	void OnResetEvasion();
 
@@ -58,9 +63,6 @@ private:
 	FName WarpTargetName;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* AbilityAnimMontage = nullptr;
-
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UAnimMontage* DodgeForwardAnimMontage = nullptr;
 
@@ -114,15 +116,19 @@ private:
 private:
 	/** 회피 거리 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float DodgeDistance = 300.0f;
+	float DodgeDistance = 200.0f;
 
 	/** 회피 거리 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float RollDistance = 500.f;
+	float RollDistance = 300.f;
 
 	/** 이동 시간 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float MovementDuration = 0.5f;
+	float DodgeMovementDuration = 0.2f;
+
+	/** 이동 시간 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	float RollMovementDuration = 0.4f;
 
 	/** 이동 속도 커브 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
@@ -134,7 +140,10 @@ private:
 	float ElapsedTime = 0.0;
 	FTimerHandle MovementTimerHandle;
 
-	FVector RollingDirection = FVector::ZeroVector;
+	FVector RollDirection = FVector::ZeroVector;
 	FTimerHandle TimerHandle;
 	bool bEvasion = false;
+
+	UAbilityTask_PlayMontageAndWait* RollMontageTask;
+	UAnimMontage* RollAnimMontage = nullptr;
 };
