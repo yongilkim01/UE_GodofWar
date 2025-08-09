@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "KratosRollGameplayAbility.generated.h"
 
 class UAbilityTask_PlayMontageAndWait;
@@ -31,6 +32,11 @@ public:
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	virtual void InputPressed(
+		const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo) override;
 	//~ End UGameplayAbility Interface.
 
 	//~ Begin UKratosGameplayAbility Interface.
@@ -43,16 +49,14 @@ private:
 	UFUNCTION()
 	void OnResetEvasion();
 
-	UFUNCTION()
-	void ComputeDodgeDirection();
-
-	UFUNCTION()
-	void ComputeRollingDirection();
-
 private:
 	void BeginSmoothMovement();
 	void TickSmoothMovement();
 	void EndSmmothMovement();
+
+	void CalcAndPlayAnimMontage();
+	void CalcAnimMontage();
+	void PlayRollAnimMontage();
 
 private:
 
@@ -64,54 +68,10 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeForwardAnimMontage = nullptr;
+	TMap<ERagnarokDirection, UAnimMontage*> DodgeAnimMontageMap;
 
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeRightAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeLeftAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeBackwardAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeRFAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeLFAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeRBAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* DodgeLBAnimMontage = nullptr;
-
-
-private:
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingForwardAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingRightAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingLeftAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingBackwardAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingRFAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingLFAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingRBAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UAnimMontage* RollingLBAnimMontage = nullptr;
+	TMap<ERagnarokDirection, UAnimMontage*> RollAnimMontageMap;
 
 private:
 	/** 회피 거리 */
@@ -142,8 +102,8 @@ private:
 
 	FVector RollDirection = FVector::ZeroVector;
 	FTimerHandle TimerHandle;
-	bool bEvasion = false;
 
 	UAbilityTask_PlayMontageAndWait* RollMontageTask;
 	UAnimMontage* RollAnimMontage = nullptr;
+	ERagnarokRollState CurRollState = ERagnarokRollState::ERRS_None;
 };
