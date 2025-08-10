@@ -26,9 +26,15 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::ActivateAbility method is called"));
 
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	if (true == IsKratosRunning())
+	{
+		CurRollState = ERagnarokRollState::ERRS_Roll;
+	}
+	else
+	{
+		CurRollState = ERagnarokRollState::ERRS_Dodge;
+	}
 
-	CurRollState = ERagnarokRollState::ERRS_Dodge;
 	SetKratosRollingState(true);
 	CalcAndPlayAnimMontage();
 	BeginSmoothMovement();
@@ -42,11 +48,6 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 
 	EndSmmothMovement();
 	SetKratosRollingState(false);
-
-	FTimerDelegate TimerDel;
-	TimerDel.BindUFunction(this, FName("OnResetEvasion"));
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.5f, false);
-
 }
 
 void UKratosRollGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -223,11 +224,6 @@ void UKratosRollGameplayAbility::OnMontageInterrupted()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageInterrupted method is called"));
 
-}
-
-void UKratosRollGameplayAbility::OnResetEvasion()
-{
-	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnResetEvasion method is called"));
 }
 
 void UKratosRollGameplayAbility::BeginSmoothMovement()

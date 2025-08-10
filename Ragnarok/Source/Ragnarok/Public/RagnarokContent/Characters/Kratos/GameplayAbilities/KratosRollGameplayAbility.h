@@ -46,10 +46,6 @@ public:
 	//~ End UKratosGameplayAbility Interface.
 
 private:
-	UFUNCTION()
-	void OnResetEvasion();
-
-private:
 	void BeginSmoothMovement();
 	void TickSmoothMovement();
 	void EndSmmothMovement();
@@ -101,7 +97,6 @@ private:
 	FTimerHandle MovementTimerHandle;
 
 	FVector RollDirection = FVector::ZeroVector;
-	FTimerHandle TimerHandle;
 
 	UAbilityTask_PlayMontageAndWait* RollMontageTask;
 	UAnimMontage* RollAnimMontage = nullptr;

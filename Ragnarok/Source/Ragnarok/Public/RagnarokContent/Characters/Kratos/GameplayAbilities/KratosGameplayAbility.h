@@ -52,6 +52,7 @@ protected:
 
 	void SetKratosAttackingState(bool bAttacking);
 	void SetKratosRollingState(bool bRolling);
+	bool IsKratosRunning();
 
 protected:
 	TWeakObjectPtr<AKratos> Kratos;

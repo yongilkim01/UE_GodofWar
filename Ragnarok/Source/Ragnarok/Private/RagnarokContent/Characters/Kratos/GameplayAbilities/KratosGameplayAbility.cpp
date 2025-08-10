@@ -106,3 +106,8 @@ void UKratosGameplayAbility::SetKratosRollingState(bool bRolling)
 {
 	Kratos->bRolling = bRolling;
 }
+
+bool UKratosGameplayAbility::IsKratosRunning()
+{
+	return Kratos->bRunning;
+}
