@@ -217,6 +217,8 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 
 void AKratos::InputMove(const FInputActionValue& InputActionValue)
 {
+	CachedMovementInputVector = InputActionValue.Get<FVector2D>();
+
 	if (true == bRolling || true == bAttacking) return;
 
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();

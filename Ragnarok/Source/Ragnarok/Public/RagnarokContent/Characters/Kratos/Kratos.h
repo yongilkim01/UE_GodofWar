@@ -81,6 +81,7 @@ private:
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
+	FVector2D CachedMovementInputVector;
 	int AttackCount = 0;
 	bool bRolling = false;
 	bool bAttacking = false;
@@ -91,4 +92,5 @@ public:
 	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }
 	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
 	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
+	FORCEINLINE FVector2D GetCachedMovementInputVector() { return CachedMovementInputVector; }
 };

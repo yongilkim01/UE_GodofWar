@@ -3,6 +3,8 @@
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRollGameplayAbility.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/KratosController.h"
+
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
@@ -15,17 +17,16 @@
 
 UKratosRollGameplayAbility::UKratosRollGameplayAbility()
 {
-	//BlockAbilitiesWithTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Kratos.Ability")));
+	bShowDebug = true;
 }
 
 void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	Debug::Print(TEXT("UKratosRollGameplayAbility::ActivateAbility"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::ActivateAbility method is called"));
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 
 	CurRollState = ERagnarokRollState::ERRS_Dodge;
 	SetKratosRollingState(true);
@@ -36,7 +37,8 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	Debug::Print(TEXT("UKratosRollGameplayAbility::EndAbility"));
+	
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::EndAbility method is called"));
 
 	EndSmmothMovement();
 	SetKratosRollingState(false);
@@ -49,6 +51,22 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 
 void UKratosRollGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	if(true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::InputPressed method is called"));
+	
+	if (ERagnarokRollState::ERRS_Dodge != CurRollState)
+	{
+		return;
+	}
+
+	if (nullptr != RollMontageTask)
+	{
+		RollMontageTask->EndTask();
+		RollMontageTask = nullptr;
+	}
+
+	CurRollState = ERagnarokRollState::ERRS_Roll;
+	CalcAndPlayAnimMontage();
+	BeginSmoothMovement();
 
 }
 
@@ -60,7 +78,20 @@ void UKratosRollGameplayAbility::CalcAndPlayAnimMontage()
 
 void UKratosRollGameplayAbility::CalcAnimMontage()
 {
-	RollDirection = GetKratosFromActorInfo()->GetLastMovementInputVector().GetSafeNormal();
+	const FVector2D InputVector = GetKratosFromActorInfo()->GetCachedMovementInputVector();
+
+	if (false == GetKratosFromActorInfo()->GetCachedMovementInputVector().IsNearlyZero())
+	{
+		const FRotator YawRotation(0.0f, GetKratosControllerFromActorInfo()->GetControlRotation().Yaw, 0.0f);
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		FVector WorldDirection = (ForwardDirection * InputVector.Y) + (RightDirection * InputVector.X);
+		RollDirection = WorldDirection.GetSafeNormal();
+	}
+	else
+	{
+		RollDirection = Kratos->GetActorForwardVector();
+	}
 
 	FVector ActorForwardVector = GetKratosFromActorInfo()->GetActorForwardVector();
 	FVector ActorRightVector = GetKratosFromActorInfo()->GetActorRightVector();
@@ -176,7 +207,7 @@ void UKratosRollGameplayAbility::PlayRollAnimMontage()
 
 void UKratosRollGameplayAbility::OnMontageCompleted()
 {
-	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageCompleted"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageCompleted method is called"));
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 
@@ -184,23 +215,25 @@ void UKratosRollGameplayAbility::OnMontageCompleted()
 
 void UKratosRollGameplayAbility::OnMontageBlendOut()
 {
-	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageBlendOut"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageBlendOut method is called"));
 
 }
 
 void UKratosRollGameplayAbility::OnMontageInterrupted()
 {
-	Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageInterrupted"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageInterrupted method is called"));
 
 }
 
 void UKratosRollGameplayAbility::OnResetEvasion()
 {
-	Debug::Print(TEXT("UKratosRollGameplayAbility::OnResetEvasion"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnResetEvasion method is called"));
 }
 
 void UKratosRollGameplayAbility::BeginSmoothMovement()
 {
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
+
 	StartLocation = Kratos->GetActorLocation();
 	
 	float Distance = 0.0f;

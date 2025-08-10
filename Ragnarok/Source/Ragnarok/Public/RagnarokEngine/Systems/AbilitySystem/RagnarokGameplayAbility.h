@@ -55,5 +55,8 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
 	EAbilityActivationEvent AbilityActivationEvent = EAbilityActivationEvent::EAE_Triggered;
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	bool bShowDebug = false;
 	
 };
