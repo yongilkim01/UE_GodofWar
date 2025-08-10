@@ -56,6 +56,8 @@ private:
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);
+	void InputStartRun(const FInputActionValue& InputActionValue);
+	void InputEndRun(const FInputActionValue& InputActionValue);
 	void InputAbilityPressed(FGameplayTag InputTag);
 	void InputAbilityReleased(FGameplayTag InputTag);
 
@@ -85,6 +87,9 @@ private:
 	int AttackCount = 0;
 	bool bRolling = false;
 	bool bAttacking = false;
+	bool bRunning = false;
+	float RunSpeed = 0.0f;
+	float WalkSpeed = 0.0f;
 	float FixedCameraWorldZLocation = 0.0f;
 
 public:

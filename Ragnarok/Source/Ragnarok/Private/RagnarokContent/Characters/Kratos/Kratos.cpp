@@ -28,6 +28,7 @@
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 AKratos::AKratos()
 {
@@ -103,6 +104,22 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		&ThisClass::InputLook
 	);
 
+	RagnarokInputComponent->BindNativeInputAction(
+		InputConfigDA,
+		KratosGameplayTags::InputTag_Run,
+		ETriggerEvent::Started,
+		this,
+		&ThisClass::InputStartRun
+	);
+
+	RagnarokInputComponent->BindNativeInputAction(
+		InputConfigDA,
+		KratosGameplayTags::InputTag_Run,
+		ETriggerEvent::Completed,
+		this,
+		&ThisClass::InputEndRun
+	);
+
 	RagnarokInputComponent->BindAbilityInputAction(
 		InputConfigDA,
 		this,
@@ -151,6 +168,8 @@ void AKratos::LoadKratosDataAsset()
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
+		RunSpeed = InitDA->MaxRunSpeed;
+		WalkSpeed = InitDA->MaxWalkSpeed;
 		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
@@ -263,6 +282,18 @@ void AKratos::InputLook(const FInputActionValue& InputActionValue)
 		AddControllerPitchInput(-LookAxisVector.Y);
 	}
 
+}
+
+void AKratos::InputStartRun(const FInputActionValue& InputActionValue)
+{
+	bRunning = true;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void AKratos::InputEndRun(const FInputActionValue& InputActionValue)
+{
+	bRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 void AKratos::InputAbilityPressed(FGameplayTag InputTag)

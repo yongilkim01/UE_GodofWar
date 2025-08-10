@@ -310,7 +310,7 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCancelled);
 		AttackMontageTask->ReadyForActivation();
 
-		LaunchCharacterForwardSmoothly(CurComboCount);
+		//LaunchCharacterForwardSmoothly(CurComboCount);
 
 	}
 	else

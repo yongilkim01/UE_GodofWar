@@ -40,6 +40,9 @@ public:
     float MaxWalkSpeed = 0.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
+    float MaxRunSpeed = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     float BrakingDecelerationWalking = 0.0f;
 	
 };
