@@ -55,49 +55,25 @@ private:
 	void PlayRollAnimMontage();
 
 private:
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	FRotator PrevRotator = FRotator::ZeroRotator;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	FName WarpTargetName;
-
-private:
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	TMap<ERagnarokDirection, UAnimMontage*> DodgeAnimMontageMap;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	TMap<ERagnarokDirection, UAnimMontage*> RollAnimMontageMap;
-
-private:
-	/** 회피 거리 */
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float DodgeDistance = 200.0f;
-
-	/** 회피 거리 */
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float RollDistance = 300.f;
-
-	/** 이동 시간 */
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float DodgeMovementDuration = 0.2f;
-
-	/** 이동 시간 */
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	float RollMovementDuration = 0.4f;
-
 	/** 이동 속도 커브 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	UCurveFloat* MovementDurationCurve;
-
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	TMap<ERagnarokDirection, UAnimMontage*> DodgeAnimMontageMap;
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	TMap<ERagnarokDirection, UAnimMontage*> RollAnimMontageMap;
+private:
 	/** 이동 관련 변수 */
 	FVector StartLocation = FVector::ZeroVector;
 	FVector TargetLocation = FVector::ZeroVector;
-	float ElapsedTime = 0.0;
-	FTimerHandle MovementTimerHandle;
-
 	FVector RollDirection = FVector::ZeroVector;
+	float ElapsedTime = 0.0f;
+	float DodgeDistance = 200.0f;
+	float RollDistance = 300.f;
+	float DodgeMovementDuration = 0.2f;
+	float RollMovementDuration = 0.4f;
 
+	FTimerHandle MovementTimerHandle;
 	UAbilityTask_PlayMontageAndWait* RollMontageTask;
 	UAnimMontage* RollAnimMontage = nullptr;
 	ERagnarokRollState CurRollState = ERagnarokRollState::ERRS_None;
