@@ -76,11 +76,11 @@ protected:
 	TSubclassOf<UGameplayEffect> EffectClass;
 
 private:
-	FTimerHandle TimerHandle;
 	int AttackAbilityActiveCount;
 	UAbilityTask_WaitGameplayEvent* HitWaitEventTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
 	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
 	ERagnarokAttackState CurAttackState = ERagnarokAttackState::ERAS_None;
+	FRotator OriginRotator = FRotator::ZeroRotator;
 };

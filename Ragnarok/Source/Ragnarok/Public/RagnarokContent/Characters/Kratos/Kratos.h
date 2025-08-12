@@ -56,8 +56,7 @@ private:
 
 	void InputMove(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);
-	void InputStartRun(const FInputActionValue& InputActionValue);
-	void InputEndRun(const FInputActionValue& InputActionValue);
+	void InputRun(const FInputActionValue& InputActionValue);
 	void InputAbilityPressed(FGameplayTag InputTag);
 	void InputAbilityReleased(FGameplayTag InputTag);
 
@@ -91,6 +90,7 @@ private:
 	float RunSpeed = 0.0f;
 	float WalkSpeed = 0.0f;
 	float FixedCameraWorldZLocation = 0.0f;
+	FTimerHandle RunningTimerHandle;
 
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }

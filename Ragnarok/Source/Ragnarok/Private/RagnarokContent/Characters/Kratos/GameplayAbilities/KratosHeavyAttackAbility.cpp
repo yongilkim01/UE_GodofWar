@@ -20,7 +20,7 @@
 UKratosHeavyAttackAbility::UKratosHeavyAttackAbility()
 {
 	CurComboCount = 1;
-	bShowDebug = true;
+	bShowDebug = false;
 }
 
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -29,12 +29,8 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::ActivateAbility"));
 
-
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	SetKratosAttackingState(true);
-	Kratos->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 	bReserveComboAttack = false;
-
 	ExecuteAttackMontage(CurComboCount);
 
 	HitWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -116,6 +112,7 @@ void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	Kratos->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	CurComboCount = 1;
 	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
+
 }
 
 void UKratosHeavyAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -215,10 +212,11 @@ void UKratosHeavyAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		HeavyAttackMontageMap[ComboCount],
 		1.0f,
 		NAME_None,
-		true, // 루트 모션 활성화
+		true,
 		1.0f,
 		0.0f
 	);
+
 
 	if (nullptr != AttackMontageTask)
 	{
@@ -269,17 +267,14 @@ void UKratosHeavyAttackAbility::OnMontageCompleted()
 void UKratosHeavyAttackAbility::OnMontageBlendOut()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageBlendOut"));
-
 }
 
 void UKratosHeavyAttackAbility::OnMontageInterrupted()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageInterrupted"));
-
 }
 
 void UKratosHeavyAttackAbility::OnMontageCancelled()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageCancelled"));
-
 }
