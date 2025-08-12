@@ -17,51 +17,27 @@
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
+UKratosHeavyAttackAbility::UKratosHeavyAttackAbility()
+{
+	CurComboCount = 1;
+	bShowDebug = true;
+}
+
 void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	CurrentSpecHandle = Handle;
-	CurrentActorInfo = ActorInfo;
-	CurrentActivationInfo = ActivationInfo;
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::ActivateAbility"));
+
 
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-
 	SetKratosAttackingState(true);
+	Kratos->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	bReserveComboAttack = false;
 
-	UseComboCount = CurComboCount;
+	ExecuteAttackMontage(CurComboCount);
 
-	if (true == URagnarokAbilityFunctionLibrary::HasActorGameplayTag(GetKratosFromActorInfo(), JumpTag))
-	{
-		CurComboCount = HeavyAttackMontageMap.Num();
-	}
-
-	// 점프 어택인 경우 MovementMode를 Flying으로 변경하여 Z축 루트모션 보장
-	if (CurComboCount == HeavyAttackMontageMap.Num())
-	{
-		bIsJumpAttack = true;
-		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
-		{
-			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-		}
-	}
-	else
-	{
-		bIsJumpAttack = false;
-	}
-
-	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-		this,
-		NAME_None,
-		HeavyAttackMontageMap[CurComboCount],
-		1.0f,
-		NAME_None,
-		true, // 루트 모션 활성화
-		1.0f,
-		0.0f
-	);
-
-	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	HitWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
 		CombatGameplayTags::Combat_Event_MeleeHit,
 		nullptr,
@@ -69,58 +45,97 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		false
 	);
 
-	if (nullptr != WaitEventTask)
+	if (nullptr != HitWaitEventTask)
 	{
-		WaitEventTask->EventReceived.AddDynamic(this, &UKratosHeavyAttackAbility::OnGameplayEventReceived);
-
-		if (true == WaitEventTask->EventReceived.IsBound())
-		{
-			Debug::Print(TEXT("HeavyAttack Delegate Binding Sucess"));
-		}
-		else
-		{
-			Debug::Print(TEXT("HeavyAttack Delegate Binding Failed"));
-		}
-
-		WaitEventTask->ReadyForActivation();
+		HitWaitEventTask->EventReceived.AddDynamic(this, &UKratosHeavyAttackAbility::OnGameplayEventReceived);
+		HitWaitEventTask->ReadyForActivation();
 	}
 
-	if (CurComboCount == HeavyAttackMontageMap.Num())
+	AttackWaitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		KratosGameplayTags::Kratos_Event_AttackWait_Start,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != AttackWaitStartTask)
 	{
-		OnResetAttackComboCount();
-	}
-	else
-	{
-		CurComboCount++;
+		AttackWaitStartTask->EventReceived.AddDynamic(this, &UKratosHeavyAttackAbility::OnAttackWaitStartEventRecived);
+		AttackWaitStartTask->ReadyForActivation();
 	}
 
-	if (nullptr != MontageTask)
-	{
-		MontageTask->OnCompleted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCompleted);
-		MontageTask->OnBlendOut.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageBlendOut);
-		MontageTask->OnInterrupted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageInterrupted);
-		MontageTask->OnCancelled.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCancelled);
-		MontageTask->ReadyForActivation();
-	}
-	else
-	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
-	}
+	AttackWaitEndTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		KratosGameplayTags::Kratos_Event_AttackWait_End,
+		nullptr,
+		false,
+		false
+	);
 
+	if (nullptr != AttackWaitEndTask)
+	{
+		AttackWaitEndTask->EventReceived.AddDynamic(this, &UKratosHeavyAttackAbility::OnAttackWaitEndEventRecived);
+		AttackWaitEndTask->ReadyForActivation();
 
+	}
 }
 
 void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	FTimerDelegate TimerDel;
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::EndAbility"));
 
-	TimerDel.BindUFunction(this, FName("OnResetAttackComboCount"));
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.3f, false);
+	if (nullptr != AttackMontageTask)
+	{
+		AttackMontageTask->EndTask();
+		AttackMontageTask = nullptr;
+	}
+
+	if (nullptr != HitWaitEventTask)
+	{
+		HitWaitEventTask->EndTask();
+		HitWaitEventTask = nullptr;
+	}
+
+	if (nullptr != AttackWaitStartTask)
+	{
+		AttackWaitStartTask->EndTask();
+		AttackWaitStartTask = nullptr;
+	}
+
+	if (nullptr != AttackWaitEndTask)
+	{
+		AttackWaitEndTask->EndTask();
+		AttackWaitEndTask = nullptr;
+	}
+
+	bReserveComboAttack = false;
+	SetKratosAttackingState(false);
+	Kratos->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	CurComboCount = 1;
+	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
 }
 
-void UKratosHeavyAttackAbility::OnResetAttackComboCount()
+void UKratosHeavyAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::InputPressed"));
+
+	switch (CurAttackState)
+	{
+	case ERagnarokAttackState::ERAS_Attacking:
+		bReserveComboAttack = true;
+		break;
+	case ERagnarokAttackState::ERAS_AttackWait:
+		ProcessNextCombo();
+		break;
+	default:
+		break;
+	}
+}
+
+void UKratosHeavyAttackAbility::ResetAttackComboCount()
 {
 	CurComboCount = 1;
 	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
@@ -152,66 +167,119 @@ void UKratosHeavyAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
 	}
 
-	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with heavy attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
+	if (true == bShowDebug)  Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with heavy attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 
+}
+
+void UKratosHeavyAttackAbility::OnAttackWaitStartEventRecived(FGameplayEventData Payload)
+{
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnAttackWaitStartEventRecived"));
+
+	CurAttackState = ERagnarokAttackState::ERAS_AttackWait;
+
+	if (true == bReserveComboAttack)
+	{
+		bReserveComboAttack = false;
+		ProcessNextCombo();
+	}
+}
+
+void UKratosHeavyAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData Payload)
+{
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnAttackWaitEndEventRecived"));
+
+	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
+	{
+		CurAttackState = ERagnarokAttackState::ERAS_Attacking;
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+
+	bReserveComboAttack = false;
+}
+
+void UKratosHeavyAttackAbility::ExecuteAttackMontage(int32 ComboCount)
+{
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::ExecuteAttackMontage"));
+
+	if (false == HeavyAttackMontageMap.Contains(ComboCount))
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+		return;
+	}
+
+	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
+
+	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		NAME_None,
+		HeavyAttackMontageMap[ComboCount],
+		1.0f,
+		NAME_None,
+		true, // 루트 모션 활성화
+		1.0f,
+		0.0f
+	);
+
+	if (nullptr != AttackMontageTask)
+	{
+		AttackMontageTask->OnCompleted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCompleted);
+		AttackMontageTask->OnBlendOut.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageBlendOut);
+		AttackMontageTask->OnInterrupted.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageInterrupted);
+		AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosHeavyAttackAbility::OnMontageCancelled);
+		AttackMontageTask->ReadyForActivation();
+	}
+	else
+	{
+		Debug::Print(TEXT("UKratosHeavyAttackAbility::ExecuteAttackMontage - Failed creating montage task"), FColor::Orange);
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+
+}
+
+void UKratosHeavyAttackAbility::ProcessNextCombo()
+{
+	if (nullptr != AttackMontageTask)
+	{
+		AttackMontageTask->EndTask();
+		AttackMontageTask = nullptr;
+	}
+
+	CurComboCount++;
+
+	if (CurComboCount > HeavyAttackMontageMap.Num())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+	else
+	{
+		ExecuteAttackMontage(CurComboCount);
+	}
 }
 
 void UKratosHeavyAttackAbility::OnMontageCompleted()
 {
-	Super::OnMontageCompleted();
-	
-	// 점프 어택이었다면 MovementMode를 Walking으로 복원
-	if (bIsJumpAttack)
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageCompleted"));
+
+	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	{
-		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
-		{
-			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		}
-		bIsJumpAttack = false;
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
 }
 
 void UKratosHeavyAttackAbility::OnMontageBlendOut()
 {
-	Super::OnMontageBlendOut();
-	
-	// 점프 어택이었다면 MovementMode를 Walking으로 복원
-	if (bIsJumpAttack)
-	{
-		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
-		{
-			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		}
-		bIsJumpAttack = false;
-	}
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageBlendOut"));
+
 }
 
 void UKratosHeavyAttackAbility::OnMontageInterrupted()
 {
-	Super::OnMontageInterrupted();
-	
-	// 점프 어택이었다면 MovementMode를 Walking으로 복원
-	if (bIsJumpAttack)
-	{
-		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
-		{
-			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		}
-		bIsJumpAttack = false;
-	}
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageInterrupted"));
+
 }
 
 void UKratosHeavyAttackAbility::OnMontageCancelled()
 {
-	Super::OnMontageCancelled();
-	
-	// 점프 어택이었다면 MovementMode를 Walking으로 복원
-	if (bIsJumpAttack)
-	{
-		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
-		{
-			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		}
-		bIsJumpAttack = false;
-	}
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosHeavyAttackAbility::OnMontageCancelled"));
+
 }

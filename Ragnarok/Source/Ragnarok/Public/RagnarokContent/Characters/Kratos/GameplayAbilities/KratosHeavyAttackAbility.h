@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "KratosHeavyAttackAbility.generated.h"
 
 class UAbilityTask_WaitGameplayEvent;
+class UAbilityTask_PlayMontageAndWait;
 
 /**
  * 
@@ -17,8 +19,9 @@ class RAGNAROK_API UKratosHeavyAttackAbility : public UKratosGameplayAbility
 	GENERATED_BODY()
 
 public:
-	//~ Begin UGameplayAbility Interface.
+	UKratosHeavyAttackAbility();
 
+	//~ Begin UGameplayAbility Interface.
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
@@ -31,13 +34,23 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	virtual void InputPressed(
+		const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo) override;
 	//~ End UGameplayAbility Interface.
 
 private:
 	UFUNCTION()
-	void OnResetAttackComboCount();
-	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
+	UFUNCTION()
+	void OnAttackWaitStartEventRecived(FGameplayEventData Payload);
+	UFUNCTION()
+	void OnAttackWaitEndEventRecived(FGameplayEventData Payload);
+
+	void ExecuteAttackMontage(int32 ComboCount);
+	void ProcessNextCombo();
+	void ResetAttackComboCount();
 
 protected:
 	//~ Begin Montage Callback Overrides
@@ -48,8 +61,7 @@ protected:
 	//~ End Montage Callback Overrides
 
 private:
-	// 점프 어택 중인지 추적하기 위한 플래그
-	bool bIsJumpAttack = false;
+	bool bReserveComboAttack = false;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
@@ -66,5 +78,9 @@ protected:
 private:
 	FTimerHandle TimerHandle;
 	int AttackAbilityActiveCount;
-	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* HitWaitEventTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
+	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
+	ERagnarokAttackState CurAttackState = ERagnarokAttackState::ERAS_None;
 };

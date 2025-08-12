@@ -28,13 +28,14 @@ UKratosLightAttackAbility::UKratosLightAttackAbility()
 	LaunchPowerMap.Add(4, 1600.0f);
 
 	CurComboCount = 1;
+	bShowDebug = false;
 }
 
 void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
 	SetKratosAttackingState(true);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
@@ -91,7 +92,7 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	Debug::Print(TEXT("UKratosLightAttackAbility::EndAbility"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::EndAbility"));
 
 	if (nullptr != AttackMontageTask)
 	{
@@ -119,13 +120,13 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 	bReserveComboAttack = false;
 	SetKratosAttackingState(false);
-
-	ResetAttackComboCount();
+	CurComboCount = 1;
+	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
 }
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
 
 	switch (CurAttackState)
 	{
@@ -142,7 +143,7 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 
 void UKratosLightAttackAbility::OnMontageCompleted()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
 
 	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
 	{
@@ -152,12 +153,12 @@ void UKratosLightAttackAbility::OnMontageCompleted()
 
 void UKratosLightAttackAbility::OnMontageBlendOut()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::OnMontageInterrupted()
 {
-	Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageBlendOut"));
 }
 
 void UKratosLightAttackAbility::ResetAttackComboCount()
@@ -255,7 +256,7 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
 	}
 
-	//Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
+	if (true == bShowDebug) Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(CurComboCount) + TEXT(")"), FColor::Cyan);
 }
 
 void UKratosLightAttackAbility::OnAttackWaitStartEventRecived(FGameplayEventData Payload)
