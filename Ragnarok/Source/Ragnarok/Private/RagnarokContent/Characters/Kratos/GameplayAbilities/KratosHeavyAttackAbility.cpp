@@ -25,11 +25,9 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	CurrentActorInfo = ActorInfo;
 	CurrentActivationInfo = ActivationInfo;
 
-	FGameplayTagContainer Container;
-	GetASCFromActorInfo()->GetBlockedAbilityTags(Container);
-	FGameplayTagContainer AssetTagContainer = GetAssetTags();
-
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+	SetKratosAttackingState(true);
 
 	UseComboCount = CurComboCount;
 
@@ -38,15 +36,29 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		CurComboCount = HeavyAttackMontageMap.Num();
 	}
 
+	// 점프 어택인 경우 MovementMode를 Flying으로 변경하여 Z축 루트모션 보장
+	if (CurComboCount == HeavyAttackMontageMap.Num())
+	{
+		bIsJumpAttack = true;
+		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
+		{
+			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		}
+	}
+	else
+	{
+		bIsJumpAttack = false;
+	}
+
 	UAbilityTask_PlayMontageAndWait* MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
 		HeavyAttackMontageMap[CurComboCount],
 		1.0f,
 		NAME_None,
-		false,
-		0.0f,
-		false
+		true, // 루트 모션 활성화
+		1.0f,
+		0.0f
 	);
 
 	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
@@ -71,16 +83,6 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		}
 
 		WaitEventTask->ReadyForActivation();
-	}
-
-	if (nullptr != GetKratosFromActorInfo())
-	{
-		if (GetKratosFromActorInfo()->GetKratosAttackCount() == 0)
-		{
-			GetKratosFromActorInfo()->GetCharacterMovement()->DisableMovement();
-		}
-
-		GetKratosFromActorInfo()->AddKratosAttackCount(1);
 	}
 
 	if (CurComboCount == HeavyAttackMontageMap.Num())
@@ -111,17 +113,6 @@ void UKratosHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 void UKratosHeavyAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
-	if (nullptr != GetKratosFromActorInfo())
-	{
-		GetKratosFromActorInfo()->AddKratosAttackCount(-1);
-
-		if (GetKratosFromActorInfo()->GetKratosAttackCount() <= 0)
-		{
-			GetKratosFromActorInfo()->SetKratosAttackCount(0);
-			GetKratosFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-		}
-	}
 
 	FTimerDelegate TimerDel;
 
@@ -164,4 +155,63 @@ void UKratosHeavyAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 	Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with heavy attack (Combo: ") + FString::FromInt(UseComboCount) + TEXT(")"), FColor::Cyan);
 
 }
-		
+
+void UKratosHeavyAttackAbility::OnMontageCompleted()
+{
+	Super::OnMontageCompleted();
+	
+	// 점프 어택이었다면 MovementMode를 Walking으로 복원
+	if (bIsJumpAttack)
+	{
+		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
+		{
+			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+		bIsJumpAttack = false;
+	}
+}
+
+void UKratosHeavyAttackAbility::OnMontageBlendOut()
+{
+	Super::OnMontageBlendOut();
+	
+	// 점프 어택이었다면 MovementMode를 Walking으로 복원
+	if (bIsJumpAttack)
+	{
+		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
+		{
+			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+		bIsJumpAttack = false;
+	}
+}
+
+void UKratosHeavyAttackAbility::OnMontageInterrupted()
+{
+	Super::OnMontageInterrupted();
+	
+	// 점프 어택이었다면 MovementMode를 Walking으로 복원
+	if (bIsJumpAttack)
+	{
+		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
+		{
+			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+		bIsJumpAttack = false;
+	}
+}
+
+void UKratosHeavyAttackAbility::OnMontageCancelled()
+{
+	Super::OnMontageCancelled();
+	
+	// 점프 어택이었다면 MovementMode를 Walking으로 복원
+	if (bIsJumpAttack)
+	{
+		if (AKratos* KratosCharacter = GetKratosFromActorInfo())
+		{
+			KratosCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+		bIsJumpAttack = false;
+	}
+}

@@ -40,6 +40,18 @@ private:
 	void OnGameplayEventReceived(FGameplayEventData Payload);
 
 protected:
+	//~ Begin Montage Callback Overrides
+	virtual void OnMontageCompleted() override;
+	virtual void OnMontageBlendOut() override;
+	virtual void OnMontageInterrupted() override;
+	virtual void OnMontageCancelled() override;
+	//~ End Montage Callback Overrides
+
+private:
+	// 점프 어택 중인지 추적하기 위한 플래그
+	bool bIsJumpAttack = false;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")
 	TMap<int, UAnimMontage*> HeavyAttackMontageMap;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok")

@@ -171,6 +171,10 @@ void AKratos::LoadKratosDataAsset()
 		RunSpeed = InitDA->MaxRunSpeed;
 		WalkSpeed = InitDA->MaxWalkSpeed;
 		
+		// 루트모션 Z축 이동을 위한 설정
+		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
+		//GetCharacterMovement()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
+		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
 	}
@@ -269,7 +273,7 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 
 void AKratos::InputLook(const FInputActionValue& InputActionValue)
 {
-	if (true == bRolling) return;
+	if (true == bRolling || true == bAttacking) return;
 
 	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
 
