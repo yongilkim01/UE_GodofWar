@@ -41,10 +41,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	
-	//~ Begin APawn Interface.
-	virtual void PossessedBy(AController* NewController) override;
-	//~ End APawn Interface.
 
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
@@ -54,7 +50,8 @@ private:
 	void LoadKratosDataAsset();
 	void InitPrimaryData(UObject* PDAObject);
 
-	void InputMove(const FInputActionValue& InputActionValue);
+	void InputMovePressed(const FInputActionValue& InputActionValue);
+	void InputMoveReleased(const FInputActionValue& InputActionValue);
 	void InputLook(const FInputActionValue& InputActionValue);
 	void InputRun(const FInputActionValue& InputActionValue);
 	void InputAbilityPressed(FGameplayTag InputTag);

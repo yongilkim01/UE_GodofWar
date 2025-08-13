@@ -17,7 +17,7 @@
 
 UKratosRollGameplayAbility::UKratosRollGameplayAbility()
 {
-	bShowDebug = true;
+	bShowDebug = false;
 }
 
 void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

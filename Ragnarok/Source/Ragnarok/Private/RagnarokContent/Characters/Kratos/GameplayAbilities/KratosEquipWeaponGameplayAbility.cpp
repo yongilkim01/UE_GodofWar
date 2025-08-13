@@ -56,21 +56,7 @@ void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySp
 
 		if (nullptr != WaitEventTask)
 		{
-			Debug::Print(TEXT("WaitEventTask Created"));
-
-			// 바인딩 시도
 			WaitEventTask->EventReceived.AddDynamic(this, &UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived);
-
-			// 바인딩 성공 여부 확인
-			if (WaitEventTask->EventReceived.IsBound())
-			{
-				Debug::Print(TEXT("Equip Delegate Binding Success"));
-			}
-			else
-			{
-				Debug::Print(TEXT("Equip Delegate Binding Failed"));
-			}
-
 			WaitEventTask->ReadyForActivation();
 		}
 	}

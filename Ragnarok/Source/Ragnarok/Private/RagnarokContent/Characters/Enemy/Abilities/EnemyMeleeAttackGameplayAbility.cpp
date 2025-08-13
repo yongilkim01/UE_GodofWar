@@ -39,19 +39,7 @@ void UEnemyMeleeAttackGameplayAbility::ActivateAbility(const FGameplayAbilitySpe
 
     if (nullptr != WaitEventTask)
     {
-        Debug::Print(TEXT("WaitEventTask Created"));
-
         WaitEventTask->EventReceived.AddDynamic(this, &UEnemyMeleeAttackGameplayAbility::OnGameplayEventReceived);
-
-        if (WaitEventTask->EventReceived.IsBound())
-        {
-            Debug::Print(TEXT("Equip Delegate Binding Success"));
-        }
-        else
-        {
-            Debug::Print(TEXT("Equip Delegate Binding Failed"));
-        }
-
         WaitEventTask->ReadyForActivation();
     }
 

@@ -35,4 +35,7 @@ protected:
 		return GetRagnarokOwnerController<AController>();
 	}
 
+protected:
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Component")
+	bool bShowDebugMsg = false;
 };

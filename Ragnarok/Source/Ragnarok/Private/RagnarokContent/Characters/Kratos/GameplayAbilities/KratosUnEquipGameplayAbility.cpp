@@ -55,16 +55,6 @@ void UKratosUnEquipGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
 		if (nullptr != WaitEventTask)
 		{
 			WaitEventTask->EventReceived.AddDynamic(this, &UKratosUnEquipGameplayAbility::OnGameplayEventReceived);
-
-			if (true == WaitEventTask->EventReceived.IsBound())
-			{
-				Debug::Print(TEXT("UnEquip Delegate Binding Sucess"));
-			}
-			else
-			{
-				Debug::Print(TEXT("UnEquip Delegate Binding Failed"));
-			}
-
 			WaitEventTask->ReadyForActivation();
 		}
 	}

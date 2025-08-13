@@ -25,7 +25,7 @@ void UCombatComponent::RegisterSpawnWeapon(FGameplayTag InRegisterWeaponTag, ARa
 	}
 
 	const FString WeaponString = FString::Printf(TEXT("Weapon name : %s is registered %s"), *InRegisterWeapon->GetName(), *InRegisterWeaponTag.ToString());
-	Debug::Print(WeaponString);
+	if(true == bShowDebugMsg) Debug::Print(WeaponString);
 }
 
 ARagnarokWeapon* UCombatComponent::GetCharacterWeaponByTag(FGameplayTag InFindWeaponTag) const

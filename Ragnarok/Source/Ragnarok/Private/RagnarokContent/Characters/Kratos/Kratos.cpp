@@ -50,7 +50,7 @@ void AKratos::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Debug::Print(TEXT("Start Kratos Beginplay method"));
+	if (true == bShowDebugMsg) Debug::Print(TEXT("Start Kratos Beginplay method"));
 
 	FOnPrimaryAssetLoadedDelegate PrimaryAssetDataDelegate;
 
@@ -93,7 +93,15 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		RagnarokGameplayTags::InputTag_Move,
 		ETriggerEvent::Triggered,
 		this,
-		&ThisClass::InputMove
+		&ThisClass::InputMovePressed
+	);
+
+	RagnarokInputComponent->BindNativeInputAction(
+		InputConfigDA,
+		RagnarokGameplayTags::InputTag_Move,
+		ETriggerEvent::Completed,
+		this,
+		&ThisClass::InputMoveReleased
 	);
 
 	RagnarokInputComponent->BindNativeInputAction(
@@ -119,22 +127,6 @@ void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		&ThisClass::InputAbilityReleased);
 }
 
-void AKratos::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	//if (nullptr != AbilitySystemComponent && nullptr != AttributeSet)
-	//{
-	//	const FString DebugInfoStr = 
-	//		FString::Printf(TEXT("GAS Owner Actor : %s, AvataActor : %s"), 
-	//		*AbilitySystemComponent->GetOwnerActor()->GetActorNameOrLabel(),
-	//		*AbilitySystemComponent->GetAvatarActor()->GetActorNameOrLabel());
-
-	//	Debug::Print(TEXT("Ability system component valid ") + DebugInfoStr, FColor::Green);
-	//	Debug::Print(TEXT("AttributeSet valid ") + DebugInfoStr, FColor::Green);		
-	//}
-}
-
 UCombatComponent* AKratos::GetCombatComponent() const
 {
 	return KratosCombatComponent;
@@ -157,15 +149,13 @@ void AKratos::LoadKratosDataAsset()
 
 		MainCameraComponent->bUsePawnControlRotation = false;
 
+		
+		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
 		RunSpeed = InitDA->MaxRunSpeed;
 		WalkSpeed = InitDA->MaxWalkSpeed;
-		
-		// 루트모션 Z축 이동을 위한 설정
-		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
-		//GetCharacterMovement()->SetRootMotionMode(ERootMotionMode::RootMotionFromMontagesOnly);
 		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
@@ -230,7 +220,7 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 	}
 }
 
-void AKratos::InputMove(const FInputActionValue& InputActionValue)
+void AKratos::InputMovePressed(const FInputActionValue& InputActionValue)
 {
 	CachedMovementInputVector = InputActionValue.Get<FVector2D>();
 
@@ -238,25 +228,6 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 	const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
-
-	if (true == MovementVector.IsNearlyZero())
-	{
-		if (true == bRunning)
-		{
-			GetWorld()->GetTimerManager().SetTimer(
-				RunningTimerHandle,
-				[this](){
-					if (true == CachedMovementInputVector.IsNearlyZero())
-					{
-						bRunning = false;
-						GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-					}
-				},
-				0.2f,
-				false
-			);
-		}
-	}
 
 	if (0.0f != MovementVector.Y)
 	{
@@ -280,6 +251,12 @@ void AKratos::InputMove(const FInputActionValue& InputActionValue)
 		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+}
+
+void AKratos::InputMoveReleased(const FInputActionValue& InputActionValue)
+{
+	bRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 void AKratos::InputLook(const FInputActionValue& InputActionValue)

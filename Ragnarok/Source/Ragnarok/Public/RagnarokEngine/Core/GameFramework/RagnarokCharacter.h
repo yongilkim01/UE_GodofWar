@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|StartUp")
 	TSoftObjectPtr<UStartUpDataAsset> StartUpData;
 
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Character")
+	bool bShowDebugMsg = false;
+
 public:
 	FORCEINLINE URagnarokAbilitySystemComponent* GetAbilitySystem() const { return AbilitySystemComponent; }
 	FORCEINLINE UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
