@@ -95,4 +95,7 @@ public:
 	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
 	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
 	FORCEINLINE FVector2D GetCachedMovementInputVector() { return CachedMovementInputVector; }
+	FORCEINLINE bool IsRunning() const { return bRunning; }
+	FORCEINLINE bool IsAttacking() const { return bAttacking; }
+	FORCEINLINE bool IsRolling() const { return bRolling; }
 };

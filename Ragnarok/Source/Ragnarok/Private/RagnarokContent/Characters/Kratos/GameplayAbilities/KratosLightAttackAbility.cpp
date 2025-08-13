@@ -141,6 +141,33 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 	}
 }
 
+bool UKratosLightAttackAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (false == Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return false;
+	}
+
+	const AKratos* KratosCharacter = Cast<AKratos>(ActorInfo->AvatarActor.Get());
+
+	if (nullptr != KratosCharacter)
+	{
+		if (true == KratosCharacter->IsRunning())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		Debug::Print(TEXT("Kratos is nullptr"), FColor::Red);
+		return false;
+	}
+}
+
 void UKratosLightAttackAbility::OnMontageCompleted()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
