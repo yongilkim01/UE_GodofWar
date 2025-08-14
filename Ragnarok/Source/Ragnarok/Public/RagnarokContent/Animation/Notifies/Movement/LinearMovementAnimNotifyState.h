@@ -4,23 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "RagnarokEngine/Core/Animation/RagnarokAnimNotifyState.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "LinearMovementAnimNotifyState.generated.h"
 
 class ARagnarokCharacter;
-
-UENUM(BlueprintType)
-enum class ELinearMovementDirection : uint8
-{
-	ELMD_Forward		UMETA(DisplayName = "Forward"),
-	ELMD_Backward		UMETA(DisplayName = "Backward"),
-	ELMD_Right			UMETA(DisplayName = "Right"),
-	ELMD_Left			UMETA(DisplayName = "Left"),
-	ELMD_ForwardRight	UMETA(DisplayName = "ForwardRight"),
-	ELMD_ForwardLeft	UMETA(DisplayName = "ForwardLeft"),
-	ELMD_BackwardRight	UMETA(DisplayName = "BackwardRight"),
-	ELMD_BackwardLeft	UMETA(DisplayName = "BackwardLeft"),
-	ELMD_Custom			UMETA(DisplayName = "Custom"),
-};
 
 /**
  * 
@@ -39,13 +26,14 @@ public:
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 	//~ End UAnimNotifyState Interface.
 
+
 private:
 	FVector GetDirectionVector() const;
 
 private:
 	/** 이동 방향 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Animation")
-	ELinearMovementDirection MovementDirection = ELinearMovementDirection::ELMD_Forward;
+	ERagnarokDirection MovementDirection = ERagnarokDirection::ERD_Forward;
 
 	/** 커스텀 방향 벡터 MoveDirection이 Custom일 떄만 사용 */
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Animation", meta = (EditCondition = "MovementDirection == ELinearMovementDirection::ELMD_Custom"))

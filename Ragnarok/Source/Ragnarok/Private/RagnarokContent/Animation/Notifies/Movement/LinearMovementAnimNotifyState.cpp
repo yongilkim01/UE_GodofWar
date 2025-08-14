@@ -48,6 +48,8 @@ void ULinearMovementAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp
 
 void ULinearMovementAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
+	Super::NotifyEnd(MeshComp, Animation);
+
 	if (nullptr != RagnarokCharacter)
 	{
 		FHitResult HitResult;
@@ -65,47 +67,47 @@ FVector ULinearMovementAnimNotifyState::GetDirectionVector() const
 
 	switch (MovementDirection)
 	{
-	case ELinearMovementDirection::ELMD_Forward:
+	case ERagnarokDirection::ERD_Forward:
 		Direction = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorForwardVector();
 		break;
-	case ELinearMovementDirection::ELMD_Backward:
+	case ERagnarokDirection::ERD_Backward:
 		Direction = bMoveWorldSpace ? FVector::ForwardVector : -RagnarokCharacter->GetActorForwardVector();
 		break;
-	case ELinearMovementDirection::ELMD_Right:
+	case ERagnarokDirection::ERD_Right:
 		Direction = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorRightVector();
 		break;
-	case ELinearMovementDirection::ELMD_Left:
+	case ERagnarokDirection::ERD_Left:
 		Direction = bMoveWorldSpace ? FVector::ForwardVector : -RagnarokCharacter->GetActorRightVector();
 		break;
-	case ELinearMovementDirection::ELMD_ForwardRight:
+	case ERagnarokDirection::ERD_ForwardRight:
 	{
 		FVector ForwardVector = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorForwardVector();
 		FVector RightVector = bMoveWorldSpace ? FVector::RightVector : RagnarokCharacter->GetActorRightVector();
 		Direction = (ForwardVector + RightVector).GetSafeNormal();
 	}
 	break;
-	case ELinearMovementDirection::ELMD_ForwardLeft:
+	case ERagnarokDirection::ERD_ForwardLeft:
 	{
 		FVector ForwardVector = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorForwardVector();
 		FVector LeftVector = bMoveWorldSpace ? FVector::LeftVector : -RagnarokCharacter->GetActorRightVector();
 		Direction = (ForwardVector + LeftVector).GetSafeNormal();
 	}
 	break;
-	case ELinearMovementDirection::ELMD_BackwardRight:
+	case ERagnarokDirection::ERD_BackwardRight:
 	{
 		FVector BackwardVector = bMoveWorldSpace ? FVector::BackwardVector : -RagnarokCharacter->GetActorForwardVector();
 		FVector RightVector = bMoveWorldSpace ? FVector::RightVector : RagnarokCharacter->GetActorRightVector();
 		Direction = (BackwardVector + RightVector).GetSafeNormal();
 	}
 	break;
-	case ELinearMovementDirection::ELMD_BackwardLeft:
+	case ERagnarokDirection::ERD_BackwardLeft:
 	{
 		FVector BackwardVector = bMoveWorldSpace ? FVector::BackwardVector : -RagnarokCharacter->GetActorForwardVector();
 		FVector LeftVector = bMoveWorldSpace ? FVector::LeftVector : -RagnarokCharacter->GetActorRightVector();
 		Direction = (BackwardVector + LeftVector).GetSafeNormal();
 	}
 	break;
-	case ELinearMovementDirection::ELMD_Custom:
+	case ERagnarokDirection::ERD_Custom:
 		Direction = bMoveWorldSpace ? 
 			CustomDirection.GetSafeNormal() :
 			RagnarokCharacter->GetActorTransform().TransformVectorNoScale(CustomDirection.GetSafeNormal());

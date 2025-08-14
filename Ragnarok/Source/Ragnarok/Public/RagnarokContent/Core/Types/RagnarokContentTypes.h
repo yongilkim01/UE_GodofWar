@@ -10,6 +10,15 @@
 class UKratosLinkedAnimLayer;
 class UInputMappingContext;
 
+UENUM(BLueprintType)
+enum class EArcMovementType : uint8
+{
+	EAMT_Jump		UMETA(DisplayName = "Jump"),
+	EAMT_Leap		UMETA(DisplayName = "Leap"),
+	EAMT_Parabolic	UMETA(DisplayName = "Parabolic"),
+	EAMT_Custom		UMETA(DisplayName = "Custom")
+};
+
 UENUM(BlueprintType)
 enum class ERagnarokDirection : uint8
 {
@@ -21,7 +30,8 @@ enum class ERagnarokDirection : uint8
 	ERD_ForwardRight	UMETA(DisplayName = "ForwardRight"),
 	ERD_ForwardLeft		UMETA(DisplayName = "ForwardLeft"),
 	ERD_BackwardRight	UMETA(DisplayName = "BackwardRight"),
-	ERD_BackwardLeft	UMETA(DisplayName = "BackwardLeft")
+	ERD_BackwardLeft	UMETA(DisplayName = "BackwardLeft"),
+	ERD_Custom			UMETA(DisplayName = "Custom")
 };
 
 UENUM(BlueprintType)
