@@ -30,6 +30,7 @@ void UKratosDashHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHa
 
 	SetKratosAttackingState(true);
 	ExecuteAttackMontage();
+	BeginMovement();
 
 	HitWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
@@ -124,7 +125,7 @@ void UKratosDashHeavyAttackAbility::ExecuteAttackMontage()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosDashHeavyAttackAbility::ExecuteAttackMontage"));
 
-	if (nullptr == AttackAnimMontage)
+	if (nullptr == AttackMontageToPlay)
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 		return;
@@ -133,14 +134,13 @@ void UKratosDashHeavyAttackAbility::ExecuteAttackMontage()
 	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
-		AttackAnimMontage,
-		1.0f,
+		AttackMontageToPlay,
+		AnimMontageRate,
 		NAME_None,
 		true,
 		1.0f,
 		0.0f
 	);
-
 
 	if (nullptr != AttackMontageTask)
 	{
@@ -155,6 +155,57 @@ void UKratosDashHeavyAttackAbility::ExecuteAttackMontage()
 		Debug::Print(TEXT("UKratosHeavyAttackAbility::ExecuteAttackMontage - Failed creating montage task"), FColor::Orange);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
+}
+
+void UKratosDashHeavyAttackAbility::BeginMovement()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
+
+	if (nullptr != AttackMontageToPlay)
+	{
+		Duration = AttackMontageToPlay->GetPlayLength() / AnimMontageRate;
+	}
+
+	StartLocation = Kratos->GetActorLocation();
+	FVector ForwardDirection = Kratos->GetActorForwardVector();
+	TargetLocation = StartLocation + (ForwardDirection * Distance);
+	ElapsedTime = 0.0f;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		MovementTimerHandle,
+		this,
+		&UKratosDashHeavyAttackAbility::TickMovement,
+		0.016f,
+		true
+	);
+}
+
+void UKratosDashHeavyAttackAbility::TickMovement()
+{
+	ElapsedTime += GetWorld()->GetDeltaSeconds();
+
+	float Alpha = FMath::Clamp(ElapsedTime / Duration, 0.0f, 1.0f);
+
+	if (nullptr != MovementDurationCurve)
+	{
+		Alpha = MovementDurationCurve->GetFloatValue(Alpha);
+	}
+
+	FVector CalLocation = FMath::Lerp(StartLocation, TargetLocation, Alpha);
+
+	FHitResult HitResult;
+
+	Kratos->SetActorLocation(CalLocation, true, &HitResult);
+
+	if (Alpha >= 1.0f)
+	{
+		EndMovement();
+	}
+}
+
+void UKratosDashHeavyAttackAbility::EndMovement()
+{
+	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
 }
 
 void UKratosDashHeavyAttackAbility::OnMontageCompleted()

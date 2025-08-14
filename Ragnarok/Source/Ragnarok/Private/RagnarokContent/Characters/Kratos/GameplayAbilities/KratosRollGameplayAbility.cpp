@@ -17,7 +17,7 @@
 
 UKratosRollGameplayAbility::UKratosRollGameplayAbility()
 {
-	bShowDebug = false;
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::UKratosRollGameplayAbility"));
 }
 
 void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
