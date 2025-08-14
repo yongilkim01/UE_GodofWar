@@ -30,7 +30,7 @@ void UKratosDashHeavyAttackAbility::ActivateAbility(const FGameplayAbilitySpecHa
 
 	SetKratosAttackingState(true);
 	ExecuteAttackMontage();
-	BeginMovement();
+	//BeginMovement();
 
 	HitWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
@@ -163,7 +163,7 @@ void UKratosDashHeavyAttackAbility::BeginMovement()
 
 	if (nullptr != AttackMontageToPlay)
 	{
-		Duration = AttackMontageToPlay->GetPlayLength() / AnimMontageRate;
+		Duration = (AttackMontageToPlay->GetPlayLength() / AnimMontageRate) * 0.4518f;
 	}
 
 	StartLocation = Kratos->GetActorLocation();
