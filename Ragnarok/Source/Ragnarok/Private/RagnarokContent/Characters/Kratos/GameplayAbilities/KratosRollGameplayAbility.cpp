@@ -37,7 +37,6 @@ void UKratosRollGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 
 	SetKratosRollingState(true);
 	CalcAndPlayAnimMontage();
-	BeginSmoothMovement();
 }
 
 void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -46,7 +45,6 @@ void UKratosRollGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 	
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::EndAbility method is called"));
 
-	EndSmmothMovement();
 	SetKratosRollingState(false);
 }
 
@@ -67,7 +65,6 @@ void UKratosRollGameplayAbility::InputPressed(const FGameplayAbilitySpecHandle H
 
 	CurRollState = ERagnarokRollState::ERRS_Roll;
 	CalcAndPlayAnimMontage();
-	BeginSmoothMovement();
 
 }
 
@@ -225,78 +222,3 @@ void UKratosRollGameplayAbility::OnMontageInterrupted()
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRollGameplayAbility::OnMontageInterrupted method is called"));
 
 }
-
-void UKratosRollGameplayAbility::BeginSmoothMovement()
-{
-	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
-
-	StartLocation = Kratos->GetActorLocation();
-	
-	float Distance = 0.0f;
-
-	switch (CurRollState)
-	{
-	case ERagnarokRollState::ERRS_Dodge:
-		Distance = DodgeDistance;
-		break;
-	case ERagnarokRollState::ERRS_Roll:
-		Distance = RollDistance;
-		break;
-	default:
-		break;
-	}
-
-	TargetLocation = StartLocation + (RollDirection * Distance);
-
-	ElapsedTime = 0.0f;
-
-	GetWorld()->GetTimerManager().SetTimer(
-		MovementTimerHandle,
-		this,
-		&UKratosRollGameplayAbility::TickSmoothMovement,
-		0.016f,
-		true
-	);
-}
-
-void UKratosRollGameplayAbility::TickSmoothMovement()
-{
-	ElapsedTime += GetWorld()->GetDeltaSeconds();
-
-	float MovementDuration = 0.0f;
-
-	switch (CurRollState)
-	{
-	case ERagnarokRollState::ERRS_Dodge:
-		MovementDuration = DodgeMovementDuration;
-		break;
-	case ERagnarokRollState::ERRS_Roll:
-		MovementDuration = RollMovementDuration;
-		break;
-	default:
-		break;
-	}
-
-	float Alpha = FMath::Clamp(ElapsedTime / MovementDuration, 0.0f, 1.0f);
-
-	if(nullptr != MovementDurationCurve)
-	{
-		Alpha = MovementDurationCurve->GetFloatValue(Alpha);
-	}
-
-	FVector CalLocation = FMath::Lerp(StartLocation, TargetLocation, Alpha);
-
-	FHitResult HitResult;
-	Kratos->SetActorLocation(CalLocation, true, &HitResult);
-
-	if (Alpha >= 1.0f)
-	{
-		EndSmmothMovement();
-	}
-}
-
-void UKratosRollGameplayAbility::EndSmmothMovement()
-{
-	GetWorld()->GetTimerManager().ClearTimer(MovementTimerHandle);
-}
-

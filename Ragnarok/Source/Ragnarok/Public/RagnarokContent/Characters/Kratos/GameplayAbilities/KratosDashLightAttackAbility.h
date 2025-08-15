@@ -64,13 +64,6 @@ protected:
 	float AnimMontageRate = 1.6f;
 
 private:
-	/** 이동 관련 변수 */
-	FVector StartLocation = FVector::ZeroVector;
-	FVector TargetLocation = FVector::ZeroVector;
-	FVector RollDirection = FVector::ZeroVector;
-	float ElapsedTime = 0.0f;
-	float Distance = 600.0f;
-	float Duration = 1.5f;
 
 	UAbilityTask_WaitGameplayEvent* HitWaitEventTask = nullptr;
 	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;

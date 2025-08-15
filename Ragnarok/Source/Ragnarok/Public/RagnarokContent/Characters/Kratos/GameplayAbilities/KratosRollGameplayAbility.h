@@ -20,6 +20,7 @@ class RAGNAROK_API UKratosRollGameplayAbility : public UKratosGameplayAbility
 public:
 	UKratosRollGameplayAbility();
 
+protected:
 	//~ Begin UGameplayAbility Interface.
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
@@ -46,35 +47,19 @@ public:
 	//~ End UKratosGameplayAbility Interface.
 
 private:
-	void BeginSmoothMovement();
-	void TickSmoothMovement();
-	void EndSmmothMovement();
-
 	void CalcAndPlayAnimMontage();
 	void CalcAnimMontage();
 	void PlayRollAnimMontage();
 
 private:
-	/** 이동 속도 커브 */
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
-	UCurveFloat* MovementDurationCurve;
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	TMap<ERagnarokDirection, UAnimMontage*> DodgeAnimMontageMap;
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
 	TMap<ERagnarokDirection, UAnimMontage*> RollAnimMontageMap;
-private:
-	/** 이동 관련 변수 */
-	FVector StartLocation = FVector::ZeroVector;
-	FVector TargetLocation = FVector::ZeroVector;
-	FVector RollDirection = FVector::ZeroVector;
-	float ElapsedTime = 0.0f;
-	float DodgeDistance = 200.0f;
-	float RollDistance = 300.f;
-	float DodgeMovementDuration = 0.2f;
-	float RollMovementDuration = 0.4f;
 
-	FTimerHandle MovementTimerHandle;
+private:
 	UAbilityTask_PlayMontageAndWait* RollMontageTask;
 	UAnimMontage* RollAnimMontage = nullptr;
 	ERagnarokRollState CurRollState = ERagnarokRollState::ERRS_None;
+	FVector RollDirection = FVector::ZeroVector;
 };

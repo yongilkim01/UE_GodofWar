@@ -22,6 +22,16 @@ void UArcMovementAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	ForwardDirection = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorForwardVector();
 	TargetLocation = StartLocation + (ForwardDirection * MovementDistance);
 	ElapsedTime = 0.0f;
+
+	if (UAnimInstance* AnimInstance = MeshComp->GetAnimInstance())
+	{
+		if (UAnimMontage* CurrentMontage = AnimInstance->GetCurrentActiveMontage())
+		{
+			float PlayRate = AnimInstance->Montage_GetPlayRate(CurrentMontage);
+
+			if (PlayRate > 0.0f) Duration = TotalDuration / PlayRate;
+		}
+	}
 }
 
 void UArcMovementAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)

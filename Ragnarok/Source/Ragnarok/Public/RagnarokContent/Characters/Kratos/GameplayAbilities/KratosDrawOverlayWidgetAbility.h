@@ -14,16 +14,13 @@ class RAGNAROK_API UKratosDrawOverlayWidgetAbility : public UKratosGameplayAbili
 {
 	GENERATED_BODY()
 
-public:
-
+protected:
 	//~ Begin UGameplayAbility Interface.
-
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
-
 	//~ End UGameplayAbility Interface.
 
 protected:
