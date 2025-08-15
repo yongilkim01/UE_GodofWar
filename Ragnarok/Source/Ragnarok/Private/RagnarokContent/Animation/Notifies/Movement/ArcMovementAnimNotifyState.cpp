@@ -22,7 +22,6 @@ void UArcMovementAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	ForwardDirection = bMoveWorldSpace ? FVector::ForwardVector : RagnarokCharacter->GetActorForwardVector();
 	TargetLocation = StartLocation + (ForwardDirection * MovementDistance);
 	ElapsedTime = 0.0f;
-	//Duration = TotalDuration;
 }
 
 void UArcMovementAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
