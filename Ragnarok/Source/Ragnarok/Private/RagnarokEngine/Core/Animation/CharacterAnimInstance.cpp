@@ -51,17 +51,17 @@ void UCharacterAnimInstance::CalcMovementSpeeds()
 	FRotator MeshWorldRotator = OwnerCharacter->GetMesh()->GetComponentRotation();
 	FRotator CapsuleWorldRotator = OwnerCharacter->GetCapsuleComponent()->GetComponentRotation();
 	
-	float PitchValue = MeshWorldRotator.Pitch - CapsuleWorldRotator.Pitch;
+	FRotator PitchRotator(0.0f, MeshWorldRotator.Pitch - CapsuleWorldRotator.Pitch, 0.0f);
 
-	FVector RotateForwardVectorToPitch = ForwardVector.RotateAngleAxis(PitchValue, FVector::UpVector);
-	FVector RotateRightVectorToPitch = RightVector.RotateAngleAxis(PitchValue, FVector::UpVector);
+	FVector RotateForwardVectorToPitch = PitchRotator.RotateVector(ForwardVector);
+	FVector RotateRightVectorToPitch = PitchRotator.RotateVector(RightVector);
 
-	FVector NormalVelocity = OwnerCharacter->GetVelocity().GetSafeNormal();
+	FVector Velocity = OwnerCharacter->GetVelocity();
 	float VelocitySize = OwnerCharacter->GetVelocity().Size();
 	
-	float ForwardDot = FVector::DotProduct(NormalVelocity, RotateForwardVectorToPitch);
-	float RightDot = FVector::DotProduct(NormalVelocity, RotateRightVectorToPitch);
+	float ForwardDot = FVector::DotProduct(Velocity, RotateForwardVectorToPitch);
+	float RightDot = FVector::DotProduct(Velocity, RotateRightVectorToPitch);
 
-	ForwardSpeed = FMath::Clamp((ForwardDot * VelocitySize) / MaxWalkSpeed, -1.0f, 1.0f) * MaxWalkSpeed;
-	RightSpeed = FMath::Clamp((RightDot * VelocitySize) / MaxWalkSpeed, -1.0f, 1.0f) * MaxWalkSpeed;
+	ForwardSpeed = -(RightDot / MaxWalkSpeed) * -1.0f;
+	RightSpeed = (ForwardDot / MaxWalkSpeed) * -1.0f;
 }

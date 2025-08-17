@@ -18,7 +18,7 @@ void UKratosAnimInstance::NativeInitializeAnimation()
 		{
 			Debug::Print(TEXT("Kratos is nullptr check owner character type"), FColor::Red);
 		}
-	}
+	}	
 	
 	IdleElapsedTime = 0.0f;
 }
@@ -40,4 +40,8 @@ void UKratosAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 
 		bRelax = (IdleElapsedTime >= RelaxStateThreshold);
 	}
+
+	FString DebugMessage = FString::Printf(TEXT("ForwardSpeed: %.2f, RightSpeed: %.2f"),
+		ForwardSpeed, RightSpeed);
+	Debug::Print(DebugMessage, FColor::Green, false, 1, 2.0f);
 }
