@@ -21,6 +21,9 @@ public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 
+private:
+	void CalcMovementSpeeds();
+
 protected:
 	UPROPERTY()
 	ARagnarokCharacter* OwnerCharacter = nullptr;
@@ -36,4 +39,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationData|LocomotionData")
 	float LocomotionDirection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|AnimInstance")
+	float ForwardSpeed = 0.0f;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ragnarok|AnimInstance")
+	float RightSpeed = 0.0f;
 };
