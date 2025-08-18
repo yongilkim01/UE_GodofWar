@@ -76,9 +76,9 @@ void UKratosRollGameplayAbility::CalcAndPlayAnimMontage()
 
 void UKratosRollGameplayAbility::CalcAnimMontage()
 {
-	const FVector2D InputVector = GetKratosFromActorInfo()->GetCachedMovementInputVector();
+	const FVector2D InputVector = GetKratosFromActorInfo()->GetMovementInputVector();
 
-	if (false == GetKratosFromActorInfo()->GetCachedMovementInputVector().IsNearlyZero())
+	if (false == GetKratosFromActorInfo()->GetMovementInputVector().IsNearlyZero())
 	{
 		const FRotator YawRotation(0.0f, GetKratosControllerFromActorInfo()->GetControlRotation().Yaw, 0.0f);
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);

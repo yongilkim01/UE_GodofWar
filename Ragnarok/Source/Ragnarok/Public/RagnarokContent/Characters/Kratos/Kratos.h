@@ -17,6 +17,7 @@ class UInputComponent;
 class UKratosCombatComponent;
 class UKratosUIComponent;
 class UKratosGameplayAbility;
+class UKratosControlComponent;
 
 struct FInputActionValue;
 
@@ -29,6 +30,7 @@ class RAGNAROK_API AKratos : public ARagnarokCharacter
 		GENERATED_BODY()
 public:
 	friend class UKratosGameplayAbility;
+	friend class UKratosControlComponent;
 
 public:
 	AKratos();
@@ -50,10 +52,6 @@ private:
 	void LoadKratosDataAsset();
 	void InitPrimaryData(UObject* PDAObject);
 
-	void InputMovePressed(const FInputActionValue& InputActionValue);
-	void InputMoveReleased(const FInputActionValue& InputActionValue);
-	void InputLook(const FInputActionValue& InputActionValue);
-	void InputRun(const FInputActionValue& InputActionValue);
 	void InputAbilityPressed(FGameplayTag InputTag);
 	void InputAbilityReleased(FGameplayTag InputTag);
 
@@ -77,25 +75,20 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
 	UKratosUIComponent* KratosUIComponent = nullptr;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
+	UKratosControlComponent* KratosControlComponent = nullptr;
+
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
-	FVector2D CachedMovementInputVector;
-	int AttackCount = 0;
 	bool bRolling = false;
 	bool bAttacking = false;
-	bool bRunning = false;
-	float RunSpeed = 0.0f;
-	float WalkSpeed = 0.0f;
 	float FixedCameraWorldZLocation = 0.0f;
 	FTimerHandle RunningTimerHandle;
 
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
-	FORCEINLINE int GetKratosAttackCount() const { return AttackCount; }
-	FORCEINLINE void SetKratosAttackCount(int Count) { AttackCount = Count; }
-	FORCEINLINE void AddKratosAttackCount(int Count) { AttackCount += Count; }
-	FORCEINLINE FVector2D GetCachedMovementInputVector() { return CachedMovementInputVector; }
-	FORCEINLINE bool IsRunning() const { return bRunning; }
 	FORCEINLINE bool IsAttacking() const { return bAttacking; }
 	FORCEINLINE bool IsRolling() const { return bRolling; }
+	bool IsRunning() const;
+	FVector2D GetMovementInputVector() const;
 };

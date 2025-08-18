@@ -2,6 +2,22 @@
 
 
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosControlComponent.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
+#include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
+#include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
+#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
+#include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
+#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
@@ -14,21 +30,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
-#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
-#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
-#include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
-#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
-#include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 
-#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
-#include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
-#include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
-#include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
-#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 AKratos::AKratos()
 {
@@ -44,6 +46,7 @@ AKratos::AKratos()
 
 	KratosCombatComponent = CreateDefaultSubobject<UKratosCombatComponent>(TEXT("KratosCombat"));
 	KratosUIComponent = CreateDefaultSubobject<UKratosUIComponent>(TEXT("KratosUI"));
+	KratosControlComponent = CreateDefaultSubobject<UKratosControlComponent>(TEXT("KratosControl"));
 }
 
 void AKratos::BeginPlay()
@@ -72,55 +75,10 @@ void AKratos::Tick(float DeltaTime)
 
 void AKratos::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	checkf(InputConfigDA, TEXT("Check input config data asset"));
+	URagnarokEnhancedInputComponent* RagnarokEnhancedInputComponent = 
+		KratosControlComponent->SetupPlayerInputComponent(PlayerInputComponent);
 
-	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
-
-	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
-		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
-
-	check(InputSubsystem);
-
-	InputSubsystem->AddMappingContext(InputConfigDA->InputMappingContext, 0);
-
-	URagnarokEnhancedInputComponent* RagnarokInputComponent
-		= CastChecked<URagnarokEnhancedInputComponent>(PlayerInputComponent);
-
-	check(RagnarokInputComponent);
-
-	RagnarokInputComponent->BindNativeInputAction(
-		InputConfigDA,
-		RagnarokGameplayTags::InputTag_Move,
-		ETriggerEvent::Triggered,
-		this,
-		&ThisClass::InputMovePressed
-	);
-
-	RagnarokInputComponent->BindNativeInputAction(
-		InputConfigDA,
-		RagnarokGameplayTags::InputTag_Move,
-		ETriggerEvent::Completed,
-		this,
-		&ThisClass::InputMoveReleased
-	);
-
-	RagnarokInputComponent->BindNativeInputAction(
-		InputConfigDA,
-		RagnarokGameplayTags::InputTag_Look,
-		ETriggerEvent::Triggered,
-		this,
-		&ThisClass::InputLook
-	);
-
-	RagnarokInputComponent->BindNativeInputAction(
-		InputConfigDA,
-		KratosGameplayTags::InputTag_Run,
-		ETriggerEvent::Started,
-		this,
-		&ThisClass::InputRun
-	);
-
-	RagnarokInputComponent->BindAbilityInputAction(
+	RagnarokEnhancedInputComponent->BindAbilityInputAction(
 		InputConfigDA,
 		this,
 		&ThisClass::InputAbilityPressed,
@@ -154,8 +112,8 @@ void AKratos::LoadKratosDataAsset()
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
-		RunSpeed = InitDA->MaxRunSpeed;
-		WalkSpeed = InitDA->MaxWalkSpeed;
+		KratosControlComponent->RunSpeed = InitDA->MaxRunSpeed;
+		KratosControlComponent->WalkSpeed = InitDA->MaxWalkSpeed;
 		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
@@ -220,68 +178,6 @@ void AKratos::InitPrimaryData(UObject* PDAObject)
 	}
 }
 
-void AKratos::InputMovePressed(const FInputActionValue& InputActionValue)
-{
-	CachedMovementInputVector = InputActionValue.Get<FVector2D>();
-
-	if (true == bRolling || true == bAttacking) return;
-
-	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
-	const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
-
-	if (0.0f != MovementVector.Y)
-	{
-		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-
-		if (MovementVector.Y > 0.0f)
-		{
-			FRotator CurrentRotation = GetActorRotation();
-			FRotator TargetRotation = FRotator(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
-
-			float RotationInterpSpeed = 15.0f;
-			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), RotationInterpSpeed);
-			SetActorRotation(TargetRotation);
-		}
-	}
-
-
-	if (0.0f != MovementVector.X)
-	{
-		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
-		AddMovementInput(RightDirection, MovementVector.X);
-	}
-}
-
-void AKratos::InputMoveReleased(const FInputActionValue& InputActionValue)
-{
-	bRunning = false;
-	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-}
-
-void AKratos::InputLook(const FInputActionValue& InputActionValue)
-{
-	if (true == bRolling || true == bAttacking) return;
-
-	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
-
-	if(0.0f != LookAxisVector.X)
-	{
-		AddControllerYawInput(LookAxisVector.X);
-	}
-	if (0.0f != LookAxisVector.Y)
-	{
-		AddControllerPitchInput(-LookAxisVector.Y);
-	}
-
-}
-
-void AKratos::InputRun(const FInputActionValue& InputActionValue)
-{
-	bRunning = true;
-	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
-}
-
 void AKratos::InputAbilityPressed(FGameplayTag InputTag)
 {
 	AbilitySystemComponent->OnAbilityInputPressed(InputTag);
@@ -290,4 +186,14 @@ void AKratos::InputAbilityPressed(FGameplayTag InputTag)
 void AKratos::InputAbilityReleased(FGameplayTag InputTag)
 {
 	AbilitySystemComponent->OnAbilityInputReleased(InputTag);
+}
+
+bool AKratos::IsRunning() const
+{
+	return KratosControlComponent->bRunning;
+}
+
+FVector2D AKratos::GetMovementInputVector() const
+{
+	return KratosControlComponent->MovementInputVector;
 }
