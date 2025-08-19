@@ -29,7 +29,7 @@ void UKratosControlComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//CalcCharacterRotation(DeltaTime);
+	CalcCharacterRotation(DeltaTime);
 
 }
 

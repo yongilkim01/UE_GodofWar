@@ -47,6 +47,16 @@ void URagnarokFunctionLibrary::AddGameplayTagToActor(AActor* InActor, FGameplayT
 	}
 }
 
+void URagnarokFunctionLibrary::RemoveGameplayTagToActor(AActor* InActor, FGameplayTag TagToRemove)
+{
+	URagnarokAbilitySystemComponent* ASC = GetRagnarokASCFromActor(InActor);
+
+	if (true == ASC->HasMatchingGameplayTag(TagToRemove))
+	{
+		ASC->RemoveLooseGameplayTag(TagToRemove);
+	}
+}
+
 void URagnarokFunctionLibrary::SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag, float EventMagnitude)
 {
 	if (nullptr == InActor)
