@@ -11,6 +11,13 @@ class URagnarokGameplayAbility;
 
 DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
 
+UENUM()
+enum class ERagnarokConfirmType : uint8
+{
+	ERCT_Yes				UMETA(DisplayName = "Yes"),
+	ERCT_No					UMETA(DisplayName = "No")
+};
+
 UENUM(BlueprintType)
 enum class EToggleDamageType : uint8
 {

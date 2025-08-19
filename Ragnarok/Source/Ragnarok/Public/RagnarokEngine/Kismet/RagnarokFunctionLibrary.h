@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameplayTagContainer.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokFunctionLibrary.generated.h"
 
 class URagnarokAbilitySystemComponent;
@@ -26,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "RagnarokKismet|FunctionLibrary")
 	static bool HasActorGameplayTag(AActor* InActor, FGameplayTag TagToCheck);
+
+	UFUNCTION(BlueprintCallable, Category = "RagnarokKismet|FunctionLibrary", meta = (DisplayName = "Has Actor Gameplay Tag", ExpandEnumAsExecs = "OutConfirmType"))
+	static void BP_HasActorGameplayTag(AActor* InActor, FGameplayTag TagToCheck, ERagnarokConfirmType& OutConfirmType);
 
 	UFUNCTION(BlueprintCallable, Category = "RagnarokKismet|FunctionLibrary")
 	static void AddGameplayTagToActor(AActor* InActor, FGameplayTag TagToAdd);

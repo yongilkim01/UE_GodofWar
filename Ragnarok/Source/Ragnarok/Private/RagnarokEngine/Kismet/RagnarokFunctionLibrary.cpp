@@ -37,6 +37,11 @@ bool URagnarokFunctionLibrary::HasActorGameplayTag(AActor* InActor, FGameplayTag
 	return ASC->HasMatchingGameplayTag(TagToCheck);
 }
 
+void URagnarokFunctionLibrary::BP_HasActorGameplayTag(AActor* InActor, FGameplayTag TagToCheck, ERagnarokConfirmType& OutConfirmType)
+{
+	OutConfirmType = HasActorGameplayTag(InActor, TagToCheck) ? ERagnarokConfirmType::ERCT_Yes : ERagnarokConfirmType::ERCT_No;
+}
+
 void URagnarokFunctionLibrary::AddGameplayTagToActor(AActor* InActor, FGameplayTag TagToAdd)
 {
 	URagnarokAbilitySystemComponent* ASC = GetRagnarokASCFromActor(InActor);
