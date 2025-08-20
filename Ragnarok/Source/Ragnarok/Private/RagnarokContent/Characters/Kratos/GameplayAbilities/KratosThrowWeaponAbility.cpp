@@ -10,6 +10,9 @@
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 UKratosThrowWeaponAbility::UKratosThrowWeaponAbility()
 {
 	bShowDebug = true;
@@ -30,8 +33,9 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		return;
 	}
 
-	StartAiming();
+	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
+	PlayThrowAnimMontage();
 }
 
 void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -40,62 +44,68 @@ void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAbility"));
 
+	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
-	if (true == bAiming)
-	{
-		EndAiming();
-	}
 
 }
 
 void UKratosThrowWeaponAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::InputPressed"));
-
-	if (true == bAiming)
-	{
-		ThrowWeapon();
-	}
 }
 
 void UKratosThrowWeaponAbility::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::InputReleased"));
-
-	if (true == bAiming)
-	{
-		bAiming = false;
-		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-		return;
-	}
-}
-
-void UKratosThrowWeaponAbility::StartAiming()
-{
-	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::StartAiming"));
-
-	if (true == bAiming)
-	{
-		return;
-	}
-
-	bAiming = true;
-
-	URagnarokFunctionLibrary::AddGameplayTagToActor(
-		GetKratosFromActorInfo(), KratosGameplayTags::Kratos_Status_Aiming);
-
-}
-
-void UKratosThrowWeaponAbility::EndAiming()
-{
-	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAiming"));
-
-	URagnarokFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), KratosGameplayTags::Kratos_Status_Aiming);
-
 }
 
 void UKratosThrowWeaponAbility::ThrowWeapon()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::ThrowWeapon"));
 
+}
+
+void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
+{
+	if (nullptr == ThrowAnimMontage)
+	{
+		Debug::Print(TEXT("UKratosThrowWeaponAbility::ThrowAnimMontage is nullptr"), FColor::Red);
+		return;
+	}
+
+	//PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+	//	this,
+	//	NAME_None,
+	//	ThrowAnimMontage,
+	//	1.0f,
+	//	NAME_None,
+	//	true,
+	//	1.0f,
+	//	0.0f
+	//);
+
+	PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+		this,
+		NAME_None,
+		ThrowAnimMontage,
+		1.0f,
+		NAME_None,
+		true,
+		1.0f,
+		0.037f,
+		false
+	);
+
+	if (nullptr != PlayMontageTask)
+	{
+		PlayMontageTask->OnCompleted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCompleted);
+		PlayMontageTask->OnBlendOut.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageBlendOut);
+		PlayMontageTask->OnInterrupted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageInterrupted);
+		PlayMontageTask->OnCancelled.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCancelled);
+		PlayMontageTask->ReadyForActivation();
+	}
+	else
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
 }

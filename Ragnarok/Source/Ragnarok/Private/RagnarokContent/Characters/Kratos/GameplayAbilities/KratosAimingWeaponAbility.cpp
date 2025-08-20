@@ -65,6 +65,7 @@ void UKratosAimingWeaponAbility::InputReleased(const FGameplayAbilitySpecHandle 
 	if (true == bAiming)
 	{
 		bAiming = false;
+		URagnarokFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), KratosGameplayTags::Kratos_Status_Aiming);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 		return;
 	}

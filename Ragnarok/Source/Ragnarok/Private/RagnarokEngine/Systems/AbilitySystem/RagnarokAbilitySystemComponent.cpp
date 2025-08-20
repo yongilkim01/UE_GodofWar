@@ -35,6 +35,25 @@ void URagnarokAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& 
 
 void URagnarokAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
+	if (false == InInputTag.IsValid())
+	{
+		return;
+	}
+
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (false == AbilitySpec.GetDynamicSpecSourceTags().HasTag(InInputTag))
+		{
+			continue;
+		}
+
+		UGameplayAbility* ActiveAbility = AbilitySpec.GetPrimaryInstance();
+
+		if (nullptr != ActiveAbility && true == ActiveAbility->IsActive())
+		{
+			ActiveAbility->InputReleased(AbilitySpec.Handle, AbilityActorInfo.Get(), FGameplayAbilityActivationInfo());
+		}
+	}
 }
 
 void URagnarokAbilitySystemComponent::GrantWeaponAbilities(const TArray<FRagnarokbilitySet> InWeaponAbilityArray, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandleArray)

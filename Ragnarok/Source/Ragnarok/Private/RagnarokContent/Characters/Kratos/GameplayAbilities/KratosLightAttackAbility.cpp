@@ -13,7 +13,7 @@
 #include "GameplayTagContainer.h"
 #include "Animation/AnimInstance.h"
 
-
+#include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
@@ -152,7 +152,8 @@ bool UKratosLightAttackAbility::CanActivateAbility(const FGameplayAbilitySpecHan
 
 	if (nullptr != KratosCharacter)
 	{
-		if (true == KratosCharacter->IsRunning())
+		if (true == KratosCharacter->IsRunning() || 
+			true == URagnarokFunctionLibrary::HasActorGameplayTag(ActorInfo->AvatarActor.Get(), KratosGameplayTags::Kratos_Status_Aiming))
 		{
 			return false;
 		}

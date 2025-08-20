@@ -7,6 +7,7 @@
 #include "KratosThrowWeaponAbility.generated.h"
 
 class AKratosWeapon;
+class UAbilityTask_PlayMontageAndWait;
 
 /**
  * 
@@ -45,22 +46,14 @@ protected:
 	//~ End UGameplayAbility Interface.
 
 private:
-	void StartAiming();
-	void EndAiming();
 	void ThrowWeapon();
+	void PlayThrowAnimMontage();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok")
-	UAnimMontage* AimAnimMontage = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok")
 	UAnimMontage* ThrowAnimMontage = nullptr;
-
 	UPROPERTY()
 	AKratosWeapon* CurWeapon = nullptr;
 
-	bool bAiming = false;
-	float AimCameraDistance = 100.0f;
-	float AimCameraInterpSpeed = 5.0f;
-	
+	UAbilityTask_PlayMontageAndWait* PlayMontageTask = nullptr;
 };
