@@ -8,6 +8,9 @@
 #include "GameplayAbilitySpecHandle.h"
 #include "KratosWeapon.generated.h"
 
+class UProjectileMovementComponent;
+class UTimelineComponent;
+
 /**
  * 
  */
@@ -17,11 +20,18 @@ class RAGNAROK_API AKratosWeapon : public ARagnarokWeapon
 	GENERATED_BODY()
 
 public:
+	AKratosWeapon();
+
 	virtual void InitWeapon() override;
 
 	void AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
 	TArray<FGameplayAbilitySpecHandle>& GetGrantedAbilitySpecHandleArray();
-
+	
+	virtual void ThrowWeapon(
+		FRotator CameraRotator, 
+		FVector ThrowDirection, 
+		FVector CameraLocation, 
+		float ThrowSpeed) {}
 
 protected:
 	//~ Begin AActor Interface.
@@ -34,10 +44,17 @@ protected:
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject) override;
 	//~ End ARagnarokWeapon Interface.
 
+
 private:
 	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandleArray;
 
 protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* PivotPointComponent = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
+
 	UItemPrimaryAssetKratosWeapon* KratosWeaponPDA = nullptr;
 
 public:

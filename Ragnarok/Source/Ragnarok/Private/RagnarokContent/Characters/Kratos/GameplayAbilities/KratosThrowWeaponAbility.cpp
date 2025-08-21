@@ -6,10 +6,14 @@
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
+#include "EnhancedInputSubsystems.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -36,6 +40,8 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	PlayThrowAnimMontage();
+
+	ThrowWeapon();
 }
 
 void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -59,10 +65,81 @@ void UKratosThrowWeaponAbility::InputReleased(const FGameplayAbilitySpecHandle H
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::InputReleased"));
 }
 
+bool UKratosThrowWeaponAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (false == Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return false;
+	}
+
+	const AKratos* KratosCharacter = Cast<AKratos>(ActorInfo->AvatarActor.Get());
+
+	if (nullptr != KratosCharacter)
+	{
+		if (false == URagnarokFunctionLibrary::HasActorGameplayTag(ActorInfo->AvatarActor.Get(), KratosGameplayTags::Kratos_Status_Aiming))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		Debug::Print(TEXT("Kratos is nullptr"), FColor::Red);
+		return false;
+	}
+}
+
 void UKratosThrowWeaponAbility::ThrowWeapon()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::ThrowWeapon"));
 
+	if (nullptr == CurWeapon)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* ParentMesh = Kratos->FindComponentByClass<USkeletalMeshComponent>();
+
+	if (nullptr != ParentMesh)
+	{
+		FDetachmentTransformRules DetachRules(
+			EDetachmentRule::KeepWorld,
+			EDetachmentRule::KeepWorld,
+			EDetachmentRule::KeepWorld,
+			true
+		);
+
+		CurWeapon->DetachFromActor(DetachRules);
+	}
+	{
+		ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
+	}
+	{
+		ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
+		UEnhancedInputLocalPlayerSubsystem* InputSubsystem
+			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+		InputSubsystem->RemoveMappingContext(CurWeapon->WeaponData.InputMappingContext);
+	}
+	{
+		GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
+	}
+
+	{
+		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
+	}
+
+	FVector CameraLocation = FVector::ZeroVector;
+	FRotator CameraRotation = FRotator::ZeroRotator;
+	GetKratosControllerFromActorInfo()->GetPlayerViewPoint(CameraLocation, CameraRotation);
+
+	FVector ThrowDirection = CameraRotation.Vector();
+	float ThrowSpeed = 1000.0f;
+
+	CurWeapon->ThrowWeapon(CameraRotation, FVector::ZeroVector, FVector::ZeroVector, 0.0f);
 }
 
 void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
