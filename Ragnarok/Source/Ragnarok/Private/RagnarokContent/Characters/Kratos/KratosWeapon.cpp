@@ -2,8 +2,15 @@
 
 
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 
+#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
+
+#include "EnhancedInputSubsystems.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/Character.h"
 
 AKratosWeapon::AKratosWeapon()
 {
@@ -50,4 +57,34 @@ void AKratosWeapon::LoadWeaponDataAsset()
 void AKratosWeapon::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 {
 	Super::LoadWeaponPrimaryDataAsset(PDAAssetObject);
+}
+
+void AKratosWeapon::UnlinkAnimClassLayersFromActor(const AActor* UnlinkActor)
+{
+	if (nullptr == UnlinkActor)
+	{
+		Debug::Print(TEXT("AKratosWeapon::UnlinkAnimClassLayersFromActor method's UnlinkActor is nullptr"), FColor::Red);
+		return;
+	}
+
+	USkeletalMeshComponent* ParentMesh = UnlinkActor->FindComponentByClass<USkeletalMeshComponent>();
+
+	if (nullptr != ParentMesh)
+	{
+		ParentMesh->UnlinkAnimClassLayers(WeaponData.WeaponAnimLayer.Get());
+
+	}
+}
+
+void AKratosWeapon::UnUequipWeapon(const AActor* OwnerActor, FName HandleSocketName)
+{
+	FAttachmentTransformRules AttachmentRules(
+		EAttachmentRule::SnapToTarget,    // LocationRule
+		EAttachmentRule::KeepRelative,    // RotationRule
+		EAttachmentRule::KeepWorld,       // ScaleRule
+		true						      // bWeldSimulatedBodies
+	);
+
+	AttachWeaponToActor(OwnerActor, AttachmentRules, HandleSocketName);
+	UnlinkAnimClassLayersFromActor(OwnerActor);
 }

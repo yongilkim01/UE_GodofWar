@@ -2,12 +2,16 @@
 
 
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/KratosController.h"
+#include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosControlComponent.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
+
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
@@ -93,6 +97,19 @@ UCombatComponent* AKratos::GetCombatComponent() const
 URagnarokUIComponent* AKratos::GetUIComponent() const
 {
 	return KratosUIComponent;
+}
+
+void AKratos::UnEquipWeapon(AKratosWeapon* KratosWeapon)
+{
+	ULocalPlayer* LocalPlayer = KratosController->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
+		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+	InputSubsystem->RemoveMappingContext(KratosWeapon->WeaponData.InputMappingContext);
+	KratosWeapon->UnUequipWeapon(this, UnequipWeaponSocket);
+	GetAbilitySystem()->RemoveWeaponAbilities(KratosWeapon->GetGrantedAbilitySpecHandleArray());
+	KratosCombatComponent->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
+	KratosUIComponent->OnEquippedWeaponChanged.Broadcast(nullptr);
 }
 
 void AKratos::LoadKratosDataAsset()
@@ -196,4 +213,14 @@ bool AKratos::IsRunning() const
 FVector2D AKratos::GetMovementInputVector() const
 {
 	return KratosControlComponent->MovementInputVector;
+}
+
+AKratosController* AKratos::GetKratosController()
+{
+	if (false == KratosController.IsValid())
+	{
+		KratosController = Cast<AKratosController>(GetController());
+	}
+
+	return KratosController.Get();
 }

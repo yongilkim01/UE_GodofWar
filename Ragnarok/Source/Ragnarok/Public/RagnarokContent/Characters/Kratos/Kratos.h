@@ -8,6 +8,8 @@
 #include "GameplayTagContainer.h"
 #include "Kratos.generated.h"
 
+class AKratosController;
+class AKratosWeapon;
 class USpringArmComponent;
 class UCameraComponent;
 class UInitDataAssetKratos;
@@ -38,6 +40,8 @@ public:
 	//~ Begin IUIInterface Interface.
 	virtual URagnarokUIComponent* GetUIComponent() const override;
 	//~ End IUIInterface Interface.
+
+	void UnEquipWeapon(AKratosWeapon* KratosWeapon);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -78,12 +82,16 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
 	UKratosControlComponent* KratosControlComponent = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Kratos")
+	FName UnequipWeaponSocket;
+
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
 	bool bRolling = false;
 	bool bAttacking = false;
 	float FixedCameraWorldZLocation = 0.0f;
 	FTimerHandle RunningTimerHandle;
+	TWeakObjectPtr<AKratosController> KratosController;
 
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
@@ -91,4 +99,5 @@ public:
 	FORCEINLINE bool IsRolling() const { return bRolling; }
 	bool IsRunning() const;
 	FVector2D GetMovementInputVector() const;
+	AKratosController* GetKratosController();
 };

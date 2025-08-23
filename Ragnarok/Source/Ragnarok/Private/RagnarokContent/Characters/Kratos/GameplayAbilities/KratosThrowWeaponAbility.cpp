@@ -114,23 +114,14 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 
 		CurWeapon->DetachFromActor(DetachRules);
 	}
-	{
-		ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
-	}
-	{
-		ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
-		UEnhancedInputLocalPlayerSubsystem* InputSubsystem
-			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
+	ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
+		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
-		InputSubsystem->RemoveMappingContext(CurWeapon->WeaponData.InputMappingContext);
-	}
-	{
-		GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
-	}
-
-	{
-		GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
-	}
+	InputSubsystem->RemoveMappingContext(CurWeapon->WeaponData.InputMappingContext);
+	GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
+	GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
 
 	FVector CameraLocation = FVector::ZeroVector;
 	FRotator CameraRotation = FRotator::ZeroRotator;
@@ -139,7 +130,7 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 	FVector ThrowDirection = CameraRotation.Vector();
 	float ThrowSpeed = 1000.0f;
 
-	CurWeapon->ThrowWeapon(CameraRotation, FVector::ZeroVector, FVector::ZeroVector, 0.0f);
+	//CurWeapon->ThrowWeapon(CameraRotation, FVector::ZeroVector, FVector::ZeroVector, 0.0f);
 }
 
 void UKratosThrowWeaponAbility::PlayThrowAnimMontage()

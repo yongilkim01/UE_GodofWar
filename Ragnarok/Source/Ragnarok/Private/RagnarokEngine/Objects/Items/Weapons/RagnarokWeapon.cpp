@@ -42,6 +42,22 @@ void ARagnarokWeapon::InitWeapon()
 {
 }
 
+void ARagnarokWeapon::AttachWeaponToActor(const AActor* ActorToAttach, const FAttachmentTransformRules& AttachmentRules, FName SocketName)
+{
+	if (nullptr == ActorToAttach)
+	{
+		Debug::Print(TEXT("ARagnarokWeapon::AttachWeaponToActor method's ActorToAttach is nullptr"), FColor::Red);
+		return;
+	}
+
+	USkeletalMeshComponent* ParentMesh = ActorToAttach->FindComponentByClass<USkeletalMeshComponent>();
+
+	if (nullptr != ParentMesh)
+	{
+		AttachToComponent(ParentMesh, AttachmentRules, SocketName);
+	}
+}
+
 void ARagnarokWeapon::LoadWeaponDataAsset()
 {
 }

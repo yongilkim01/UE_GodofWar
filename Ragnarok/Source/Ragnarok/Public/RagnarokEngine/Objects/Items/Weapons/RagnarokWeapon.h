@@ -10,6 +10,8 @@ class USkeletalMeshComponent;
 class UBoxComponent;
 class UItemPrimaryAssetKratosWeapon;
 
+struct FAttachmentTransformRules;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponInitialized);
 DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*);
 
@@ -29,6 +31,7 @@ public:
 
 public:
 	virtual void InitWeapon();
+	void AttachWeaponToActor(const AActor* ActorToAttach, const FAttachmentTransformRules& AttachmentRules, FName SocketName);
 
 protected:
 	virtual void LoadWeaponDataAsset();

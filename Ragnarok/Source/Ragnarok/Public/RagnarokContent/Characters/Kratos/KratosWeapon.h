@@ -33,6 +33,8 @@ public:
 		FVector CameraLocation, 
 		float ThrowSpeed) {}
 
+	void UnUequipWeapon(const AActor* OwnerActor, FName SocketName);
+
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
@@ -44,6 +46,8 @@ protected:
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject) override;
 	//~ End ARagnarokWeapon Interface.
 
+private:
+	void UnlinkAnimClassLayersFromActor(const AActor* UnlinkActor);
 
 private:
 	TArray<FGameplayAbilitySpecHandle> GrantedAbilitySpecHandleArray;
