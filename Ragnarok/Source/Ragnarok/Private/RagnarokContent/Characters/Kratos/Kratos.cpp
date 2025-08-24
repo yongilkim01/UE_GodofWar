@@ -29,6 +29,7 @@
 #include "Engine/AssetManager.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/UserWidget.h"
@@ -47,6 +48,8 @@ AKratos::AKratos()
 
 	MainCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+
+	CameraZoomTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("CameraZoomTimeline"));
 
 	KratosCombatComponent = CreateDefaultSubobject<UKratosCombatComponent>(TEXT("KratosCombat"));
 	KratosUIComponent = CreateDefaultSubobject<UKratosUIComponent>(TEXT("KratosUI"));
@@ -70,6 +73,19 @@ void AKratos::BeginPlay()
 	LoadKratosDataAsset();
 
 	FixedCameraWorldZLocation = MainCameraComponent->GetComponentLocation().Z;
+
+	if (nullptr != CameraZoomCurve && nullptr != CameraZoomTimelineComponent)
+	{
+		FOnTimelineFloat TimelineDelegateFloat;
+		TimelineDelegateFloat.BindUFunction(this, FName("OnCameraZoomTimelineTick"));
+		CameraZoomTimelineComponent->AddInterpFloat(CameraZoomCurve, TimelineDelegateFloat);
+
+		FOnTimelineEvent TimelineDelegateEvent;
+		TimelineDelegateEvent.BindUFunction(this, FName("OnCameraZoomTimelineEnd"));
+		CameraZoomTimelineComponent->SetTimelineFinishedFunc(TimelineDelegateEvent);
+
+		CameraZoomTimelineComponent->SetPlayRate(TimelineComponentPlayRate);
+	}
 }
 
 void AKratos::Tick(float DeltaTime)
@@ -121,6 +137,7 @@ void AKratos::LoadKratosDataAsset()
 		SpringArmComponent->TargetArmLength = InitDA->TargetArmLength;
 		SpringArmComponent->SocketOffset = InitDA->SocketOffset;	
 		SpringArmComponent->bUsePawnControlRotation = true;
+		IdleSpringArmLength = InitDA->TargetArmLength;
 
 		MainCameraComponent->bUsePawnControlRotation = false;
 
@@ -131,6 +148,7 @@ void AKratos::LoadKratosDataAsset()
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
 		KratosControlComponent->RunSpeed = InitDA->MaxRunSpeed;
 		KratosControlComponent->WalkSpeed = InitDA->MaxWalkSpeed;
+		IdleMaxWalkSpeed = InitDA->MaxWalkSpeed;
 		
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
@@ -223,4 +241,40 @@ AKratosController* AKratos::GetKratosController()
 	}
 
 	return KratosController.Get();
+}
+
+void AKratos::ZoomInCamera()
+{
+	bUseControllerRotationYaw = true;
+	GetCharacterMovement()->MaxWalkSpeed = CameraZoomMaxWalkSpeed;
+
+	if (nullptr != CameraZoomTimelineComponent)
+	{
+		CameraZoomTimelineComponent->Play();
+	}
+}
+
+void AKratos::ZoomOutCamera()
+{
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->MaxWalkSpeed = IdleMaxWalkSpeed;
+
+	if (nullptr != CameraZoomTimelineComponent)
+	{
+		CameraZoomTimelineComponent->Reverse();
+	}
+}
+
+
+void AKratos::OnCameraZoomTimelineTick(float Value)
+{
+	if (nullptr != SpringArmComponent)
+	{
+		float CalcLength = FMath::Lerp(IdleSpringArmLength, CameraZoomSpringArmLength, Value);
+		SpringArmComponent->TargetArmLength = CalcLength;
+	}
+}
+
+void AKratos::OnCameraZoomTimelineEnd()
+{
 }

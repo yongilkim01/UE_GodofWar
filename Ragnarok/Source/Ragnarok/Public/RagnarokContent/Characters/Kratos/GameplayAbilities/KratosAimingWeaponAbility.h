@@ -8,6 +8,7 @@
 
 class AKratosWeapon;
 class URagnarokUserWidget;
+class UTimelineComponent;
 
 /**
  * 
@@ -46,7 +47,7 @@ protected:
 	//~ End UGameplayAbility Interface.
 
 private:
-	void StartAiming();
+	void BeginAiming();
 	void EndAiming();
 	void ThrowWeapon();
 
@@ -67,7 +68,5 @@ private:
 	URagnarokUserWidget* AimWidget = nullptr;
 
 	bool bAiming = false;
-	float AimCameraDistance = 100.0f;
-	float AimCameraInterpSpeed = 5.0f;
 
 };

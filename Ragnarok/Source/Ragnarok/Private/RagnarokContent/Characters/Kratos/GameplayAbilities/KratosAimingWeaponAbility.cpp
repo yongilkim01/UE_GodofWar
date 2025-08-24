@@ -31,7 +31,7 @@ void UKratosAimingWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 		return;
 	}
 
-	StartAiming();
+	BeginAiming();
 
 }
 
@@ -68,7 +68,7 @@ void UKratosAimingWeaponAbility::InputReleased(const FGameplayAbilitySpecHandle 
 	}
 }
 
-void UKratosAimingWeaponAbility::StartAiming()
+void UKratosAimingWeaponAbility::BeginAiming()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosAimingWeaponAbility::StartAiming"));
 
@@ -91,6 +91,7 @@ void UKratosAimingWeaponAbility::StartAiming()
 		}
 	}
 
+	Kratos->ZoomInCamera();
 }
 
 void UKratosAimingWeaponAbility::EndAiming()
@@ -104,6 +105,8 @@ void UKratosAimingWeaponAbility::EndAiming()
 		AimWidget->RemoveFromParent();
 		AimWidget = nullptr;
 	}
+
+	Kratos->ZoomOutCamera();
 }
 
 void UKratosAimingWeaponAbility::ThrowWeapon()

@@ -20,6 +20,7 @@ class UKratosCombatComponent;
 class UKratosUIComponent;
 class UKratosGameplayAbility;
 class UKratosControlComponent;
+class UTimelineComponent;
 
 struct FInputActionValue;
 
@@ -42,6 +43,8 @@ public:
 	//~ End IUIInterface Interface.
 
 	void UnEquipWeapon(AKratosWeapon* KratosWeapon);
+	void ZoomInCamera();
+	void ZoomOutCamera();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -53,6 +56,11 @@ protected:
 	//~ End ICombatInterface Interface.
 
 private:
+	UFUNCTION()
+	void OnCameraZoomTimelineTick(float Value);
+	UFUNCTION()
+	void OnCameraZoomTimelineEnd();
+
 	void LoadKratosDataAsset();
 	void InitPrimaryData(UObject* PDAObject);
 
@@ -67,6 +75,12 @@ protected:
 	UInputConfigDataAsset* InputConfigDA = nullptr;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Ragnarok")
+	UTimelineComponent* CameraZoomTimelineComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Ragnarok")
+	UCurveFloat* CameraZoomCurve = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components|Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* MainCameraComponent = nullptr;
 
@@ -92,6 +106,14 @@ private:
 	float FixedCameraWorldZLocation = 0.0f;
 	FTimerHandle RunningTimerHandle;
 	TWeakObjectPtr<AKratosController> KratosController;
+
+	float CameraZoomSpringArmLength = 0.0f;
+	float IdleSpringArmLength = 0.0f;
+	float CameraZoomTurnRate = 30.0f;
+	float IdleCameraTurnRate = 50.0f;
+	float CameraZoomMaxWalkSpeed = 250.0f;
+	float IdleMaxWalkSpeed = 400.0f;
+	float TimelineComponentPlayRate = 1.4f;
 
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
