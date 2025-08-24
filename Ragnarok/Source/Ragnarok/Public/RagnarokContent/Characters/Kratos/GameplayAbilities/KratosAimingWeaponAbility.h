@@ -7,6 +7,7 @@
 #include "KratosAimingWeaponAbility.generated.h"
 
 class AKratosWeapon;
+class URagnarokUserWidget;
 
 /**
  * 
@@ -56,10 +57,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok")
 	UAnimMontage* ThrowAnimMontage = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "Ragnarok")
+	TSubclassOf<URagnarokUserWidget> AimWidgetClass;
+
 	UPROPERTY()
 	AKratosWeapon* CurWeapon = nullptr;
+
+	UPROPERTY()
+	URagnarokUserWidget* AimWidget = nullptr;
 
 	bool bAiming = false;
 	float AimCameraDistance = 100.0f;
 	float AimCameraInterpSpeed = 5.0f;
+
 };

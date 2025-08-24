@@ -6,6 +6,7 @@
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
@@ -40,11 +41,7 @@ void UKratosAimingWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Han
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosAimingWeaponAbility::EndAbility"));
 
-
-	if (true == bAiming)
-	{
-		EndAiming();
-	}
+	EndAiming();
 
 }
 
@@ -85,6 +82,15 @@ void UKratosAimingWeaponAbility::StartAiming()
 	URagnarokFunctionLibrary::AddGameplayTagToActor(
 		GetKratosFromActorInfo(), KratosGameplayTags::Kratos_Status_Aiming);
 
+	if (AimWidgetClass && nullptr == AimWidget)
+	{
+		AimWidget = CreateWidget<URagnarokUserWidget>(GetWorld(), AimWidgetClass);
+		if (nullptr != AimWidget)
+		{
+			AimWidget->AddToViewport();
+		}
+	}
+
 }
 
 void UKratosAimingWeaponAbility::EndAiming()
@@ -93,6 +99,11 @@ void UKratosAimingWeaponAbility::EndAiming()
 
 	URagnarokFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), KratosGameplayTags::Kratos_Status_Aiming);
 
+	if (nullptr != AimWidget)
+	{
+		AimWidget->RemoveFromParent();
+		AimWidget = nullptr;
+	}
 }
 
 void UKratosAimingWeaponAbility::ThrowWeapon()

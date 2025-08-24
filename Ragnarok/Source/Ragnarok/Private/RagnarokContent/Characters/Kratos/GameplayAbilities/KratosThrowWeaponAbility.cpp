@@ -13,6 +13,8 @@
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 
+#include "Engine/Engine.h"
+#include "DrawDebugHelpers.h"
 #include "EnhancedInputSubsystems.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -40,8 +42,6 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	PlayThrowAnimMontage();
-
-	ThrowWeapon();
 }
 
 void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -51,6 +51,9 @@ void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAbility"));
 
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	ThrowWeapon();
+
 
 
 }
@@ -114,7 +117,7 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 
 		CurWeapon->DetachFromActor(DetachRules);
 	}
-	ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
+	//ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
 	ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
@@ -130,7 +133,20 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 	FVector ThrowDirection = CameraRotation.Vector();
 	float ThrowSpeed = 1000.0f;
 
-	//CurWeapon->ThrowWeapon(CameraRotation, FVector::ZeroVector, FVector::ZeroVector, 0.0f);
+	// 방향을 더 명확하게 보여주는 화살표
+	DrawDebugDirectionalArrow(
+		GetWorld(),
+		Kratos->GetActorLocation(),
+		Kratos->GetActorLocation() + (Kratos->GetActorForwardVector() * 500.0f),
+		50.0f,              // ArrowSize
+		FColor::Green,
+		false,
+		3.0f,
+		0,
+		5.0f
+	);
+
+	CurWeapon->ThrowWeapon(CameraRotation, -Kratos->GetActorForwardVector(), CameraLocation, ThrowSpeed);
 }
 
 void UKratosThrowWeaponAbility::PlayThrowAnimMontage()

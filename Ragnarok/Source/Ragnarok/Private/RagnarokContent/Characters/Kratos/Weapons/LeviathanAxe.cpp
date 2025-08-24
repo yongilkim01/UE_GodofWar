@@ -116,13 +116,13 @@ void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 
 void ALeviathanAxe::ThrowWeapon(FRotator CameraRotator, FVector ThrowDirection, FVector CameraLocation, float ThrowSpeed)
 {
-	//FRotator CalcCameraRotator = FRotator(CameraRotator.Pitch, CameraRotator.Yaw, CameraRotator.Roll + AxeSpinAxisOffset);
+	FRotator CalcCameraRotator = FRotator(CameraRotator.Pitch, CameraRotator.Yaw, CameraRotator.Roll + AxeSpinAxisOffset);
 	//SnapAxeLocationAndRotation(CalcCameraRotator, ThrowDirection, CameraLocation);
 
-	//ProjectileMovementComponent->SetVelocityInLocalSpace(ThrowDirection * ThrowSpeed);
-	//ProjectileMovementComponent->Activate();
+	ProjectileMovementComponent->SetVelocityInLocalSpace(ThrowDirection * ThrowSpeed);
+	ProjectileMovementComponent->Activate();
 
-	RotateAxe();
+	//RotateAxe();
 }
 
 void ALeviathanAxe::SnapAxeLocationAndRotation(FRotator SnapRotation, FVector SnapDirection, FVector CameraLocation)

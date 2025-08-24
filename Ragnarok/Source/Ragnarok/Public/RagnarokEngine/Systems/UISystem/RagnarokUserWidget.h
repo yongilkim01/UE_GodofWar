@@ -20,12 +20,6 @@ class RAGNAROK_API URagnarokUserWidget : public UUserWidget
 protected:
 	virtual void NativeOnInitialized() override;
 
-	//UFUNCTION()
-	//void OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
-
-	//UFUNCTION()
-	//void OnEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent);
-
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Kratos UI Component Initialize"))
 	void BP_OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent);
 

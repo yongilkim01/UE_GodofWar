@@ -21,16 +21,6 @@ void URagnarokUserWidget::NativeOnInitialized()
 	}
 }
 
-//void URagnarokUserWidget::OnKratosUIComponentInitialized(UKratosUIComponent* KratosUIComponent)
-//{
-//	//KratosUIComponent->OnCurrentHealthChanged.AddDynamic(this, &URagnarokUserWidget::TestBind);
-//}
-//
-//void URagnarokUserWidget::OnEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent)
-//{
-//	//EnemyUIComponent->OnCurrentHealthChanged.AddDynamic(this, &URagnarokUserWidget::TestBind);
-//}
-
 void URagnarokUserWidget::InitEnemyCreatedWidet(AActor* EnemyActor)
 {
 	if (IUIInterface* UIInterface = Cast<IUIInterface>(EnemyActor))
