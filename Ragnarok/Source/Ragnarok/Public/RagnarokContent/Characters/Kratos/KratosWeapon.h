@@ -30,8 +30,11 @@ public:
 	virtual void ThrowWeapon(
 		FRotator CameraRotator, 
 		FVector ThrowDirection, 
-		FVector CameraLocation, 
-		float ThrowSpeed) {}
+		FVector CameraLocation) {}
+
+	virtual void ThrowWeaponToTarget(
+		FVector StartLocation,
+		FVector TargetLocation) {}
 
 	void UnUequipWeapon(const AActor* OwnerActor, FName SocketName);
 

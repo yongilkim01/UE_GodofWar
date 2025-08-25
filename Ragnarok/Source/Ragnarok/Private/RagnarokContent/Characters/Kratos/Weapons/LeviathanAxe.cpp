@@ -114,7 +114,7 @@ void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 	}
 }
 
-void ALeviathanAxe::ThrowWeapon(FRotator CameraRotator, FVector ThrowDirection, FVector CameraLocation, float ThrowSpeed)
+void ALeviathanAxe::ThrowWeapon(FRotator CameraRotator, FVector ThrowDirection, FVector CameraLocation)
 {
 	FRotator CalcCameraRotator = FRotator(CameraRotator.Pitch, CameraRotator.Yaw, CameraRotator.Roll + AxeSpinAxisOffset);
 	//SnapAxeLocationAndRotation(CalcCameraRotator, ThrowDirection, CameraLocation);
@@ -122,7 +122,26 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotator, FVector ThrowDirection, 
 	ProjectileMovementComponent->SetVelocityInLocalSpace(ThrowDirection * ThrowSpeed);
 	ProjectileMovementComponent->Activate();
 
-	//RotateAxe();
+	RotateAxe();
+}
+
+void ALeviathanAxe::ThrowWeaponToTarget(FVector StartLocation, FVector TargetLocation)
+{
+	//if (USkeletalMeshComponent* WeawponMesh = GetWeaponMesh())
+	//{
+	//	WeawponMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	//	WeawponMesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	//	WeawponMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
+	//}
+	FVector ThrowDirection = (TargetLocation - StartLocation).GetSafeNormal();
+
+	FRotator TargetRotation = ThrowDirection.Rotation();
+	TargetRotation.Roll += AxeSpinAxisOffset;
+
+	ProjectileMovementComponent->Velocity = ThrowDirection * ThrowSpeed;
+	ProjectileMovementComponent->Activate();
+
+	RotateAxe(); 
 }
 
 void ALeviathanAxe::SnapAxeLocationAndRotation(FRotator SnapRotation, FVector SnapDirection, FVector CameraLocation)

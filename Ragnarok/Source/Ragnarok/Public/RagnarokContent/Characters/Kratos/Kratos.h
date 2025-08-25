@@ -45,6 +45,12 @@ public:
 	void UnEquipWeapon(AKratosWeapon* KratosWeapon);
 	void ZoomInCamera();
 	void ZoomOutCamera();
+
+	bool IsRunning() const;
+	bool IsAiming() const;
+	FVector2D GetMovementInputVector() const;
+	AKratosController* GetKratosController();
+	bool GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange = 5000.0f);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -119,7 +125,4 @@ public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
 	FORCEINLINE bool IsAttacking() const { return bAttacking; }
 	FORCEINLINE bool IsRolling() const { return bRolling; }
-	bool IsRunning() const;
-	FVector2D GetMovementInputVector() const;
-	AKratosController* GetKratosController();
 };

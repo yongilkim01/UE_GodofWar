@@ -40,8 +40,11 @@ protected:
 	virtual void ThrowWeapon(
 		FRotator CameraRotator,
 		FVector ThrowDirection,
-		FVector CameraLocation,
-		float ThrowSpeed) override;
+		FVector CameraLocation) override;
+
+	virtual void ThrowWeaponToTarget(
+		FVector StartLocation,
+		FVector TargetLocation) override;
 
 private:
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
@@ -59,4 +62,5 @@ private:
 	float ThrowDistance = 250.0f;
 	float AxeSpinAxisOffset = 100.0f;
 	float WeaponSpinRate = 1.0f;
+	float ThrowSpeed = 30000.0f;
 };

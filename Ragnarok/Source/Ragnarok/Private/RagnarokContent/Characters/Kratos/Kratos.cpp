@@ -232,6 +232,11 @@ bool AKratos::IsRunning() const
 	return KratosControlComponent->bRunning;
 }
 
+bool AKratos::IsAiming() const
+{
+	return GetAbilitySystemComponent()->HasMatchingGameplayTag(KratosGameplayTags::Kratos_Status_Aiming);
+}
+
 FVector2D AKratos::GetMovementInputVector() const
 {
 	return KratosControlComponent->MovementInputVector;
@@ -245,6 +250,38 @@ AKratosController* AKratos::GetKratosController()
 	}
 
 	return KratosController.Get();
+}
+
+bool AKratos::GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange)
+{
+	FVector CameraForward = MainCameraComponent->GetForwardVector();
+
+	FHitResult HitResult;
+	FVector StartLocation = InWeaponLocation;
+	FVector TargetLocation = StartLocation + (CameraForward * MaxRange);
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	QueryParams.bTraceComplex = true;
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		TargetLocation,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	if (true == bHit)
+	{
+		OutTargetLocation = HitResult.Location;
+	}
+	else
+	{
+		OutTargetLocation = TargetLocation;
+	}
+
+	return bHit;
 }
 
 void AKratos::ZoomInCamera()

@@ -117,7 +117,7 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 
 		CurWeapon->DetachFromActor(DetachRules);
 	}
-	//ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
+	ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
 	ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
 	UEnhancedInputLocalPlayerSubsystem* InputSubsystem
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
@@ -126,27 +126,12 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 	GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
 	GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
 
-	FVector CameraLocation = FVector::ZeroVector;
-	FRotator CameraRotation = FRotator::ZeroRotator;
-	GetKratosControllerFromActorInfo()->GetPlayerViewPoint(CameraLocation, CameraRotation);
+	FVector StartLocation = CurWeapon->GetActorLocation();
+	FVector TargetLocation = FVector::ZeroVector;
+	
+	Kratos->GetAimingTargetLocation(StartLocation, TargetLocation);
 
-	FVector ThrowDirection = CameraRotation.Vector();
-	float ThrowSpeed = 1000.0f;
-
-	// 방향을 더 명확하게 보여주는 화살표
-	DrawDebugDirectionalArrow(
-		GetWorld(),
-		Kratos->GetActorLocation(),
-		Kratos->GetActorLocation() + (Kratos->GetActorForwardVector() * 500.0f),
-		50.0f,              // ArrowSize
-		FColor::Green,
-		false,
-		3.0f,
-		0,
-		5.0f
-	);
-
-	CurWeapon->ThrowWeapon(CameraRotation, -Kratos->GetActorForwardVector(), CameraLocation, ThrowSpeed);
+	CurWeapon->ThrowWeaponToTarget(StartLocation, TargetLocation);
 }
 
 void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
@@ -156,17 +141,6 @@ void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
 		Debug::Print(TEXT("UKratosThrowWeaponAbility::ThrowAnimMontage is nullptr"), FColor::Red);
 		return;
 	}
-
-	//PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-	//	this,
-	//	NAME_None,
-	//	ThrowAnimMontage,
-	//	1.0f,
-	//	NAME_None,
-	//	true,
-	//	1.0f,
-	//	0.0f
-	//);
 
 	PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
