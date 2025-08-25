@@ -31,6 +31,9 @@ public:
     float TargetArmLength = 0.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
+    float ZoomTargetArmLength = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     FVector SocketOffset = FVector::ZeroVector;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
@@ -41,6 +44,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     float MaxRunSpeed = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
+    float MaxZoomWalkSpeed = 0.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ComponentsConfig")
     float BrakingDecelerationWalking = 0.0f;

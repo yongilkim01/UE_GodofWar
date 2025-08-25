@@ -107,7 +107,7 @@ private:
 	FTimerHandle RunningTimerHandle;
 	TWeakObjectPtr<AKratosController> KratosController;
 
-	float CameraZoomSpringArmLength = 0.0f;
+	float CameraZoomSpringArmLength = 100.0f;
 	float IdleSpringArmLength = 0.0f;
 	float CameraZoomTurnRate = 30.0f;
 	float IdleCameraTurnRate = 50.0f;

@@ -137,21 +137,25 @@ void AKratos::LoadKratosDataAsset()
 		SpringArmComponent->TargetArmLength = InitDA->TargetArmLength;
 		SpringArmComponent->SocketOffset = InitDA->SocketOffset;	
 		SpringArmComponent->bUsePawnControlRotation = true;
-		IdleSpringArmLength = InitDA->TargetArmLength;
 
 		MainCameraComponent->bUsePawnControlRotation = false;
 
-		
 		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;
 		GetCharacterMovement()->MaxWalkSpeed = InitDA->MaxWalkSpeed;
-		KratosControlComponent->RunSpeed = InitDA->MaxRunSpeed;
-		KratosControlComponent->WalkSpeed = InitDA->MaxWalkSpeed;
-		IdleMaxWalkSpeed = InitDA->MaxWalkSpeed;
-		
+
 		GetMesh()->SetRelativeLocation(InitDA->SkeletalMeshOffset);
 		GetMesh()->SetRelativeRotation(InitDA->SkeletalMeshRotator);
+	
+		IdleSpringArmLength = InitDA->TargetArmLength;
+		CameraZoomSpringArmLength = InitDA->ZoomTargetArmLength;
+
+		IdleMaxWalkSpeed = InitDA->MaxWalkSpeed;
+		CameraZoomMaxWalkSpeed = InitDA->MaxZoomWalkSpeed;;
+
+		KratosControlComponent->RunSpeed = InitDA->MaxRunSpeed;
+		KratosControlComponent->WalkSpeed = InitDA->MaxWalkSpeed;
 	}
 	else
 	{
