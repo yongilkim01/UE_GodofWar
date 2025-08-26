@@ -284,6 +284,16 @@ bool AKratos::GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTarg
 	return bHit;
 }
 
+void AKratos::ThrowWeapon(AKratosWeapon* KratosWeapon)
+{
+	FVector CameraForwardVector = MainCameraComponent->GetForwardVector();
+	FVector CameraLocation = MainCameraComponent->GetComponentLocation();
+	FRotator CameraRotation = MainCameraComponent->GetComponentRotation();
+
+	KratosWeapon->ThrowWeapon(CameraRotation, CameraLocation, CameraForwardVector);
+
+}
+
 void AKratos::ZoomInCamera()
 {
 	bUseControllerRotationYaw = true;

@@ -28,9 +28,9 @@ public:
 	TArray<FGameplayAbilitySpecHandle>& GetGrantedAbilitySpecHandleArray();
 	
 	virtual void ThrowWeapon(
-		FRotator CameraRotator, 
-		FVector ThrowDirection, 
-		FVector CameraLocation) {}
+		FRotator CameraRotation, 
+		FVector CameraLocation, 
+		FVector CameraForwardVector) {}
 
 	virtual void ThrowWeaponToTarget(
 		FVector StartLocation,

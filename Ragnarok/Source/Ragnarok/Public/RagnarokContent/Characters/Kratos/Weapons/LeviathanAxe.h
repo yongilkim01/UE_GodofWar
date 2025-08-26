@@ -38,9 +38,9 @@ protected:
 	//~ End ARagnarokWeapon Interface.
 
 	virtual void ThrowWeapon(
-		FRotator CameraRotator,
-		FVector ThrowDirection,
-		FVector CameraLocation) override;
+		FRotator CameraRotation,
+		FVector CameraLocation,
+		FVector CameraForwardVector) override;
 
 	virtual void ThrowWeaponToTarget(
 		FVector StartLocation,
@@ -60,7 +60,7 @@ private:
 	FOnTimelineFloat WeaponRotTimelineTick;
 	FOnTimelineEvent WeaponRotTimelineEnd;
 	float ThrowDistance = 250.0f;
-	float AxeSpinAxisOffset = 100.0f;
+	float AxeSpinAxisOffset = 0.0f;
 	float WeaponSpinRate = 1.0f;
-	float ThrowSpeed = 30000.0f;
+	float ThrowSpeed = 2500.0f;
 };

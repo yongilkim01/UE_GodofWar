@@ -126,12 +126,14 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 	GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
 	GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
 
-	FVector StartLocation = CurWeapon->GetActorLocation();
-	FVector TargetLocation = FVector::ZeroVector;
-	
-	Kratos->GetAimingTargetLocation(StartLocation, TargetLocation);
+	//FVector StartLocation = CurWeapon->GetActorLocation();
+	//FVector TargetLocation = FVector::ZeroVector;
+	//
+	//Kratos->GetAimingTargetLocation(StartLocation, TargetLocation);
 
-	CurWeapon->ThrowWeaponToTarget(StartLocation, TargetLocation);
+	//CurWeapon->ThrowWeaponToTarget(StartLocation, TargetLocation);
+
+	Kratos->ThrowWeapon(CurWeapon);
 }
 
 void UKratosThrowWeaponAbility::PlayThrowAnimMontage()

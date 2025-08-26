@@ -51,6 +51,8 @@ public:
 	FVector2D GetMovementInputVector() const;
 	AKratosController* GetKratosController();
 	bool GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange = 5000.0f);
+
+	void ThrowWeapon(AKratosWeapon* KratosWeapon);
 	
 protected:
 	virtual void BeginPlay() override;

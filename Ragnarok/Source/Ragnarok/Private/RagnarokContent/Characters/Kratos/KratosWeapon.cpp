@@ -19,8 +19,8 @@ AKratosWeapon::AKratosWeapon()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("WeaponProjectileMovement"));
 	ProjectileMovementComponent->SetAutoActivate(false);
-	ProjectileMovementComponent->InitialSpeed = 2500.0f;
-	ProjectileMovementComponent->MaxSpeed = 2500.0f;
+	ProjectileMovementComponent->InitialSpeed = 3500.0f;
+	ProjectileMovementComponent->MaxSpeed = 3500.0f;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.3f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = false;
