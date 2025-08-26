@@ -50,10 +50,15 @@ private:
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
 	void RotateAxe();
 
-private:
+protected:
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* PivotPointComponent = nullptr;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* LodgePointComponent = nullptr;
 
+private:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* WeaponRotationCurve = nullptr;
 

@@ -11,6 +11,15 @@
 
 ALeviathanAxe::ALeviathanAxe()
 {
+	PivotPointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PivotPoint"));
+	PivotPointComponent->SetupAttachment(GetRootComponent());
+
+	LodgePointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("LodgePoint"));
+	LodgePointComponent->SetupAttachment(PivotPointComponent);
+
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(LodgePointComponent);
+
 	WeaponRotTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponRotTimeline"));
 
 	WeaponRotTimelineTick.BindUFunction(this, FName("OnWeaponRotTimelineTick"));
@@ -61,9 +70,8 @@ void ALeviathanAxe::InitWeapon()
 void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 {
 	float RotationValue = Value * -360.0f;
-	FRotator NewRotation = FRotator(RotationValue, RotationValue, 0.0f);
-	//PivotPointComponent->SetRelativeRotation(NewRotation);
-	SetActorRotation(NewRotation);
+	FRotator NewRotation = FRotator(RotationValue, 0.0f, 0.0f);
+	PivotPointComponent->SetRelativeRotation(NewRotation);
 }
 
 void ALeviathanAxe::OnWeaponRotTimelineEnd()
@@ -121,8 +129,9 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 
 	ProjectileMovementComponent->Velocity = CameraForwardVector * ThrowSpeed;
 	ProjectileMovementComponent->Activate();
+	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
-	//RotateAxe();
+	RotateAxe();
 }
 
 void ALeviathanAxe::ThrowWeaponToTarget(FVector StartLocation, FVector TargetLocation)
@@ -151,8 +160,6 @@ void ALeviathanAxe::SnapAxeLocationAndRotation(FRotator StartRotation, FVector C
 
 void ALeviathanAxe::RotateAxe()
 {
-	AddActorWorldRotation(FRotator(0.0f, 90.0f, 90.0f));
-
 	if (nullptr != WeaponRotTimelineComponent)
 	{
 		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);

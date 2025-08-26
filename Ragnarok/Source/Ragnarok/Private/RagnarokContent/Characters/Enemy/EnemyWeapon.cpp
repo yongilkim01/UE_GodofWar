@@ -3,3 +3,8 @@
 
 #include "RagnarokContent/Characters/Enemy/EnemyWeapon.h"
 
+AEnemyWeapon::AEnemyWeapon()
+{
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(GetRootComponent());
+}

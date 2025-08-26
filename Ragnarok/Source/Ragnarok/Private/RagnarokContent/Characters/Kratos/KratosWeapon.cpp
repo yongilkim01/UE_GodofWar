@@ -14,9 +14,6 @@
 
 AKratosWeapon::AKratosWeapon()
 {
-	PivotPointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PivotPoint"));
-	PivotPointComponent->SetupAttachment(GetRootComponent());
-
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("WeaponProjectileMovement"));
 	ProjectileMovementComponent->SetAutoActivate(false);
 	ProjectileMovementComponent->InitialSpeed = 3500.0f;

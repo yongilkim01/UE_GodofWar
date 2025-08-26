@@ -57,9 +57,6 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	USceneComponent* PivotPointComponent = nullptr;
-
-	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
 	UItemPrimaryAssetKratosWeapon* KratosWeaponPDA = nullptr;

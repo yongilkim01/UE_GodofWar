@@ -54,12 +54,16 @@ protected:
 		int32 OtherBodyIndex);
 
 protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* RootSceneComponent = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
 	UItemPrimaryAssetKratosWeapon* WeaponPDA = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
 	FPrimaryAssetId WeaponPDAId;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Components")
 	USkeletalMeshComponent* WeaponMesh = nullptr;
 

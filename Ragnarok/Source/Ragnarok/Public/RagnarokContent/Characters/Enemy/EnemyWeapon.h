@@ -13,5 +13,8 @@ UCLASS()
 class RAGNAROK_API AEnemyWeapon : public ARagnarokWeapon
 {
 	GENERATED_BODY()
+
+public:
+	AEnemyWeapon();
 	
 };
