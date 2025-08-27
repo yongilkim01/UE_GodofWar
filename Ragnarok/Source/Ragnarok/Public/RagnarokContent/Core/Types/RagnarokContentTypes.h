@@ -10,13 +10,23 @@
 class UKratosLinkedAnimLayer;
 class UInputMappingContext;
 
+UENUM(BlueprintType)
+enum class ERagnarokWeaponState : uint8
+{
+	ERWS_None			UMETA(DisplayName = "None"),
+	ERWS_Unequipped		UMETA(DisplayName = "Equipped"),
+	ERWS_Equipped		UMETA(DisplayName = "Equipped"),
+	ERWS_Throw			UMETA(DisplayName = "Throw"),
+	ERWS_Recall			UMETA(DisplayName = "Recall"),
+};
+
 UENUM(BLueprintType)
 enum class EArcMovementType : uint8
 {
-	EAMT_Jump		UMETA(DisplayName = "Jump"),
-	EAMT_Leap		UMETA(DisplayName = "Leap"),
-	EAMT_Parabolic	UMETA(DisplayName = "Parabolic"),
-	EAMT_Custom		UMETA(DisplayName = "Custom")
+	EAMT_Jump			UMETA(DisplayName = "Jump"),
+	EAMT_Leap			UMETA(DisplayName = "Leap"),
+	EAMT_Parabolic		UMETA(DisplayName = "Parabolic"),
+	EAMT_Custom			UMETA(DisplayName = "Custom")
 };
 
 UENUM(BlueprintType)
@@ -37,18 +47,18 @@ enum class ERagnarokDirection : uint8
 UENUM(BlueprintType)
 enum class ERagnarokAttackState : uint8
 {
-	ERAS_None		UMETA(DisplayName = "None"),
-	ERAS_Attacking	UMETA(DisplayName = "Attacking"),
-	ERAS_AttackWait	UMETA(DisplayName = "AttackWait"),
-	ERAS_Recovery	UMETA(DisplayName = "Recovery")
+	ERAS_None			UMETA(DisplayName = "None"),
+	ERAS_Attacking		UMETA(DisplayName = "Attacking"),
+	ERAS_AttackWait		UMETA(DisplayName = "AttackWait"),
+	ERAS_Recovery		UMETA(DisplayName = "Recovery")
 };
 
 UENUM(BlueprintType)
 enum class ERagnarokRollState : uint8
 {
-	ERRS_None		UMETA(DisplayName = "None"),
-	ERRS_Dodge		UMETA(DisplayName = "Dodge"),
-	ERRS_Roll		UMETA(DisplayName = "Roll")
+	ERRS_None			UMETA(DisplayName = "None"),
+	ERRS_Dodge			UMETA(DisplayName = "Dodge"),
+	ERRS_Roll			UMETA(DisplayName = "Roll")
 };
 
 USTRUCT(BlueprintType)

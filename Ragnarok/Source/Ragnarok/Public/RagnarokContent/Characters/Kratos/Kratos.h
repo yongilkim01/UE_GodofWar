@@ -10,6 +10,7 @@
 
 class AKratosController;
 class AKratosWeapon;
+class ARagnarokWeapon;
 class USpringArmComponent;
 class UCameraComponent;
 class UInitDataAssetKratos;
@@ -50,6 +51,7 @@ public:
 	bool IsAiming() const;
 	FVector2D GetMovementInputVector() const;
 	AKratosController* GetKratosController();
+	ARagnarokWeapon* GetKratosWeapon();
 	bool GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange = 5000.0f);
 
 	void ThrowWeapon(AKratosWeapon* KratosWeapon);

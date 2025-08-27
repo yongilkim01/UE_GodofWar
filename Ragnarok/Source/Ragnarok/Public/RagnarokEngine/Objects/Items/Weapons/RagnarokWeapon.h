@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "RagnarokWeapon.generated.h"
 
 class USkeletalMeshComponent;
@@ -71,11 +72,13 @@ protected:
 	UBoxComponent* WeaponCollision = nullptr;
 
 	bool bInitialized = false;
+	ERagnarokWeaponState CurWeaponState = ERagnarokWeaponState::ERWS_None;
 
 public:
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE UBoxComponent* GetWeaponCollision() const { return WeaponCollision; }
 	FORCEINLINE bool IsInitialize() const { return bInitialized; }
+	FORCEINLINE ERagnarokWeaponState GetWeaponState() const { return CurWeaponState; }
 
 	UPROPERTY(BlueprintAssignable, Category = "Weapon|Delegate")
 	FOnWeaponInitialized OnWeaponInitialized;

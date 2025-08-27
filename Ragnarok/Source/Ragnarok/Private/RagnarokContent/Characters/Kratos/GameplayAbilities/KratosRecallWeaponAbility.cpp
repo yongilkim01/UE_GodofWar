@@ -2,8 +2,12 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosRecallWeaponAbility.h"
+#include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
@@ -15,6 +19,16 @@ UKratosRecallWeaponAbility::UKratosRecallWeaponAbility()
 void UKratosRecallWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	CurWeapon = Cast<AKratosWeapon>(Kratos->GetKratosWeapon());
+
+	if (nullptr == CurWeapon)
+	{
+		Debug::Print(TEXT("UKratosRecallWeaponAbility::CurWeapon is nullptr"), FColor::Red);
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		return;
+	}
+
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRecallWeaponAbility::ActivateAbility"));
 
@@ -40,7 +54,17 @@ bool UKratosRecallWeaponAbility::CanActivateAbility(const FGameplayAbilitySpecHa
 		return false;
 	}
 
-	if (true == IsPossibleRecallWeapon())
+	AKratos* KratosCharacter = Cast<AKratos>(ActorInfo->AvatarActor.Get());
+
+	const AKratosWeapon* KratosWeapon = Cast<AKratosWeapon>(KratosCharacter->GetKratosWeapon());
+
+	if (nullptr == KratosWeapon)
+	{
+		Debug::Print(TEXT("UKratosRecallWeaponAbility::CurWeapon is nullptr"), FColor::Red);
+		return false;
+	}
+
+	if (ERagnarokWeaponState::ERWS_Throw == KratosWeapon->GetWeaponState())
 	{
 		return true;
 	}
@@ -94,5 +118,12 @@ bool UKratosRecallWeaponAbility::IsPossibleRecallWeapon() const
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRecallWeaponAbility::IsPossibleRecallWeapon"));
 
-	return true;
+	if (ERagnarokWeaponState::ERWS_Throw == CurWeapon->GetWeaponState())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

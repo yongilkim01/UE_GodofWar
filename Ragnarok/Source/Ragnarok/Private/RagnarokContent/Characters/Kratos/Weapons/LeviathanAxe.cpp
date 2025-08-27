@@ -45,6 +45,8 @@ void ALeviathanAxe::BeginPlay()
 		WeaponRotTimelineComponent->SetTimelineFinishedFunc(WeaponRotTimelineEnd);
 		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);
 	}
+
+	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
 }
 
 void ALeviathanAxe::Tick(float DeltaTime)
@@ -124,6 +126,8 @@ void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 
 void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector)
 {
+	CurWeaponState = ERagnarokWeaponState::ERWS_Throw;
+
 	FRotator CalcCameraRotator = FRotator(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll + AxeSpinAxisOffset);
 	SnapAxeLocationAndRotation(CalcCameraRotator, CameraLocation, CameraForwardVector);
 

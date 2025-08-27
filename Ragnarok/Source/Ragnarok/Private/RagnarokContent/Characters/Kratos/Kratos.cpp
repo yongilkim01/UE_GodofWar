@@ -252,6 +252,11 @@ AKratosController* AKratos::GetKratosController()
 	return KratosController.Get();
 }
 
+ARagnarokWeapon* AKratos::GetKratosWeapon()
+{
+	return KratosCombatComponent->GetCurrentEquippedWeapon();
+}
+
 bool AKratos::GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange)
 {
 	FVector CameraForward = MainCameraComponent->GetForwardVector();
