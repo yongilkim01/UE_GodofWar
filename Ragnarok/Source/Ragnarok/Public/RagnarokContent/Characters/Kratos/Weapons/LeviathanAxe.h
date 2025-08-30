@@ -24,7 +24,10 @@ public:
 	void OnWeaponRotTimelineTick(float Value);
 	UFUNCTION()
 	void OnWeaponRotTimelineEnd();
-
+	UFUNCTION()
+	void OnWeaponThrowTraceTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponThrowTraceTimelineEnd();
 
 protected:
 	//~ Begin AActor Interface.
@@ -53,6 +56,9 @@ private:
 protected:
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PivotPointComponent = nullptr;
 	UPROPERTY(EditAnywhere)
@@ -61,9 +67,14 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* WeaponRotationCurve = nullptr;
-
 	FOnTimelineFloat WeaponRotTimelineTick;
 	FOnTimelineEvent WeaponRotTimelineEnd;
+
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* WeaponThrowTraceCurve = nullptr;
+	FOnTimelineFloat WeaponThrowTraceTimelineTick;
+	FOnTimelineEvent WeaponThrowTraceTimelineEnd;
+
 	float ThrowDistance = 250.0f;
 	float AxeSpinAxisOffset = 0.0f;
 	float WeaponSpinRate = 1.0f;

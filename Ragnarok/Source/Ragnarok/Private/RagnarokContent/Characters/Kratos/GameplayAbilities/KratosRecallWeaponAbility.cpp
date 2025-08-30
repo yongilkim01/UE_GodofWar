@@ -29,7 +29,6 @@ void UKratosRecallWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandl
 		return;
 	}
 
-
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRecallWeaponAbility::ActivateAbility"));
 
 	RecallWeapon();

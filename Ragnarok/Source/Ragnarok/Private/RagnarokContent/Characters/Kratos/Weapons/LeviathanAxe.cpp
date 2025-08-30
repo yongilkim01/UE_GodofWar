@@ -21,10 +21,12 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponMesh->SetupAttachment(LodgePointComponent);
 
 	WeaponRotTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponRotTimeline"));
-
 	WeaponRotTimelineTick.BindUFunction(this, FName("OnWeaponRotTimelineTick"));
 	WeaponRotTimelineEnd.BindUFunction(this, FName("OnWeaponRotTimelineEnd"));
 
+	WeaponThrowTraceTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponThrowTraceTimeline"));
+	WeaponThrowTraceTimelineTick.BindUFunction(this, FName("OnWeaponThrowTraceTimelineTick"));
+	WeaponThrowTraceTimelineEnd.BindUFunction(this, FName("OnWeaponThrowTraceTimelineEnd"));
 }
 
 void ALeviathanAxe::BeginPlay()
@@ -44,6 +46,12 @@ void ALeviathanAxe::BeginPlay()
 		WeaponRotTimelineComponent->AddInterpFloat(WeaponRotationCurve, WeaponRotTimelineTick);
 		WeaponRotTimelineComponent->SetTimelineFinishedFunc(WeaponRotTimelineEnd);
 		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);
+	}
+
+	if (nullptr != WeaponThrowTraceCurve)
+	{
+		WeaponThrowTraceTimelineComponent->AddInterpFloat(WeaponThrowTraceCurve, WeaponThrowTraceTimelineTick);
+		WeaponThrowTraceTimelineComponent->SetTimelineFinishedFunc(WeaponThrowTraceTimelineEnd);
 	}
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
@@ -77,6 +85,15 @@ void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 }
 
 void ALeviathanAxe::OnWeaponRotTimelineEnd()
+{
+}
+
+void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
+{
+	ProjectileMovementComponent->ProjectileGravityScale = Value;
+}
+
+void ALeviathanAxe::OnWeaponThrowTraceTimelineEnd()
 {
 }
 
