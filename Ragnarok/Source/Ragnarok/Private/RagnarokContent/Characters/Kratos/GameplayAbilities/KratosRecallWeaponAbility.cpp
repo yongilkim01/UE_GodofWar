@@ -111,6 +111,11 @@ void UKratosRecallWeaponAbility::RecallWeapon()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRecallWeaponAbility::RecallWeapon"));
 
+	if (nullptr == CurWeapon)
+	{
+		CurWeapon->RecallWeapon();
+	}
+
 }
 
 bool UKratosRecallWeaponAbility::IsPossibleRecallWeapon() const

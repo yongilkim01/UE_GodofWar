@@ -8,6 +8,7 @@
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ALeviathanAxe::ALeviathanAxe()
 {
@@ -60,6 +61,25 @@ void ALeviathanAxe::BeginPlay()
 void ALeviathanAxe::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (ERagnarokWeaponState::ERWS_Throw == CurWeaponState)
+	{
+		USoundBase* SoundToPlay = ThrowSoundMap[bThrowSoundFlipFlop];
+		bThrowSoundFlipFlop = !bThrowSoundFlipFlop;
+
+		if (nullptr != SoundToPlay)
+		{
+			UGameplayStatics::SpawnSoundAttached(
+				SoundToPlay,
+				GetWeaponMesh(),
+				NAME_None,
+				FVector::ZeroVector,
+				EAttachLocation::SnapToTarget,
+				false,
+				1.15f
+			);
+		}
+	}
 
 }
 
@@ -152,24 +172,21 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 	ProjectileMovementComponent->Activate();
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
-	RotateAxe();
+	if (nullptr != WeaponRotTimelineComponent)
+	{
+		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);
+		WeaponRotTimelineComponent->PlayFromStart();
+	}
+
+	if (nullptr != WeaponThrowTraceTimelineComponent)
+	{
+		WeaponThrowTraceTimelineComponent->PlayFromStart();
+	}
 }
 
-void ALeviathanAxe::ThrowWeaponToTarget(FVector StartLocation, FVector TargetLocation)
+void ALeviathanAxe::RecallWeapon()
 {
-	FVector ThrowDirection = (TargetLocation - StartLocation).GetSafeNormal();
-
-	FRotator TargetRotation = ThrowDirection.Rotation();
-	TargetRotation.Roll += AxeSpinAxisOffset;
-
-	ProjectileMovementComponent->Velocity = ThrowDirection * ThrowSpeed;
-	ProjectileMovementComponent->Activate();
-
-	//FRotator NewRotation = FRotator(260.0f, 0.0f, 0.0f);
-	//PivotPointComponent->SetRelativeRotation(NewRotation);
-	//SetActorRotation(NewRotation);
-
-	RotateAxe(); 
+	WeaponThrowTraceTimelineComponent->Stop();
 }
 
 void ALeviathanAxe::SnapAxeLocationAndRotation(FRotator StartRotation, FVector CameraLocation, FVector CameraForwardVector)

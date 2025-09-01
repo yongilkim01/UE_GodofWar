@@ -45,9 +45,7 @@ protected:
 		FVector CameraLocation,
 		FVector CameraForwardVector) override;
 
-	virtual void ThrowWeaponToTarget(
-		FVector StartLocation,
-		FVector TargetLocation) override;
+	virtual void RecallWeapon() override;
 
 private:
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
@@ -63,6 +61,8 @@ protected:
 	USceneComponent* PivotPointComponent = nullptr;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* LodgePointComponent = nullptr;
+	UPROPERTY(EditAnywhere)
+	TMap<bool, USoundBase*> ThrowSoundMap;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -79,4 +79,6 @@ private:
 	float AxeSpinAxisOffset = 0.0f;
 	float WeaponSpinRate = 1.0f;
 	float ThrowSpeed = 2500.0f;
+
+	bool bThrowSoundFlipFlop = true;
 };

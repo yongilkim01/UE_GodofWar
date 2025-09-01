@@ -32,9 +32,7 @@ public:
 		FVector CameraLocation, 
 		FVector CameraForwardVector) {}
 
-	virtual void ThrowWeaponToTarget(
-		FVector StartLocation,
-		FVector TargetLocation) {}
+	virtual void RecallWeapon() {}
 
 	void UnUequipWeapon(const AActor* OwnerActor, FName SocketName);
 
