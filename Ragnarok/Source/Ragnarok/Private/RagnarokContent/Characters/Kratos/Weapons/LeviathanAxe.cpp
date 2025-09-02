@@ -7,11 +7,15 @@
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
+#include "NiagaraComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+
 ALeviathanAxe::ALeviathanAxe()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	PivotPointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("PivotPoint"));
 	PivotPointComponent->SetupAttachment(GetRootComponent());
 
@@ -28,6 +32,9 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponThrowTraceTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponThrowTraceTimeline"));
 	WeaponThrowTraceTimelineTick.BindUFunction(this, FName("OnWeaponThrowTraceTimelineTick"));
 	WeaponThrowTraceTimelineEnd.BindUFunction(this, FName("OnWeaponThrowTraceTimelineEnd"));
+
+	ThrowNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ThrowParticle"));
+	ThrowNiagaraComponent->SetupAttachment(WeaponMesh);
 }
 
 void ALeviathanAxe::BeginPlay()
@@ -61,26 +68,6 @@ void ALeviathanAxe::BeginPlay()
 void ALeviathanAxe::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (ERagnarokWeaponState::ERWS_Throw == CurWeaponState)
-	{
-		USoundBase* SoundToPlay = ThrowSoundMap[bThrowSoundFlipFlop];
-		bThrowSoundFlipFlop = !bThrowSoundFlipFlop;
-
-		if (nullptr != SoundToPlay)
-		{
-			UGameplayStatics::SpawnSoundAttached(
-				SoundToPlay,
-				GetWeaponMesh(),
-				NAME_None,
-				FVector::ZeroVector,
-				EAttachLocation::SnapToTarget,
-				false,
-				1.15f
-			);
-		}
-	}
-
 }
 
 void ALeviathanAxe::InitWeapon()
@@ -102,6 +89,32 @@ void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 	float RotationValue = Value * -360.0f;
 	FRotator NewRotation = FRotator(RotationValue, 0.0f, 0.0f);
 	PivotPointComponent->SetRelativeRotation(NewRotation);
+
+	ThrowFlipFlopTime += GetWorld()->GetDeltaSeconds();
+
+	if (ThrowFlipFlopTime >= 0.1f)
+	{
+		USoundBase* SoundToPlay = ThrowSoundMap[bThrowSoundFlipFlop];
+		bThrowSoundFlipFlop = !bThrowSoundFlipFlop;
+
+		if (nullptr != SoundToPlay && nullptr != ThrowSoundAttenuation)
+		{
+			UGameplayStatics::SpawnSoundAttached(
+				SoundToPlay,
+				GetWeaponMesh(),
+				NAME_None,
+				FVector::ZeroVector,
+				EAttachLocation::SnapToTarget,
+				false,
+				1.15f,
+				1.0f,
+				0.0f,
+				ThrowSoundAttenuation
+			);
+		}
+
+		ThrowFlipFlopTime = 0.0f;
+	}
 }
 
 void ALeviathanAxe::OnWeaponRotTimelineEnd()
@@ -176,12 +189,15 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 	{
 		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);
 		WeaponRotTimelineComponent->PlayFromStart();
+		WeaponRotTimelineComponent->SetLooping(true);
 	}
 
 	if (nullptr != WeaponThrowTraceTimelineComponent)
 	{
 		WeaponThrowTraceTimelineComponent->PlayFromStart();
 	}
+
+	StartWeaponTrail();
 }
 
 void ALeviathanAxe::RecallWeapon()
@@ -202,5 +218,13 @@ void ALeviathanAxe::RotateAxe()
 	{
 		WeaponRotTimelineComponent->SetPlayRate(WeaponSpinRate);
 		WeaponRotTimelineComponent->PlayFromStart();
+	}
+}
+
+void ALeviathanAxe::StartWeaponTrail()
+{
+	if (nullptr != ThrowNiagaraComponent)
+	{
+		ThrowNiagaraComponent->Activate();
 	}
 }

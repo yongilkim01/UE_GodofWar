@@ -7,6 +7,8 @@
 #include "Components/TimelineComponent.h"
 #include "LeviathanAxe.generated.h"
 
+class UNiagaraComponent;
+
 /**
  * 
  */
@@ -50,11 +52,11 @@ protected:
 private:
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
 	void RotateAxe();
+	void StartWeaponTrail();
 
 protected:
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
 	UPROPERTY(EditAnywhere)
@@ -62,7 +64,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* LodgePointComponent = nullptr;
 	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* ThrowNiagaraComponent = nullptr;
+
+	UPROPERTY(EditAnywhere)
 	TMap<bool, USoundBase*> ThrowSoundMap;
+	UPROPERTY(EditAnywhere)
+	USoundAttenuation* ThrowSoundAttenuation = nullptr;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -79,6 +86,7 @@ private:
 	float AxeSpinAxisOffset = 0.0f;
 	float WeaponSpinRate = 1.0f;
 	float ThrowSpeed = 2500.0f;
+	float ThrowFlipFlopTime = 0.5f;
 
 	bool bThrowSoundFlipFlop = true;
 };
