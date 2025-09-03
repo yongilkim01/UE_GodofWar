@@ -63,6 +63,11 @@ void ALeviathanAxe::BeginPlay()
 	}
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
+
+	TopPosition = WeaponMesh->GetSocketLocation(TEXT("TipSocket"));
+	BottomPosition = WeaponMesh->GetSocketLocation(TEXT("BladeSocket"));
+
+	//ThrowNiagaraComponent->SetFloatParameter(TEXT("Width"), )
 }
 
 void ALeviathanAxe::Tick(float DeltaTime)

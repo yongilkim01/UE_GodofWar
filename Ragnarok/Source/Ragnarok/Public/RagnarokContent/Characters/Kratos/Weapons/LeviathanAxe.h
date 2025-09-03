@@ -82,6 +82,9 @@ private:
 	FOnTimelineFloat WeaponThrowTraceTimelineTick;
 	FOnTimelineEvent WeaponThrowTraceTimelineEnd;
 
+	FVector TopPosition = FVector::ZeroVector;
+	FVector BottomPosition = FVector::ZeroVector;
+
 	float ThrowDistance = 250.0f;
 	float AxeSpinAxisOffset = 0.0f;
 	float WeaponSpinRate = 1.0f;
