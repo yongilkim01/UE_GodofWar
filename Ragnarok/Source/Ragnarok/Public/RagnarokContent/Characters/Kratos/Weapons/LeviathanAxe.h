@@ -8,6 +8,7 @@
 #include "LeviathanAxe.generated.h"
 
 class UNiagaraComponent;
+class USoundCue;
 
 /**
  * 
@@ -53,7 +54,13 @@ private:
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
 	void RotateAxe();
 	void StartWeaponTrail();
+	void EndWeaponTrail();
 	void CheckHitCollision();
+	void PlayHitSoundCue(FVector ImpactLocation);
+	void LodgeAxe(FVector ImpactNormal, FVector ImpactLocation);
+	void StopAxe();
+	float CalcAxeImpactPitch(FVector ImpactNormal, float InclinedSurfaceRange, float RegularSurfaceRange);
+	FVector CalcAxeImactLocation(FVector ImpactNormal, FVector ImpactLocation);
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -70,6 +77,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TMap<bool, USoundBase*> ThrowSoundMap;
 	UPROPERTY(EditAnywhere)
+	USoundCue* HitSoundCue1 = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	USoundCue* HitSoundCue2 = nullptr;
+
+	UPROPERTY(EditAnywhere)
 	USoundAttenuation* ThrowSoundAttenuation = nullptr;
 
 private:
@@ -85,6 +98,7 @@ private:
 
 	FVector TopPosition = FVector::ZeroVector;
 	FVector BottomPosition = FVector::ZeroVector;
+	FRotator CameraStartRotation = FRotator::ZeroRotator;
 
 	float ThrowDistance = 250.0f;
 	float AxeSpinAxisOffset = 0.0f;
@@ -92,6 +106,7 @@ private:
 	float ThrowSpeed = 2500.0f;
 	float ThrowFlipFlopTime = 0.5f;
 	float ThrowTraceDistance = 60.0f;
+	float CalcZValue = 0.0f;
 
 	bool bThrowSoundFlipFlop = true;
 };

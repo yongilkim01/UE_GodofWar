@@ -17,6 +17,7 @@ enum class ERagnarokWeaponState : uint8
 	ERWS_Unequipped		UMETA(DisplayName = "Equipped"),
 	ERWS_Equipped		UMETA(DisplayName = "Equipped"),
 	ERWS_Throw			UMETA(DisplayName = "Throw"),
+	ERWS_Lodge			UMETA(DisplayName = "Lodge"),
 	ERWS_Recall			UMETA(DisplayName = "Recall"),
 };
 

@@ -11,6 +11,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Sound/SoundCue.h"
 
 
 ALeviathanAxe::ALeviathanAxe()
@@ -127,6 +128,7 @@ void ALeviathanAxe::OnWeaponRotTimelineEnd()
 void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
 {
 	ProjectileMovementComponent->ProjectileGravityScale = Value;
+	CheckHitCollision();
 }
 
 void ALeviathanAxe::OnWeaponThrowTraceTimelineEnd()
@@ -181,6 +183,7 @@ void ALeviathanAxe::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector)
 {
 	CurWeaponState = ERagnarokWeaponState::ERWS_Throw;
+	CameraStartRotation = CameraRotation;
 
 	FRotator CalcCameraRotator = FRotator(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll + AxeSpinAxisOffset);
 	SnapAxeLocationAndRotation(CalcCameraRotator, CameraLocation, CameraForwardVector);
@@ -211,8 +214,8 @@ void ALeviathanAxe::RecallWeapon()
 
 void ALeviathanAxe::StopWeapon()
 {
-	ProjectileMovementComponent->Deactivate();
-	WeaponRotTimelineComponent->Stop();
+	StopAxe();
+	WeaponThrowTraceTimelineComponent->Stop();
 }
 
 void ALeviathanAxe::InitVFX()
@@ -253,6 +256,14 @@ void ALeviathanAxe::StartWeaponTrail()
 	}
 }
 
+void ALeviathanAxe::EndWeaponTrail()
+{
+	if (nullptr != BladeNiagaraComponent)
+	{
+		BladeNiagaraComponent->Deactivate();
+	}
+}
+
 void ALeviathanAxe::CheckHitCollision()
 {
 	FVector WeaponLocation = GetActorLocation();
@@ -280,13 +291,92 @@ void ALeviathanAxe::CheckHitCollision()
 	if (true == bHit)
 	{
 		bool bBlockingHit = HitResult.bBlockingHit;
-		FVector ImpactPoint = HitResult.ImpactPoint;
+		FVector ImpactLocation = HitResult.ImpactPoint;
 		FVector ImpactNormal = HitResult.Normal;
-		UPhysicalMaterial* PhysMat = HitResult.PhysMaterial.Get();
-		EPhysicalSurface SurfaceType = PhysMat->SurfaceType;
+		//UPhysicalMaterial* PhysMat = HitResult.PhysMaterial.Get();
+		//EPhysicalSurface SurfaceType = PhysMat->SurfaceType;
 		AActor* HitActor = HitResult.GetActor();
 		FName HitBoneName = HitResult.BoneName;
 
-
+		// TODO: End Throw weapon components
+		EndWeaponTrail();
+		PlayHitSoundCue(ImpactLocation);
+		LodgeAxe(ImpactNormal, ImpactLocation);
 	}
+}
+
+void ALeviathanAxe::PlayHitSoundCue(FVector ImpactLocation)
+{
+	if (nullptr != HitSoundCue1 && nullptr != HitSoundCue2)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(
+			GetWorld(),
+			HitSoundCue1,
+			ImpactLocation
+		);
+
+		UGameplayStatics::SpawnSoundAtLocation(
+			GetWorld(),
+			HitSoundCue2,
+			ImpactLocation
+		);
+	}
+}
+
+void ALeviathanAxe::LodgeAxe(FVector ImpactNormal, FVector ImpactLocation)
+{
+	StopAxe();
+	PivotPointComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+	SetActorRotation(CameraStartRotation);
+
+	FRotator CalcRotator = FRotator(
+		CalcAxeImpactPitch(ImpactNormal, FMath::RandRange(-30.0f, -55.0f), FMath::RandRange(-5.0f, -25.0f)),
+		0.0f, 
+		FMath::RandRange(-3.0f, -8.0f));
+
+	LodgePointComponent->SetRelativeRotation(CalcRotator);
+	SetActorLocation(CalcAxeImactLocation(ImpactNormal, ImpactLocation));
+	CurWeaponState = ERagnarokWeaponState::ERWS_Lodge;
+}
+
+void ALeviathanAxe::StopAxe()
+{
+	ProjectileMovementComponent->Deactivate();
+	WeaponRotTimelineComponent->Stop();
+}
+
+float ALeviathanAxe::CalcAxeImpactPitch(FVector ImpactNormal, float InclinedSurfaceRange, float RegularSurfaceRange)
+{
+	float PitchValue = UKismetMathLibrary::MakeRotationFromAxes(ImpactNormal, FVector::ZeroVector, FVector::ZeroVector).Pitch;
+	
+	if (PitchValue > 0.0f)
+	{
+		PitchValue = RegularSurfaceRange - PitchValue;
+	}
+	else
+	{
+		PitchValue = InclinedSurfaceRange - PitchValue;
+	}
+	
+	return PitchValue;
+}
+
+FVector ALeviathanAxe::CalcAxeImactLocation(FVector ImpactNormal, FVector ImpactLocation)
+{
+	float PitchValue = UKismetMathLibrary::MakeRotationFromAxes(ImpactNormal, FVector::ZeroVector, FVector::ZeroVector).Pitch;
+
+	if (PitchValue <= 0.0f)
+	{
+		PitchValue = 0.0f;
+	}
+
+	PitchValue = 90.0f - PitchValue;
+	PitchValue /= 90.0f;
+	PitchValue *= 10.0f;
+	CalcZValue = PitchValue;
+	ImpactLocation += FVector(0.0f, 0.0f, PitchValue);
+	FVector CalcLocation = GetActorLocation() - LodgePointComponent->GetComponentLocation();
+	CalcLocation = CalcLocation + ImpactLocation;
+
+	return CalcLocation;
 }
