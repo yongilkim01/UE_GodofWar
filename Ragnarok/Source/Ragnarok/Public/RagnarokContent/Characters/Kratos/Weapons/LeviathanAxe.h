@@ -42,17 +42,18 @@ protected:
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject) override;
 	//~ End ARagnarokWeapon Interface.
 
-	virtual void ThrowWeapon(
-		FRotator CameraRotation,
-		FVector CameraLocation,
-		FVector CameraForwardVector) override;
-
+	//~ Begin AKratosWeapon Interface.
+	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) override;
 	virtual void RecallWeapon() override;
+	virtual void StopWeapon() override;
+	//~ End AKratosWeapon Interface.
 
 private:
+	void InitVFX();
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
 	void RotateAxe();
 	void StartWeaponTrail();
+	void CheckHitCollision();
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -64,7 +65,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* LodgePointComponent = nullptr;
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* ThrowNiagaraComponent = nullptr;
+	UNiagaraComponent* BladeNiagaraComponent = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	TMap<bool, USoundBase*> ThrowSoundMap;
@@ -90,6 +91,7 @@ private:
 	float WeaponSpinRate = 1.0f;
 	float ThrowSpeed = 2500.0f;
 	float ThrowFlipFlopTime = 0.5f;
+	float ThrowTraceDistance = 60.0f;
 
 	bool bThrowSoundFlipFlop = true;
 };

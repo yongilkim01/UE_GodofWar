@@ -10,6 +10,7 @@
 #include "NiagaraComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 ALeviathanAxe::ALeviathanAxe()
@@ -33,8 +34,8 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponThrowTraceTimelineTick.BindUFunction(this, FName("OnWeaponThrowTraceTimelineTick"));
 	WeaponThrowTraceTimelineEnd.BindUFunction(this, FName("OnWeaponThrowTraceTimelineEnd"));
 
-	ThrowNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ThrowParticle"));
-	ThrowNiagaraComponent->SetupAttachment(WeaponMesh);
+	BladeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Blade Niagara"));
+	BladeNiagaraComponent->SetupAttachment(WeaponMesh);
 }
 
 void ALeviathanAxe::BeginPlay()
@@ -64,10 +65,7 @@ void ALeviathanAxe::BeginPlay()
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
 
-	TopPosition = WeaponMesh->GetSocketLocation(TEXT("TipSocket"));
-	BottomPosition = WeaponMesh->GetSocketLocation(TEXT("BladeSocket"));
-
-	//ThrowNiagaraComponent->SetFloatParameter(TEXT("Width"), )
+	InitVFX();
 }
 
 void ALeviathanAxe::Tick(float DeltaTime)
@@ -133,6 +131,7 @@ void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
 
 void ALeviathanAxe::OnWeaponThrowTraceTimelineEnd()
 {
+	StopWeapon();
 }
 
 
@@ -210,6 +209,26 @@ void ALeviathanAxe::RecallWeapon()
 	WeaponThrowTraceTimelineComponent->Stop();
 }
 
+void ALeviathanAxe::StopWeapon()
+{
+	ProjectileMovementComponent->Deactivate();
+	WeaponRotTimelineComponent->Stop();
+}
+
+void ALeviathanAxe::InitVFX()
+{
+	TopPosition = WeaponMesh->GetSocketLocation(TEXT("TipSocket"));
+	BottomPosition = WeaponMesh->GetSocketLocation(TEXT("BladeSocket"));
+
+	FVector CalcPosition = TopPosition - BottomPosition;
+	FVector CalcPosition2 = (TopPosition + BottomPosition) / 2.0f;
+	FRotator CalcRotator = UKismetMathLibrary::MakeRotFromZ(CalcPosition);
+
+	BladeNiagaraComponent->SetFloatParameter(TEXT("Width"), CalcPosition.Length());
+	BladeNiagaraComponent->SetWorldRotation(CalcRotator);
+	BladeNiagaraComponent->SetWorldLocation(CalcPosition2);
+}
+
 void ALeviathanAxe::SnapAxeLocationAndRotation(FRotator StartRotation, FVector CameraLocation, FVector CameraForwardVector)
 {
 	FVector StartLocation = (CameraForwardVector * 250.0f) + CameraLocation;
@@ -228,8 +247,46 @@ void ALeviathanAxe::RotateAxe()
 
 void ALeviathanAxe::StartWeaponTrail()
 {
-	if (nullptr != ThrowNiagaraComponent)
+	if (nullptr != BladeNiagaraComponent)
 	{
-		ThrowNiagaraComponent->Activate();
+		BladeNiagaraComponent->Activate();
+	}
+}
+
+void ALeviathanAxe::CheckHitCollision()
+{
+	FVector WeaponLocation = GetActorLocation();
+	FVector WeaponVelocity = GetVelocity();
+	WeaponVelocity.Normalize(0.0001f);
+	WeaponVelocity *= ThrowTraceDistance;
+	
+	FVector StartLocation = WeaponLocation;
+	FVector EndLocation = WeaponLocation + WeaponVelocity;
+
+	FHitResult HitResult;
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	QueryParams.bTraceComplex = false;
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		StartLocation,
+		EndLocation,
+		ECollisionChannel::ECC_Visibility,
+		QueryParams
+	);
+
+	if (true == bHit)
+	{
+		bool bBlockingHit = HitResult.bBlockingHit;
+		FVector ImpactPoint = HitResult.ImpactPoint;
+		FVector ImpactNormal = HitResult.Normal;
+		UPhysicalMaterial* PhysMat = HitResult.PhysMaterial.Get();
+		EPhysicalSurface SurfaceType = PhysMat->SurfaceType;
+		AActor* HitActor = HitResult.GetActor();
+		FName HitBoneName = HitResult.BoneName;
+
+
 	}
 }

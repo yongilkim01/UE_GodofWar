@@ -27,12 +27,9 @@ public:
 	void AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
 	TArray<FGameplayAbilitySpecHandle>& GetGrantedAbilitySpecHandleArray();
 	
-	virtual void ThrowWeapon(
-		FRotator CameraRotation, 
-		FVector CameraLocation, 
-		FVector CameraForwardVector) {}
-
+	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) {}
 	virtual void RecallWeapon() {}
+	virtual void StopWeapon() {}
 
 	void UnUequipWeapon(const AActor* OwnerActor, FName SocketName);
 
