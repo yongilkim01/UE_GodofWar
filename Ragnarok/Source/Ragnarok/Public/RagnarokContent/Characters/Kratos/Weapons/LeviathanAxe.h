@@ -31,6 +31,10 @@ public:
 	void OnWeaponThrowTraceTimelineTick(float Value);
 	UFUNCTION()
 	void OnWeaponThrowTraceTimelineEnd();
+	UFUNCTION()
+	void OnWeaponWiggleTimelineTick(float Value);
+	UFUNCTION()	
+	void OnWeaponWiggleTimelineEnd();
 
 protected:
 	//~ Begin AActor Interface.
@@ -61,12 +65,10 @@ private:
 	void StopAxe();
 	float CalcAxeImpactPitch(FVector ImpactNormal, float InclinedSurfaceRange, float RegularSurfaceRange);
 	FVector CalcAxeImactLocation(FVector ImpactNormal, FVector ImpactLocation);
+	void WiggleLodgedAxe();
+	float GetClampedDistanceFromOwnerCharacter(float MaxDistance);
 
 protected:
-	UPROPERTY(EditAnywhere)
-	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
-	UPROPERTY(EditAnywhere)
-	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PivotPointComponent = nullptr;
 	UPROPERTY(EditAnywhere)
@@ -83,22 +85,35 @@ protected:
 	USoundCue* HitSoundCue2 = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	USoundAttenuation* ThrowSoundAttenuation = nullptr;
+	USoundCue* RecallNoiseSoundCue = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	USoundAttenuation* AttachSoundAttenuation = nullptr;
 
 private:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* WeaponRotationCurve = nullptr;
-	FOnTimelineFloat WeaponRotTimelineTick;
-	FOnTimelineEvent WeaponRotTimelineEnd;
-
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* WeaponThrowTraceCurve = nullptr;
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* WeaponWiggleCurve = nullptr;
+
+	UAudioComponent* RecallAudioComponent = nullptr;
+	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
+	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
+	UTimelineComponent* WeaponWiggleTimelineComponent = nullptr;
+
+	FOnTimelineFloat WeaponRotTimelineTick;
+	FOnTimelineEvent WeaponRotTimelineEnd;
 	FOnTimelineFloat WeaponThrowTraceTimelineTick;
 	FOnTimelineEvent WeaponThrowTraceTimelineEnd;
+	FOnTimelineFloat WeaponWiggleTimelineTick;
+	FOnTimelineEvent WeaponWiggleTimelineEnd;
 
 	FVector TopPosition = FVector::ZeroVector;
 	FVector BottomPosition = FVector::ZeroVector;
 	FRotator CameraStartRotation = FRotator::ZeroRotator;
+	FRotator LodgeRotation = FRotator::ZeroRotator;
 
 	float ThrowDistance = 250.0f;
 	float AxeSpinAxisOffset = 0.0f;
@@ -107,6 +122,8 @@ private:
 	float ThrowFlipFlopTime = 0.5f;
 	float ThrowTraceDistance = 60.0f;
 	float CalcZValue = 0.0f;
+	float MaxCalcDistance = 3000.0f;
+	float DistanceFromOwner = 0.0f;
 
 	bool bThrowSoundFlipFlop = true;
 };

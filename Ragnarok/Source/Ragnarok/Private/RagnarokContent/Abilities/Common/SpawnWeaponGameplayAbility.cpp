@@ -5,6 +5,7 @@
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
 USpawnWeaponGameplayAbility::USpawnWeaponGameplayAbility()
@@ -61,6 +62,10 @@ void USpawnWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHand
 	if (false == RagnarokWeapon->IsInitialize())
 	{
 		AttachWeaponToCharacter();
+		if (ARagnarokCharacter* RagnarokCharacter = Cast<ARagnarokCharacter>(CharacterActorInfo->AvatarActor.Get()))
+		{
+			RagnarokWeapon->SetOwner(RagnarokCharacter);
+		}
 	}
 	else
 	{

@@ -8,6 +8,7 @@
 #include "GameplayAbilitySpecHandle.h"
 #include "KratosWeapon.generated.h"
 
+class AKratos;
 class UProjectileMovementComponent;
 class UTimelineComponent;
 
@@ -25,6 +26,7 @@ public:
 	virtual void InitWeapon() override;
 
 	void AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilitySpecHandle>& InSpecHandleArray);
+	virtual void SetOwner(ARagnarokCharacter* RagnarokCharacter) override;
 	TArray<FGameplayAbilitySpecHandle>& GetGrantedAbilitySpecHandleArray();
 	
 	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) {}
@@ -55,6 +57,9 @@ protected:
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
 	UItemPrimaryAssetKratosWeapon* KratosWeaponPDA = nullptr;
+
+	UPROPERTY()
+	TWeakObjectPtr<AKratos> OwnerKratos;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|WeaponData")

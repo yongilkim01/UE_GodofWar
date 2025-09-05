@@ -2,6 +2,7 @@
 
 
 #include "RagnarokContent/Characters/Kratos/Weapons/LeviathanAxe.h"
+#include "RagnarokContent/Characters/Kratos/Kratos.h"
 
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
@@ -27,13 +28,17 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(LodgePointComponent);
 
-	WeaponRotTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponRotTimeline"));
+	WeaponRotTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("RotTimeline"));
 	WeaponRotTimelineTick.BindUFunction(this, FName("OnWeaponRotTimelineTick"));
 	WeaponRotTimelineEnd.BindUFunction(this, FName("OnWeaponRotTimelineEnd"));
 
-	WeaponThrowTraceTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("WeaponThrowTraceTimeline"));
+	WeaponThrowTraceTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("ThrowTraceTimeline"));
 	WeaponThrowTraceTimelineTick.BindUFunction(this, FName("OnWeaponThrowTraceTimelineTick"));
 	WeaponThrowTraceTimelineEnd.BindUFunction(this, FName("OnWeaponThrowTraceTimelineEnd"));
+
+	WeaponWiggleTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("Wiggleimeline"));
+	WeaponWiggleTimelineTick.BindUFunction(this, FName("OnWeaponWiggleTimelineTick"));
+	WeaponWiggleTimelineEnd.BindUFunction(this, FName("OnWeaponWiggleTimelineEnd"));
 
 	BladeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Blade Niagara"));
 	BladeNiagaraComponent->SetupAttachment(WeaponMesh);
@@ -64,6 +69,12 @@ void ALeviathanAxe::BeginPlay()
 		WeaponThrowTraceTimelineComponent->SetTimelineFinishedFunc(WeaponThrowTraceTimelineEnd);
 	}
 
+	if (nullptr != WeaponWiggleCurve)
+	{
+		WeaponWiggleTimelineComponent->AddInterpFloat(WeaponWiggleCurve, WeaponWiggleTimelineTick);
+		WeaponWiggleTimelineComponent->SetTimelineFinishedFunc(WeaponWiggleTimelineEnd);
+	}
+
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
 
 	InitVFX();
@@ -90,6 +101,8 @@ void ALeviathanAxe::InitWeapon()
 
 void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 {
+	//Debug::Print(TEXT("Throw Rot Tick"));
+
 	float RotationValue = Value * -360.0f;
 	FRotator NewRotation = FRotator(RotationValue, 0.0f, 0.0f);
 	PivotPointComponent->SetRelativeRotation(NewRotation);
@@ -101,7 +114,7 @@ void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 		USoundBase* SoundToPlay = ThrowSoundMap[bThrowSoundFlipFlop];
 		bThrowSoundFlipFlop = !bThrowSoundFlipFlop;
 
-		if (nullptr != SoundToPlay && nullptr != ThrowSoundAttenuation)
+		if (nullptr != SoundToPlay && nullptr != AttachSoundAttenuation)
 		{
 			UGameplayStatics::SpawnSoundAttached(
 				SoundToPlay,
@@ -113,7 +126,7 @@ void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 				1.15f,
 				1.0f,
 				0.0f,
-				ThrowSoundAttenuation
+				AttachSoundAttenuation
 			);
 		}
 
@@ -127,6 +140,7 @@ void ALeviathanAxe::OnWeaponRotTimelineEnd()
 
 void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
 {
+	Debug::Print(TEXT("Throw Trace Tick Value : "), Value);
 	ProjectileMovementComponent->ProjectileGravityScale = Value;
 	CheckHitCollision();
 }
@@ -134,6 +148,19 @@ void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
 void ALeviathanAxe::OnWeaponThrowTraceTimelineEnd()
 {
 	StopWeapon();
+}
+
+void ALeviathanAxe::OnWeaponWiggleTimelineTick(float Value)
+{
+	LodgePointComponent->SetRelativeRotation(FRotator(
+		LodgeRotation.Pitch,
+		LodgeRotation.Yaw,
+		LodgeRotation.Roll +  (Value * 12.0f)
+	));
+}
+
+void ALeviathanAxe::OnWeaponWiggleTimelineEnd()
+{
 }
 
 
@@ -202,6 +229,8 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 	if (nullptr != WeaponThrowTraceTimelineComponent)
 	{
 		WeaponThrowTraceTimelineComponent->PlayFromStart();
+		WeaponThrowTraceTimelineComponent->SetLooping(true);
+
 	}
 
 	StartWeaponTrail();
@@ -209,7 +238,43 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 
 void ALeviathanAxe::RecallWeapon()
 {
-	WeaponThrowTraceTimelineComponent->Stop();
+	StopWeapon();
+
+	WeaponMesh->SetVisibility(true);
+
+	if (nullptr != RecallNoiseSoundCue)
+	{
+		RecallAudioComponent = UGameplayStatics::SpawnSoundAttached(
+			RecallNoiseSoundCue,
+			GetWeaponMesh(),
+			NAME_None,
+			FVector::ZeroVector,
+			EAttachLocation::SnapToTargetIncludingScale,
+			false,
+			0.0f,
+			1.0f,
+			0.0f,
+			AttachSoundAttenuation
+		);
+	}
+
+	switch (CurWeaponState)
+	{
+	case ERagnarokWeaponState::ERWS_Throw:
+	{
+
+	}
+	break;
+	case ERagnarokWeaponState::ERWS_Lodge:
+	{
+		WiggleLodgedAxe();
+		CurWeaponState = ERagnarokWeaponState::ERWS_Recall;
+		DistanceFromOwner = GetClampedDistanceFromOwnerCharacter(MaxCalcDistance);
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 void ALeviathanAxe::StopWeapon()
@@ -325,7 +390,8 @@ void ALeviathanAxe::PlayHitSoundCue(FVector ImpactLocation)
 
 void ALeviathanAxe::LodgeAxe(FVector ImpactNormal, FVector ImpactLocation)
 {
-	StopAxe();
+	StopWeapon();
+
 	PivotPointComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 	SetActorRotation(CameraStartRotation);
 
@@ -379,4 +445,28 @@ FVector ALeviathanAxe::CalcAxeImactLocation(FVector ImpactNormal, FVector Impact
 	CalcLocation = CalcLocation + ImpactLocation;
 
 	return CalcLocation;
+}
+
+void ALeviathanAxe::WiggleLodgedAxe()
+{
+	LodgeRotation = LodgePointComponent->GetRelativeRotation();
+
+	WeaponWiggleTimelineComponent->SetPlayRate(3.5f);
+	WeaponWiggleTimelineComponent->PlayFromStart();
+
+}
+
+float ALeviathanAxe::GetClampedDistanceFromOwnerCharacter(float MaxDistance)
+{
+	if (false == OwnerKratos.IsValid())
+	{
+		Debug::Print(TEXT("ALeviathanAxe::OwnerKratos is not valid"));
+		return 0.0f;
+	}
+
+	return FMath::Clamp(
+		(GetActorLocation() - OwnerKratos->GetMesh()->GetSocketLocation(TEXT("RightWeaponSocket"))).Length(),
+		0.0f,
+		MaxDistance
+	);
 }

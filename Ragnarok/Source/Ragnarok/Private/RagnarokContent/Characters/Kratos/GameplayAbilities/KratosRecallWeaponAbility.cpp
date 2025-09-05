@@ -63,7 +63,8 @@ bool UKratosRecallWeaponAbility::CanActivateAbility(const FGameplayAbilitySpecHa
 		return false;
 	}
 
-	if (ERagnarokWeaponState::ERWS_Throw == KratosWeapon->GetWeaponState())
+	if (ERagnarokWeaponState::ERWS_Throw == KratosWeapon->GetWeaponState() ||
+		ERagnarokWeaponState::ERWS_Recall == KratosWeapon->GetWeaponState())
 	{
 		return true;
 	}
@@ -111,7 +112,7 @@ void UKratosRecallWeaponAbility::RecallWeapon()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosRecallWeaponAbility::RecallWeapon"));
 
-	if (nullptr == CurWeapon)
+	if (nullptr != CurWeapon)
 	{
 		CurWeapon->RecallWeapon();
 	}

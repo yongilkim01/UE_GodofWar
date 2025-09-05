@@ -44,6 +44,20 @@ void AKratosWeapon::AssignGratnAbilitySpecHandles(const TArray<FGameplayAbilityS
 	GrantedAbilitySpecHandleArray = InSpecHandleArray;
 }
 
+void AKratosWeapon::SetOwner(ARagnarokCharacter* RagnarokCharacter)
+{
+	AKratos* Kratos = Cast<AKratos>(RagnarokCharacter);
+
+	if (nullptr != Kratos)
+	{
+		OwnerKratos = Kratos;
+	}
+	else
+	{
+		Debug::Print(TEXT("AKratosWeapon::SetOwner's Kratos variable is nullptr"), FColor::Red);
+	}
+}
+
 TArray<FGameplayAbilitySpecHandle>& AKratosWeapon::GetGrantedAbilitySpecHandleArray()
 {
 	return GrantedAbilitySpecHandleArray;

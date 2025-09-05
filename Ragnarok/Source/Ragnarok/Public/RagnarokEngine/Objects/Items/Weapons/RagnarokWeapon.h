@@ -10,6 +10,7 @@
 class USkeletalMeshComponent;
 class UBoxComponent;
 class UItemPrimaryAssetKratosWeapon;
+class ARagnarokCharacter;
 
 struct FAttachmentTransformRules;
 
@@ -29,6 +30,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	//~ End AActor Interface.
+
+	virtual void SetOwner(ARagnarokCharacter* RagnarokCharacter) {};
 
 public:
 	virtual void InitWeapon();
