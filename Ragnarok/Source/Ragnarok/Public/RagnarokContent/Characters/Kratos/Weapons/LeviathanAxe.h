@@ -35,6 +35,11 @@ public:
 	void OnWeaponWiggleTimelineTick(float Value);
 	UFUNCTION()	
 	void OnWeaponWiggleTimelineEnd();
+	UFUNCTION()
+	void OnWeaponRecallTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponRecallTimelineEnd();
+
 
 protected:
 	//~ Begin AActor Interface.
@@ -65,8 +70,10 @@ private:
 	void StopAxe();
 	float CalcAxeImpactPitch(FVector ImpactNormal, float InclinedSurfaceRange, float RegularSurfaceRange);
 	FVector CalcAxeImactLocation(FVector ImpactNormal, FVector ImpactLocation);
-	void WiggleLodgedAxe();
+	void WiggleLodgedAxe();	
 	float GetClampedDistanceFromOwnerCharacter(float MaxDistance);
+	void SetWeaponRecallLocation();
+	float CalcRecallTimelinePlayRate(float Distance, float WeaponRecallSpeed);
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -95,13 +102,24 @@ private:
 	UCurveFloat* WeaponRotationCurve = nullptr;
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* WeaponThrowTraceCurve = nullptr;
-	UPROPERTY(EditAnywhere)
-	UCurveFloat* WeaponWiggleCurve = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* WeaponRecallWiggleCurve = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallSpeedCurve = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallSoundVolCurve = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallRotationCurve1 = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallRotationCurve2 = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallRightVectorCurve = nullptr;
 
 	UAudioComponent* RecallAudioComponent = nullptr;
 	UTimelineComponent* WeaponRotTimelineComponent = nullptr;
 	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
 	UTimelineComponent* WeaponWiggleTimelineComponent = nullptr;
+	UTimelineComponent* WeaponRecallTimelineComponent = nullptr;
 
 	FOnTimelineFloat WeaponRotTimelineTick;
 	FOnTimelineEvent WeaponRotTimelineEnd;
@@ -109,9 +127,15 @@ private:
 	FOnTimelineEvent WeaponThrowTraceTimelineEnd;
 	FOnTimelineFloat WeaponWiggleTimelineTick;
 	FOnTimelineEvent WeaponWiggleTimelineEnd;
+	FOnTimelineFloat WeaponRecallTimelineTick;
+	FOnTimelineEvent WeaponRecallTimelineEnd;
 
+
+	FVector InitLocation = FVector::ZeroVector;
 	FVector TopPosition = FVector::ZeroVector;
 	FVector BottomPosition = FVector::ZeroVector;
+	FVector RecallTargetLocation = FVector::ZeroVector;
+	FRotator InitRotation = FRotator::ZeroRotator;
 	FRotator CameraStartRotation = FRotator::ZeroRotator;
 	FRotator LodgeRotation = FRotator::ZeroRotator;
 
@@ -124,6 +148,10 @@ private:
 	float CalcZValue = 0.0f;
 	float MaxCalcDistance = 3000.0f;
 	float DistanceFromOwner = 0.0f;
+	float ZAdjustment = 0.0f;
+	float OptimalDistance = 1400.0f;
+	float AxeRecallSpeed = 1.0f;
+	float AxeRightVectorScale = 1.0f;
 
 	bool bThrowSoundFlipFlop = true;
 };

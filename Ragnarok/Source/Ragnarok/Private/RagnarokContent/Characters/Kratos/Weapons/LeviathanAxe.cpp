@@ -13,6 +13,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
+#include "Camera/CameraComponent.h"
 
 
 ALeviathanAxe::ALeviathanAxe()
@@ -39,6 +41,11 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponWiggleTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("Wiggleimeline"));
 	WeaponWiggleTimelineTick.BindUFunction(this, FName("OnWeaponWiggleTimelineTick"));
 	WeaponWiggleTimelineEnd.BindUFunction(this, FName("OnWeaponWiggleTimelineEnd"));
+
+	WeaponRecallTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("RecallTimeline"));
+	WeaponRecallTimelineTick.BindUFunction(this, FName("OnWeaponRecallTimelineTick"));
+	WeaponRecallTimelineEnd.BindUFunction(this, FName("OnWeaponRecallTimelineEnd"));
+
 
 	BladeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Blade Niagara"));
 	BladeNiagaraComponent->SetupAttachment(WeaponMesh);
@@ -69,10 +76,16 @@ void ALeviathanAxe::BeginPlay()
 		WeaponThrowTraceTimelineComponent->SetTimelineFinishedFunc(WeaponThrowTraceTimelineEnd);
 	}
 
-	if (nullptr != WeaponWiggleCurve)
+	if (nullptr != WeaponRecallWiggleCurve)
 	{
-		WeaponWiggleTimelineComponent->AddInterpFloat(WeaponWiggleCurve, WeaponWiggleTimelineTick);
+		WeaponWiggleTimelineComponent->AddInterpFloat(WeaponRecallWiggleCurve, WeaponWiggleTimelineTick);
 		WeaponWiggleTimelineComponent->SetTimelineFinishedFunc(WeaponWiggleTimelineEnd);
+	}
+
+	if (nullptr != RecallSpeedCurve)
+	{
+		WeaponRecallTimelineComponent->AddInterpFloat(RecallSpeedCurve, WeaponRecallTimelineTick);
+		WeaponRecallTimelineComponent->SetTimelineFinishedFunc(WeaponRecallTimelineEnd);
 	}
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
@@ -160,6 +173,27 @@ void ALeviathanAxe::OnWeaponWiggleTimelineTick(float Value)
 }
 
 void ALeviathanAxe::OnWeaponWiggleTimelineEnd()
+{
+}
+
+void ALeviathanAxe::OnWeaponRecallTimelineTick(float Value)
+{
+	float Alpha = WeaponRecallTimelineComponent->GetPlaybackPosition() / WeaponRecallTimelineComponent->GetTimelineLength();
+
+	float SpeedValue = Value;
+	float RightVectorValue = RecallRightVectorCurve ? RecallRightVectorCurve->GetFloatValue(Alpha) : 0.0f;
+	float Rotation1Value = RecallRotationCurve1 ? RecallRotationCurve1->GetFloatValue(Alpha) : 0.0f;
+	float Rotation2Value = RecallRotationCurve2 ? RecallRotationCurve2->GetFloatValue(Alpha) : 0.0f;
+	float SoundVolValue = RecallSoundVolCurve ? RecallSoundVolCurve->GetFloatValue(Alpha) : 0.0f;
+
+	FVector CalcVector = (RightVectorValue * (DistanceFromOwner / AxeRightVectorScale)) * OwnerKratos->GetKratosCameraComponent()->GetRightVector();
+	CalcVector += OwnerKratos->GetMesh()->GetSocketLocation(TEXT("RightWeaponSocket"));
+	RecallTargetLocation = FMath::Lerp(InitLocation, CalcVector, SpeedValue);
+	//Debug::Print(TEXT("LerpLocation: ") + RecallTargetLocation.ToString(), FColor::Cyan);
+	SetActorLocation(RecallTargetLocation);
+}
+
+void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 {
 }
 
@@ -262,19 +296,42 @@ void ALeviathanAxe::RecallWeapon()
 	{
 	case ERagnarokWeaponState::ERWS_Throw:
 	{
-
+		ZAdjustment = 10.0f;
 	}
 	break;
 	case ERagnarokWeaponState::ERWS_Lodge:
 	{
 		WiggleLodgedAxe();
-		CurWeaponState = ERagnarokWeaponState::ERWS_Recall;
-		DistanceFromOwner = GetClampedDistanceFromOwnerCharacter(MaxCalcDistance);
 	}
 	break;
 	default:
 		break;
 	}
+
+	CurWeaponState = ERagnarokWeaponState::ERWS_Recall;
+	DistanceFromOwner = GetClampedDistanceFromOwnerCharacter(MaxCalcDistance);
+	SetWeaponRecallLocation();
+	InitLocation = GetActorLocation();
+	InitRotation = GetActorRotation();
+	CameraStartRotation = OwnerKratos->GetKratosCameraComponent()->GetComponentRotation();
+	LodgePointComponent->SetRelativeRotation(FRotator::ZeroRotator);
+	
+	if (nullptr != WeaponRecallTimelineComponent)
+	{
+		float PlayRate = CalcRecallTimelinePlayRate(OptimalDistance, AxeRecallSpeed);
+		WeaponRecallTimelineComponent->SetPlayRate(PlayRate);
+		WeaponRecallTimelineComponent->PlayFromStart();
+	}
+
+	
+
+
+
+	//if (nullptr != RecallAudioComponent)
+	//{
+	//	RecallAudioComponent->FadeOut(0.4f, 0.0f);
+	//}
+	//StopAxe();
 }
 
 void ALeviathanAxe::StopWeapon()
@@ -439,7 +496,7 @@ FVector ALeviathanAxe::CalcAxeImactLocation(FVector ImpactNormal, FVector Impact
 	PitchValue = 90.0f - PitchValue;
 	PitchValue /= 90.0f;
 	PitchValue *= 10.0f;
-	CalcZValue = PitchValue;
+	ZAdjustment = PitchValue;
 	ImpactLocation += FVector(0.0f, 0.0f, PitchValue);
 	FVector CalcLocation = GetActorLocation() - LodgePointComponent->GetComponentLocation();
 	CalcLocation = CalcLocation + ImpactLocation;
@@ -469,4 +526,14 @@ float ALeviathanAxe::GetClampedDistanceFromOwnerCharacter(float MaxDistance)
 		0.0f,
 		MaxDistance
 	);
+}
+
+void ALeviathanAxe::SetWeaponRecallLocation()
+{
+	SetActorLocation(GetActorLocation() + FVector(0.0f, 0.0f, ((1.0f - (ZAdjustment / 10.0f)) * 30.0f) + 20.0f));
+}
+
+float ALeviathanAxe::CalcRecallTimelinePlayRate(float Distance, float WeaponRecallSpeed)
+{
+	return FMath::Clamp((Distance * WeaponRecallSpeed) / DistanceFromOwner, 0.4f, 7.0f);
 }

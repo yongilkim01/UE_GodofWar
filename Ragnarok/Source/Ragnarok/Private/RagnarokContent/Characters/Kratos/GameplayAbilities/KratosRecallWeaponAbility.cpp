@@ -64,7 +64,7 @@ bool UKratosRecallWeaponAbility::CanActivateAbility(const FGameplayAbilitySpecHa
 	}
 
 	if (ERagnarokWeaponState::ERWS_Throw == KratosWeapon->GetWeaponState() ||
-		ERagnarokWeaponState::ERWS_Recall == KratosWeapon->GetWeaponState())
+		ERagnarokWeaponState::ERWS_Lodge == KratosWeapon->GetWeaponState())
 	{
 		return true;
 	}

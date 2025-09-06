@@ -127,6 +127,7 @@ private:
 
 public:
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
+	FORCEINLINE UCameraComponent* GetKratosCameraComponent() const { return MainCameraComponent; }
 	FORCEINLINE bool IsAttacking() const { return bAttacking; }
 	FORCEINLINE bool IsRolling() const { return bRolling; }
 };
