@@ -39,6 +39,8 @@ public:
 	void OnWeaponRecallTimelineTick(float Value);
 	UFUNCTION()
 	void OnWeaponRecallTimelineEnd();
+	UFUNCTION()
+	void OnWeaponRecallRotationTick(float Value);
 
 
 protected:
@@ -113,6 +115,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
 	UCurveFloat* RecallRotationCurve2 = nullptr;
 	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
+	UCurveFloat* RecallRotationCurve3 = nullptr;
+	UPROPERTY(EditAnywhere, Category = "LeviathanAxe|Recall")
 	UCurveFloat* RecallRightVectorCurve = nullptr;
 
 	UAudioComponent* RecallAudioComponent = nullptr;
@@ -120,6 +124,7 @@ private:
 	UTimelineComponent* WeaponThrowTraceTimelineComponent = nullptr;
 	UTimelineComponent* WeaponWiggleTimelineComponent = nullptr;
 	UTimelineComponent* WeaponRecallTimelineComponent = nullptr;
+	UTimelineComponent* WeaponRecallRotationTimelineComponent = nullptr;
 
 	FOnTimelineFloat WeaponRotTimelineTick;
 	FOnTimelineEvent WeaponRotTimelineEnd;
@@ -129,6 +134,7 @@ private:
 	FOnTimelineEvent WeaponWiggleTimelineEnd;
 	FOnTimelineFloat WeaponRecallTimelineTick;
 	FOnTimelineEvent WeaponRecallTimelineEnd;
+	FOnTimelineFloat WeaponRecallRotationTick;
 
 
 	FVector InitLocation = FVector::ZeroVector;
@@ -152,6 +158,10 @@ private:
 	float OptimalDistance = 1400.0f;
 	float AxeRecallSpeed = 1.0f;
 	float AxeRightVectorScale = 1.0f;
+	float AxeRecallRotationValue = 60.0f;
+	float AxeRecallSpinRate = 0.35f;
+
+	int32 RecallSpinCount = 0;
 
 	bool bThrowSoundFlipFlop = true;
 };

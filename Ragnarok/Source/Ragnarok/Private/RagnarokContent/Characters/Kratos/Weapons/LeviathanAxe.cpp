@@ -46,6 +46,8 @@ ALeviathanAxe::ALeviathanAxe()
 	WeaponRecallTimelineTick.BindUFunction(this, FName("OnWeaponRecallTimelineTick"));
 	WeaponRecallTimelineEnd.BindUFunction(this, FName("OnWeaponRecallTimelineEnd"));
 
+	WeaponRecallRotationTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("RecallRotationTimeline"));
+	WeaponRecallRotationTick.BindUFunction(this, FName("OnWeaponRecallRotationTick"));
 
 	BladeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Blade Niagara"));
 	BladeNiagaraComponent->SetupAttachment(WeaponMesh);
@@ -86,6 +88,11 @@ void ALeviathanAxe::BeginPlay()
 	{
 		WeaponRecallTimelineComponent->AddInterpFloat(RecallSpeedCurve, WeaponRecallTimelineTick);
 		WeaponRecallTimelineComponent->SetTimelineFinishedFunc(WeaponRecallTimelineEnd);
+	}
+
+	if (nullptr != RecallRotationCurve3)
+	{
+		WeaponRecallRotationTimelineComponent->AddInterpFloat(RecallRotationCurve3, WeaponRecallRotationTick);
 	}
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
@@ -189,12 +196,28 @@ void ALeviathanAxe::OnWeaponRecallTimelineTick(float Value)
 	FVector CalcVector = (RightVectorValue * (DistanceFromOwner / AxeRightVectorScale)) * OwnerKratos->GetKratosCameraComponent()->GetRightVector();
 	CalcVector += OwnerKratos->GetMesh()->GetSocketLocation(TEXT("RightWeaponSocket"));
 	RecallTargetLocation = FMath::Lerp(InitLocation, CalcVector, SpeedValue);
+
+	FRotator CalcRotation = FRotator(CameraStartRotation.Pitch, CameraStartRotation.Yaw, CameraStartRotation.Roll + AxeRecallRotationValue);
+	CalcRotation = UKismetMathLibrary::RLerp(InitRotation, CalcRotation, Rotation1Value, true);
+	CalcRotation = UKismetMathLibrary::RLerp(CalcRotation, OwnerKratos->GetMesh()->GetSocketRotation(TEXT("RightWeaponSocket")), Rotation2Value, true);
+
 	//Debug::Print(TEXT("LerpLocation: ") + RecallTargetLocation.ToString(), FColor::Cyan);
-	SetActorLocation(RecallTargetLocation);
+	SetActorLocationAndRotation(RecallTargetLocation, CalcRotation);
+
+	if (nullptr != RecallAudioComponent)
+	{
+		RecallAudioComponent->SetVolumeMultiplier(SoundVolValue);
+	}
 }
 
 void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 {
+}
+
+void ALeviathanAxe::OnWeaponRecallRotationTick(float Value)
+{
+	Debug::Print(TEXT("Recall Rotation Value : "), Value * 360.0f, -1, FColor::Black);
+	PivotPointComponent->SetRelativeRotation(FRotator(Value * 360.0f, 0.0f, 0.0f));
 }
 
 
@@ -315,7 +338,7 @@ void ALeviathanAxe::RecallWeapon()
 	InitRotation = GetActorRotation();
 	CameraStartRotation = OwnerKratos->GetKratosCameraComponent()->GetComponentRotation();
 	LodgePointComponent->SetRelativeRotation(FRotator::ZeroRotator);
-	
+
 	if (nullptr != WeaponRecallTimelineComponent)
 	{
 		float PlayRate = CalcRecallTimelinePlayRate(OptimalDistance, AxeRecallSpeed);
@@ -323,7 +346,26 @@ void ALeviathanAxe::RecallWeapon()
 		WeaponRecallTimelineComponent->PlayFromStart();
 	}
 
-	
+	if (nullptr != WeaponRecallRotationTimelineComponent)
+	{
+		float RecallPlayRate = CalcRecallTimelinePlayRate(OptimalDistance, AxeRecallSpeed);
+		float LengthRecallTimeline = 1.0f / RecallPlayRate;
+		float SpinRate = LengthRecallTimeline / AxeRecallSpinRate;
+		float SpinLength = LengthRecallTimeline - 0.055f;
+		RecallSpinCount = FMath::RoundToInt(SpinRate);
+		SpinLength = 1.0f / (SpinLength / RecallSpinCount);
+
+		if (nullptr != WeaponRotTimelineComponent)
+		{
+			WeaponRotTimelineComponent->Stop();
+		}
+
+		WeaponRecallRotationTimelineComponent->SetPlayRate(SpinLength);
+		WeaponRecallRotationTimelineComponent->SetLooping(true);
+
+		WeaponRecallRotationTimelineComponent->PlayFromStart();
+	}
+
 
 
 
