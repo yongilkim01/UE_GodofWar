@@ -41,6 +41,8 @@ public:
 	void OnWeaponRecallTimelineEnd();
 	UFUNCTION()
 	void OnWeaponRecallRotationTick(float Value);
+	UFUNCTION()
+	void OnWeaponRecallRotationEnd();
 
 
 protected:
@@ -77,6 +79,9 @@ private:
 	void SetWeaponRecallLocation();
 	float CalcRecallTimelinePlayRate(float Distance, float WeaponRecallSpeed);
 
+	UFUNCTION()
+	void OnDelayFinished();
+
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PivotPointComponent = nullptr;
@@ -88,14 +93,15 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TMap<bool, USoundBase*> ThrowSoundMap;
 	UPROPERTY(EditAnywhere)
+	TMap<bool, USoundBase*> RecallSoundMap;
+	UPROPERTY(EditAnywhere)
 	USoundCue* HitSoundCue1 = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	USoundCue* HitSoundCue2 = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	USoundCue* RecallNoiseSoundCue = nullptr;
-
+	UPROPERTY(EditAnywhere)
+	USoundCue* RecallBrownSoundCue = nullptr;
 	UPROPERTY(EditAnywhere)
 	USoundAttenuation* AttachSoundAttenuation = nullptr;
 
@@ -135,7 +141,9 @@ private:
 	FOnTimelineFloat WeaponRecallTimelineTick;
 	FOnTimelineEvent WeaponRecallTimelineEnd;
 	FOnTimelineFloat WeaponRecallRotationTick;
+	FOnTimelineEvent WeaponRecallRotationEnd;
 
+	FTimerHandle DelayTimerHandler;
 
 	FVector InitLocation = FVector::ZeroVector;
 	FVector TopPosition = FVector::ZeroVector;
@@ -150,6 +158,7 @@ private:
 	float WeaponSpinRate = 1.0f;
 	float ThrowSpeed = 2500.0f;
 	float ThrowFlipFlopTime = 0.5f;
+	float RecallFlipFlopTime = 0.5f;
 	float ThrowTraceDistance = 60.0f;
 	float CalcZValue = 0.0f;
 	float MaxCalcDistance = 3000.0f;
@@ -160,8 +169,10 @@ private:
 	float AxeRightVectorScale = 1.0f;
 	float AxeRecallRotationValue = 60.0f;
 	float AxeRecallSpinRate = 0.35f;
+	float LengthRecallTimeline = 0.0f;
 
 	int32 RecallSpinCount = 0;
 
 	bool bThrowSoundFlipFlop = true;
+	bool bRecallSoundFlipFlop = true;
 };

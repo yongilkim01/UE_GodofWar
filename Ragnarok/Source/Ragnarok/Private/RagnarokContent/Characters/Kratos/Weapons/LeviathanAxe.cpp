@@ -48,6 +48,7 @@ ALeviathanAxe::ALeviathanAxe()
 
 	WeaponRecallRotationTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("RecallRotationTimeline"));
 	WeaponRecallRotationTick.BindUFunction(this, FName("OnWeaponRecallRotationTick"));
+	WeaponRecallRotationEnd.BindUFunction(this, FName("OnWeaponRecallRotationEnd"));
 
 	BladeNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Blade Niagara"));
 	BladeNiagaraComponent->SetupAttachment(WeaponMesh);
@@ -93,6 +94,7 @@ void ALeviathanAxe::BeginPlay()
 	if (nullptr != RecallRotationCurve3)
 	{
 		WeaponRecallRotationTimelineComponent->AddInterpFloat(RecallRotationCurve3, WeaponRecallRotationTick);
+		WeaponRecallRotationTimelineComponent->SetTimelineFinishedFunc(WeaponRecallRotationEnd);
 	}
 
 	CurWeaponState = ERagnarokWeaponState::ERWS_Unequipped;
@@ -212,12 +214,55 @@ void ALeviathanAxe::OnWeaponRecallTimelineTick(float Value)
 
 void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 {
+
 }
 
 void ALeviathanAxe::OnWeaponRecallRotationTick(float Value)
 {
 	Debug::Print(TEXT("Recall Rotation Value : "), Value * 360.0f, -1, FColor::Black);
 	PivotPointComponent->SetRelativeRotation(FRotator(Value * 360.0f, 0.0f, 0.0f));
+
+	RecallFlipFlopTime += GetWorld()->GetDeltaSeconds();
+
+	if (RecallFlipFlopTime >= 0.1f)
+	{
+		USoundBase* SoundToPlay = RecallSoundMap[bRecallSoundFlipFlop];
+		bRecallSoundFlipFlop = !bRecallSoundFlipFlop;
+
+		if (nullptr != SoundToPlay && nullptr != AttachSoundAttenuation)
+		{
+			UGameplayStatics::SpawnSoundAttached(
+				SoundToPlay,
+				GetWeaponMesh(),
+				NAME_None,
+				FVector::ZeroVector,
+				EAttachLocation::SnapToTarget,
+				false,
+				0.45f,
+				1.1f,
+				0.0f,
+				AttachSoundAttenuation
+			);
+		}
+
+		RecallFlipFlopTime = 0.0f;
+	}
+}
+
+void ALeviathanAxe::OnWeaponRecallRotationEnd()
+{
+	RecallSpinCount--;
+	if (RecallSpinCount == 0)
+	{
+		if (nullptr != WeaponRecallRotationTimelineComponent)
+		{
+			WeaponRecallRotationTimelineComponent->Stop();
+		}
+	}
+	else
+	{
+		WeaponRecallRotationTimelineComponent->PlayFromStart();
+	}
 }
 
 
@@ -349,10 +394,22 @@ void ALeviathanAxe::RecallWeapon()
 	if (nullptr != WeaponRecallRotationTimelineComponent)
 	{
 		float RecallPlayRate = CalcRecallTimelinePlayRate(OptimalDistance, AxeRecallSpeed);
-		float LengthRecallTimeline = 1.0f / RecallPlayRate;
+		LengthRecallTimeline = 1.0f / RecallPlayRate;
 		float SpinRate = LengthRecallTimeline / AxeRecallSpinRate;
 		float SpinLength = LengthRecallTimeline - 0.055f;
+
+		LengthRecallTimeline -= 0.87f;
+
+		GetWorld()->GetTimerManager().SetTimer(
+			DelayTimerHandler,
+			this,
+			&ALeviathanAxe::OnDelayFinished,
+			LengthRecallTimeline,
+			false
+		);
+
 		RecallSpinCount = FMath::RoundToInt(SpinRate);
+		Debug::Print(TEXT("Recall Spin Count : "), RecallSpinCount);
 		SpinLength = 1.0f / (SpinLength / RecallSpinCount);
 
 		if (nullptr != WeaponRotTimelineComponent)
@@ -361,7 +418,7 @@ void ALeviathanAxe::RecallWeapon()
 		}
 
 		WeaponRecallRotationTimelineComponent->SetPlayRate(SpinLength);
-		WeaponRecallRotationTimelineComponent->SetLooping(true);
+		//WeaponRecallRotationTimelineComponent->SetLooping(true);
 
 		WeaponRecallRotationTimelineComponent->PlayFromStart();
 	}
@@ -578,4 +635,53 @@ void ALeviathanAxe::SetWeaponRecallLocation()
 float ALeviathanAxe::CalcRecallTimelinePlayRate(float Distance, float WeaponRecallSpeed)
 {
 	return FMath::Clamp((Distance * WeaponRecallSpeed) / DistanceFromOwner, 0.4f, 7.0f);
+}
+
+void ALeviathanAxe::OnDelayFinished()
+{
+	if (LengthRecallTimeline > 0.0f)
+	{
+		if (nullptr != RecallBrownSoundCue)
+		{
+			UGameplayStatics::SpawnSoundAttached(
+				RecallBrownSoundCue,
+				GetWeaponMesh(),
+				NAME_None,
+				FVector::ZeroVector,
+				EAttachLocation::SnapToTargetIncludingScale,
+				false,
+				1.0f,
+				1.0f,
+				0.0f,
+				AttachSoundAttenuation,
+				nullptr,
+				true
+			);
+		}
+	}
+	else
+	{
+		LengthRecallTimeline += 0.87f;
+		LengthRecallTimeline = 0.87f - LengthRecallTimeline;
+
+		if (nullptr != RecallBrownSoundCue)
+		{
+			UAudioComponent* RecallBrwonAudioComponent = UGameplayStatics::SpawnSoundAttached(
+				RecallBrownSoundCue,
+				GetWeaponMesh(),
+				NAME_None,
+				FVector::ZeroVector,
+				EAttachLocation::SnapToTargetIncludingScale,
+				false,
+				1.0f,
+				1.0f,
+				LengthRecallTimeline,
+				AttachSoundAttenuation,
+				nullptr,
+				true
+			);
+
+			RecallBrwonAudioComponent->FadeIn(0.1f, 1.0f, LengthRecallTimeline);
+		}
+	}
 }
