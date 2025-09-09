@@ -3,10 +3,12 @@
 
 #include "RagnarokContent/Characters/Kratos/Weapons/LeviathanAxe.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
+#include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 
 #include "NiagaraComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -15,7 +17,8 @@
 #include "Sound/SoundCue.h"
 #include "Components/AudioComponent.h"
 #include "Camera/CameraComponent.h"
-
+#include "Abilities/GameplayAbility.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 ALeviathanAxe::ALeviathanAxe()
 {
@@ -214,7 +217,25 @@ void ALeviathanAxe::OnWeaponRecallTimelineTick(float Value)
 
 void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 {
+	if (nullptr != RecallAudioComponent)
+	{
+		RecallAudioComponent->FadeOut(0.4f, 0.0f);
+	}
 
+	if (true == OwnerKratos.IsValid())
+	{
+		FGameplayEventData EventData;
+		EventData.Instigator = OwnerKratos.Get();
+		EventData.Target = this;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			OwnerKratos.Get(),
+			KratosGameplayTags::Kratos_Event_Catch_Weapon,
+			EventData
+		);
+	}
+
+	StopAxe();
 }
 
 void ALeviathanAxe::OnWeaponRecallRotationTick(float Value)
@@ -422,15 +443,6 @@ void ALeviathanAxe::RecallWeapon()
 
 		WeaponRecallRotationTimelineComponent->PlayFromStart();
 	}
-
-
-
-
-	//if (nullptr != RecallAudioComponent)
-	//{
-	//	RecallAudioComponent->FadeOut(0.4f, 0.0f);
-	//}
-	//StopAxe();
 }
 
 void ALeviathanAxe::StopWeapon()

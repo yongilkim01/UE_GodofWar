@@ -20,12 +20,14 @@ namespace KratosGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Ability_Roll, "Kratos.Ability.Roll");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Ability_ThrowWeapon, "Kratos.Ability.ThrowWeapon");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Ability_RecallWeapon, "Kratos.Ability.RecallWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_Ability_Catch_Weapon, "Kratos.Ability.Catch.Weapon");
 
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_Equip_Weapon, "Kratos.Event.Equip.Weapon");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_Unequip_Weapon, "Kratos.Event.Unequip.Weapon");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_HitPause, "Kratos.Event.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_AttackWait_Start, "Kratos.Event.AttackWait.Start");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_AttackWait_End, "Kratos.Event.AttackWait.End");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_Event_Catch_Weapon, "Kratos.Event.Catch.Weapon");
 
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Weapon_LeviathanAxe, "Kratos.Weapon.LeviathanAxe");
 
