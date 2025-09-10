@@ -49,6 +49,10 @@ private:
 
 	UFUNCTION()
 	void OnCatchAnimationComplete();
+	UFUNCTION()
+	void OnNotifyBegin();
+	UFUNCTION()
+	void OnNotifyEnd();
 
 private:
 	UPROPERTY(EditAnywhere)
