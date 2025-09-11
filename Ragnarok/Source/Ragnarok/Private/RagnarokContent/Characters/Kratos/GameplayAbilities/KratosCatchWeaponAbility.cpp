@@ -59,6 +59,7 @@ void UKratosCatchWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	}
 
 	Kratos->ShakeCamera();
+	CatchingWeapon->EndWeaponTrail();
 
 }
 

@@ -32,6 +32,8 @@ public:
 	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) {}
 	virtual void RecallWeapon() {}
 	virtual void StopWeapon() {}
+	virtual void StartWeaponTrail() {}
+	virtual void EndWeaponTrail() {}
 
 	void UnUequipWeapon(const AActor* OwnerActor, FName SocketName);
 

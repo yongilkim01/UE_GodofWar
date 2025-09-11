@@ -38,6 +38,9 @@ public:
 	static void RemoveGameplayTagToActor(AActor* InActor, FGameplayTag TagToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "RagnarokKismet|FunctionLibrary")
-	static void SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag, float EventMagnitude);
+	static void SendGameplayEventToActorWithMagnitude(AActor* InActor, FGameplayTag EventTag, float EventMagnitude);
+
+	UFUNCTION(BlueprintCallable, Category = "RagnarokKismet|FunctionLibrary")
+	static void SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag);
 	
 };

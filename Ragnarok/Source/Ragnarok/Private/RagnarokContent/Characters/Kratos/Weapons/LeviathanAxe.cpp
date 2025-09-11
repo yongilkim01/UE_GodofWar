@@ -370,6 +370,7 @@ void ALeviathanAxe::RecallWeapon()
 	StopWeapon();
 
 	WeaponMesh->SetVisibility(true);
+	StartWeaponTrail();
 
 	if (nullptr != RecallNoiseSoundCue)
 	{

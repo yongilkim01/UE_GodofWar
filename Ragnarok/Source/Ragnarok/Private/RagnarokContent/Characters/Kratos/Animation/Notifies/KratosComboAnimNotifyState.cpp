@@ -23,7 +23,7 @@ void UKratosComboAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 		return;
 	}
 
-	URagnarokFunctionLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), AttackWaitStartEventTag, ComboIndex);
+	URagnarokFunctionLibrary::SendGameplayEventToActorWithMagnitude(MeshComp->GetOwner(), AttackWaitStartEventTag, ComboIndex);
 }
 
 void UKratosComboAnimNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
@@ -41,6 +41,6 @@ void UKratosComboAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 		return;
 	}
 
-	URagnarokFunctionLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), AttackWaitEndEventTag, ComboIndex);
+	URagnarokFunctionLibrary::SendGameplayEventToActorWithMagnitude(MeshComp->GetOwner(), AttackWaitEndEventTag, ComboIndex);
 
 }

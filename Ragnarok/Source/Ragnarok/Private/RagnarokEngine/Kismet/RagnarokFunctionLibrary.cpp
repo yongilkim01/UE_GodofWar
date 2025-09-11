@@ -62,7 +62,7 @@ void URagnarokFunctionLibrary::RemoveGameplayTagToActor(AActor* InActor, FGamepl
 	}
 }
 
-void URagnarokFunctionLibrary::SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag, float EventMagnitude)
+void URagnarokFunctionLibrary::SendGameplayEventToActorWithMagnitude(AActor* InActor, FGameplayTag EventTag, float EventMagnitude)
 {
 	if (nullptr == InActor)
 	{
@@ -72,6 +72,20 @@ void URagnarokFunctionLibrary::SendGameplayEventToActor(AActor* InActor, FGamepl
 	FGameplayEventData EventData;
 	EventData.EventTag = EventTag;
 	EventData.EventMagnitude = EventMagnitude;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(InActor, EventTag, EventData);
+}
+
+void URagnarokFunctionLibrary::SendGameplayEventToActor(AActor* InActor, FGameplayTag EventTag)
+{
+	if (nullptr == InActor)
+	{
+		return;
+	}
+
+	FGameplayEventData EventData;
+	EventData.EventTag = EventTag;
+	EventData.Instigator = InActor;
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(InActor, EventTag, EventData);
 }

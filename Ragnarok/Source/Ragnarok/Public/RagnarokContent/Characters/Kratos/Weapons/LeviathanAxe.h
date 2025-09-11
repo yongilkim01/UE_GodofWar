@@ -23,6 +23,14 @@ public:
 
 	virtual void InitWeapon() override;
 
+	//~ Begin AKratosWeapon Interface.
+	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) override;
+	virtual void RecallWeapon() override;
+	virtual void StopWeapon() override;
+	virtual void StartWeaponTrail() override;
+	virtual void EndWeaponTrail() override;
+	//~ Begin AKratosWeapon Interface.
+
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
@@ -34,18 +42,10 @@ protected:
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject) override;
 	//~ End ARagnarokWeapon Interface.
 
-	//~ Begin AKratosWeapon Interface.
-	virtual void ThrowWeapon(FRotator CameraRotation, FVector CameraLocation, FVector CameraForwardVector) override;
-	virtual void RecallWeapon() override;
-	virtual void StopWeapon() override;
-	//~ End AKratosWeapon Interface.
-
 private:
 	void InitVFX();
 	void SnapAxeLocationAndRotation(FRotator StartRotation, FVector SnapDirection, FVector SnapLocation);
 	void RotateAxe();
-	void StartWeaponTrail();
-	void EndWeaponTrail();
 	void CheckHitCollision();
 	void PlayHitSoundCue(FVector ImpactLocation);
 	void LodgeAxe(FVector ImpactNormal, FVector ImpactLocation);
