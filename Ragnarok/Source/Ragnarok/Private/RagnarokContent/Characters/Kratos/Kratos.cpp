@@ -321,6 +321,14 @@ void AKratos::ZoomOutCamera()
 	}
 }
 
+void AKratos::ShakeCamera()
+{
+	if (false == CameraZoomTimelineComponent->IsPlaying())
+	{
+		GetKratosController()->PlayerCameraManager->StartCameraShake(ShakeCameraClass, 1.0f);
+	}
+}
+
 
 void AKratos::OnCameraZoomTimelineTick(float Value)
 {

@@ -236,6 +236,10 @@ void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 	}
 
 	StopAxe();
+
+	SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+	PivotPointComponent->SetRelativeRotation(PivotInitRotation);
+	LodgePointComponent->SetRelativeRotation(LodgeInitRotation);
 }
 
 void ALeviathanAxe::OnWeaponRecallRotationTick(float Value)
@@ -334,6 +338,8 @@ void ALeviathanAxe::ThrowWeapon(FRotator CameraRotation, FVector CameraLocation,
 {
 	CurWeaponState = ERagnarokWeaponState::ERWS_Throw;
 	CameraStartRotation = CameraRotation;
+	PivotInitRotation = PivotPointComponent->GetRelativeRotation();
+	LodgeInitRotation = LodgePointComponent->GetRelativeRotation();
 
 	FRotator CalcCameraRotator = FRotator(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll + AxeSpinAxisOffset);
 	SnapAxeLocationAndRotation(CalcCameraRotator, CameraLocation, CameraForwardVector);
@@ -430,7 +436,6 @@ void ALeviathanAxe::RecallWeapon()
 		);
 
 		RecallSpinCount = FMath::RoundToInt(SpinRate);
-		Debug::Print(TEXT("Recall Spin Count : "), RecallSpinCount);
 		SpinLength = 1.0f / (SpinLength / RecallSpinCount);
 
 		if (nullptr != WeaponRotTimelineComponent)

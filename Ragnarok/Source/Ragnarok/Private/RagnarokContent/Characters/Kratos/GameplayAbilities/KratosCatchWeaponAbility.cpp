@@ -45,9 +45,9 @@ void UKratosCatchWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	if (nullptr != ParentMesh)
 	{
 		FAttachmentTransformRules AttachRules(
-			EAttachmentRule::KeepRelative,    // LocationRule
-			EAttachmentRule::KeepRelative,    // RotationRule
-			EAttachmentRule::KeepRelative,       // ScaleRule
+			EAttachmentRule::SnapToTarget,    // LocationRule
+			EAttachmentRule::SnapToTarget,    // RotationRule
+			EAttachmentRule::SnapToTarget,       // ScaleRule
 			true						      // bWeldSimulatedBodies
 		);
 
@@ -57,6 +57,8 @@ void UKratosCatchWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 			FName("RightWeaponSocket") // FName 타입의 멤버 변수여야 함
 		);
 	}
+
+	Kratos->ShakeCamera();
 
 }
 

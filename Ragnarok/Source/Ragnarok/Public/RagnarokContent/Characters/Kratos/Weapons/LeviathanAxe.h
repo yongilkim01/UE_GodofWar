@@ -23,28 +23,6 @@ public:
 
 	virtual void InitWeapon() override;
 
-	UFUNCTION()
-	void OnWeaponRotTimelineTick(float Value);
-	UFUNCTION()
-	void OnWeaponRotTimelineEnd();
-	UFUNCTION()
-	void OnWeaponThrowTraceTimelineTick(float Value);
-	UFUNCTION()
-	void OnWeaponThrowTraceTimelineEnd();
-	UFUNCTION()
-	void OnWeaponWiggleTimelineTick(float Value);
-	UFUNCTION()	
-	void OnWeaponWiggleTimelineEnd();
-	UFUNCTION()
-	void OnWeaponRecallTimelineTick(float Value);
-	UFUNCTION()
-	void OnWeaponRecallTimelineEnd();
-	UFUNCTION()
-	void OnWeaponRecallRotationTick(float Value);
-	UFUNCTION()
-	void OnWeaponRecallRotationEnd();
-
-
 protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
@@ -81,6 +59,27 @@ private:
 
 	UFUNCTION()
 	void OnDelayFinished();
+	UFUNCTION()
+	void OnWeaponRotTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponRotTimelineEnd();
+	UFUNCTION()
+	void OnWeaponThrowTraceTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponThrowTraceTimelineEnd();
+	UFUNCTION()
+	void OnWeaponWiggleTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponWiggleTimelineEnd();
+	UFUNCTION()
+	void OnWeaponRecallTimelineTick(float Value);
+	UFUNCTION()
+	void OnWeaponRecallTimelineEnd();
+	UFUNCTION()
+	void OnWeaponRecallRotationTick(float Value);
+	UFUNCTION()
+	void OnWeaponRecallRotationEnd();
+
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -145,10 +144,13 @@ private:
 
 	FTimerHandle DelayTimerHandler;
 
+	FVector PivotInitLocation = FVector::ZeroVector;
 	FVector InitLocation = FVector::ZeroVector;
 	FVector TopPosition = FVector::ZeroVector;
 	FVector BottomPosition = FVector::ZeroVector;
 	FVector RecallTargetLocation = FVector::ZeroVector;
+	FRotator PivotInitRotation = FRotator::ZeroRotator;
+	FRotator LodgeInitRotation = FRotator::ZeroRotator;
 	FRotator InitRotation = FRotator::ZeroRotator;
 	FRotator CameraStartRotation = FRotator::ZeroRotator;
 	FRotator LodgeRotation = FRotator::ZeroRotator;

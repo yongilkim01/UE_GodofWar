@@ -46,6 +46,7 @@ public:
 	void UnEquipWeapon(AKratosWeapon* KratosWeapon);
 	void ZoomInCamera();
 	void ZoomOutCamera();
+	void ShakeCamera();
 
 	bool IsRunning() const;
 	bool IsAiming() const;
@@ -108,6 +109,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Kratos")
 	FName UnequipWeaponSocket;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> ShakeCameraClass;
 
 private:
 	UCharacterPrimaryAssetKratos* CharacterPDA = nullptr;
