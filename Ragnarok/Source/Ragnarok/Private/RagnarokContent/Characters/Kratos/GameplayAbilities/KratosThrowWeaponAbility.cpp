@@ -17,6 +17,7 @@
 #include "DrawDebugHelpers.h"
 #include "EnhancedInputSubsystems.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 UKratosThrowWeaponAbility::UKratosThrowWeaponAbility()
@@ -41,6 +42,20 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
+	ThrowWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		KratosGameplayTags::Kratos_Event_Throw_Weapon,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != ThrowWaitEventTask)
+	{
+		ThrowWaitEventTask->EventReceived.AddDynamic(this, &UKratosThrowWeaponAbility::OnThrowEventReceived);
+		ThrowWaitEventTask->ReadyForActivation();
+	}
+
 	PlayThrowAnimMontage();
 }
 
@@ -51,6 +66,8 @@ void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAbility"));
 
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	//ThrowWeapon();
 }
 
 void UKratosThrowWeaponAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -163,4 +180,9 @@ void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
+}
+
+void UKratosThrowWeaponAbility::OnThrowEventReceived(FGameplayEventData Payload)
+{
+	ThrowWeapon();
 }

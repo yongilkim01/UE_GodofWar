@@ -8,6 +8,7 @@
 
 class AKratosWeapon;
 class UAbilityTask_PlayMontageAndWait;
+class UAbilityTask_WaitGameplayEvent;
 
 /**
  * 
@@ -56,6 +57,9 @@ private:
 	void ThrowWeapon();
 	void PlayThrowAnimMontage();
 
+	UFUNCTION()
+	void OnThrowEventReceived(FGameplayEventData Payload);
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok")
 	UAnimMontage* ThrowAnimMontage = nullptr;
@@ -63,4 +67,6 @@ private:
 	AKratosWeapon* CurWeapon = nullptr;
 
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* ThrowWaitEventTask = nullptr;
+
 };
