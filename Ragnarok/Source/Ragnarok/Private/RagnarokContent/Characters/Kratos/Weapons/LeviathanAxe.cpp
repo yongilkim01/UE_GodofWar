@@ -126,8 +126,6 @@ void ALeviathanAxe::InitWeapon()
 
 void ALeviathanAxe::OnWeaponRotTimelineTick(float Value)
 {
-	//Debug::Print(TEXT("Throw Rot Tick"));
-
 	float RotationValue = Value * -360.0f;
 	FRotator NewRotation = FRotator(RotationValue, 0.0f, 0.0f);
 	PivotPointComponent->SetRelativeRotation(NewRotation);
@@ -165,7 +163,6 @@ void ALeviathanAxe::OnWeaponRotTimelineEnd()
 
 void ALeviathanAxe::OnWeaponThrowTraceTimelineTick(float Value)
 {
-	Debug::Print(TEXT("Throw Trace Tick Value : "), Value);
 	ProjectileMovementComponent->ProjectileGravityScale = Value;
 	CheckHitCollision();
 }
@@ -206,7 +203,6 @@ void ALeviathanAxe::OnWeaponRecallTimelineTick(float Value)
 	CalcRotation = UKismetMathLibrary::RLerp(InitRotation, CalcRotation, Rotation1Value, true);
 	CalcRotation = UKismetMathLibrary::RLerp(CalcRotation, OwnerKratos->GetMesh()->GetSocketRotation(TEXT("RightWeaponSocket")), Rotation2Value, true);
 
-	//Debug::Print(TEXT("LerpLocation: ") + RecallTargetLocation.ToString(), FColor::Cyan);
 	SetActorLocationAndRotation(RecallTargetLocation, CalcRotation);
 
 	if (nullptr != RecallAudioComponent)
@@ -244,7 +240,6 @@ void ALeviathanAxe::OnWeaponRecallTimelineEnd()
 
 void ALeviathanAxe::OnWeaponRecallRotationTick(float Value)
 {
-	Debug::Print(TEXT("Recall Rotation Value : "), Value * 360.0f, -1, FColor::Black);
 	PivotPointComponent->SetRelativeRotation(FRotator(Value * 360.0f, 0.0f, 0.0f));
 
 	RecallFlipFlopTime += GetWorld()->GetDeltaSeconds();
@@ -445,8 +440,6 @@ void ALeviathanAxe::RecallWeapon()
 		}
 
 		WeaponRecallRotationTimelineComponent->SetPlayRate(SpinLength);
-		//WeaponRecallRotationTimelineComponent->SetLooping(true);
-
 		WeaponRecallRotationTimelineComponent->PlayFromStart();
 	}
 }

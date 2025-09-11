@@ -26,18 +26,17 @@ public:
 	ARagnarokWeapon();
 
 public:
+	virtual void InitWeapon() {}
+	virtual void SetOwner(ARagnarokCharacter* RagnarokCharacter) {};
+
+	void AttachWeaponToActor(const AActor* ActorToAttach, const FAttachmentTransformRules& AttachmentRules, FName SocketName);
+
+protected:
 	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	//~ End AActor Interface.
 
-	virtual void SetOwner(ARagnarokCharacter* RagnarokCharacter) {};
-
-public:
-	virtual void InitWeapon();
-	void AttachWeaponToActor(const AActor* ActorToAttach, const FAttachmentTransformRules& AttachmentRules, FName SocketName);
-
-protected:
 	virtual void LoadWeaponDataAsset();
 	virtual void LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject);
 
@@ -61,17 +60,17 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* RootSceneComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UItemPrimaryAssetKratosWeapon* WeaponPDA = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FPrimaryAssetId WeaponPDAId;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Components")
+	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* WeaponMesh = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Components")
+	UPROPERTY(EditAnywhere)
 	UBoxComponent* WeaponCollision = nullptr;
 
 	bool bInitialized = false;
@@ -83,7 +82,7 @@ public:
 	FORCEINLINE bool IsInitialize() const { return bInitialized; }
 	FORCEINLINE ERagnarokWeaponState GetWeaponState() const { return CurWeaponState; }
 
-	UPROPERTY(BlueprintAssignable, Category = "Weapon|Delegate")
+	UPROPERTY(BlueprintAssignable)
 	FOnWeaponInitialized OnWeaponInitialized;
 
 	FOnTargetInteractedDelegate OnWeaponHitTarget;

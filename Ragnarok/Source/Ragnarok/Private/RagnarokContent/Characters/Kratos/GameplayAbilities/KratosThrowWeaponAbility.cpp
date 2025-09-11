@@ -66,8 +66,6 @@ void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAbility"));
 
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-
-	//ThrowWeapon();
 }
 
 void UKratosThrowWeaponAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
@@ -129,21 +127,6 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 
 		CurWeapon->DetachFromActor(DetachRules);
 	}
-	//ParentMesh->UnlinkAnimClassLayers(CurWeapon->WeaponData.WeaponAnimLayer.Get());
-	//ULocalPlayer* LocalPlayer = GetKratosControllerFromActorInfo()->GetLocalPlayer();
-	//UEnhancedInputLocalPlayerSubsystem* InputSubsystem
-	//	= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
-
-	//InputSubsystem->RemoveMappingContext(CurWeapon->WeaponData.InputMappingContext);
-	//GetASCFromActorInfo()->RemoveWeaponAbilities(CurWeapon->GetGrantedAbilitySpecHandleArray());
-	//GetCombatComponentFromActorInfo()->CurrentEquippedWeaponTag = FGameplayTag::EmptyTag;
-
-	//FVector StartLocation = CurWeapon->GetActorLocation();
-	//FVector TargetLocation = FVector::ZeroVector;
-	//
-	//Kratos->GetAimingTargetLocation(StartLocation, TargetLocation);
-
-	//CurWeapon->ThrowWeaponToTarget(StartLocation, TargetLocation);
 
 	Kratos->ThrowWeapon(CurWeapon);
 }

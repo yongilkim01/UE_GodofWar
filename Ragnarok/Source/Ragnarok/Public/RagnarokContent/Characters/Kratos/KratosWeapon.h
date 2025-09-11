@@ -64,6 +64,6 @@ protected:
 	TWeakObjectPtr<AKratos> OwnerKratos;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|WeaponData")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FKratosWeaponData WeaponData;
 };

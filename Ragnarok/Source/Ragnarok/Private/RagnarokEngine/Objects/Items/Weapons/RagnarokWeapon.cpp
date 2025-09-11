@@ -38,10 +38,6 @@ void ARagnarokWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ARagnarokWeapon::InitWeapon()
-{
-}
-
 void ARagnarokWeapon::AttachWeaponToActor(const AActor* ActorToAttach, const FAttachmentTransformRules& AttachmentRules, FName SocketName)
 {
 	if (nullptr == ActorToAttach)
