@@ -38,5 +38,6 @@ namespace KratosGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Light, "Kratos.SetByCaller.AttackType.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Heavy, "Kratos.SetByCaller.AttackType.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Throw, "Kratos.SetByCaller.AttackType.Throw");
 
 }

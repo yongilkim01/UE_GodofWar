@@ -295,6 +295,8 @@ void AKratos::ThrowWeapon(AKratosWeapon* KratosWeapon)
 	FVector CameraLocation = MainCameraComponent->GetComponentLocation();
 	FRotator CameraRotation = MainCameraComponent->GetComponentRotation();
 
+	KratosCombatComponent->ToggleWeaponCollision(true);
+
 	KratosWeapon->ThrowWeapon(CameraRotation, CameraLocation, CameraForwardVector);
 
 }

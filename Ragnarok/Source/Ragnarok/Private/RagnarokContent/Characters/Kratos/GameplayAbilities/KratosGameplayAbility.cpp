@@ -52,10 +52,11 @@ UKratosCombatComponent* UKratosGameplayAbility::GetKratosCombatComponent()
 	return GetKratosFromActorInfo()->GetKratosCombatComponent();
 }
 
-FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float Damage, FGameplayTag AttackTypeTag, int32 ComboCount)
+FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float Damage, FGameplayTag AttackTypeTag, int32 ComboCount)
 {
 	check(EffectClass);
 
+	// 데미지 이펙트 클래스 처리기
 	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
@@ -72,6 +73,32 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 	if (true == AttackTypeTag.IsValid())
 	{
 		EffectSpecHandle.Data->SetSetByCallerMagnitude(AttackTypeTag, ComboCount);
+	}
+
+	return EffectSpecHandle;
+}
+
+FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float Damage, FGameplayTag AttackTypeTag, float AddDamage)
+{
+	check(EffectClass);
+
+	// 데미지 이펙트 클래스 처리기
+	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle EffectSpecHandle = GetASCFromActorInfo()->MakeOutgoingSpec(
+		EffectClass,
+		GetAbilityLevel(),
+		ContextHandle
+	);
+
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(RagnarokGameplayTags::Global_SetByCaller_BaseDamage, Damage);
+
+	if (true == AttackTypeTag.IsValid())
+	{
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(AttackTypeTag, AddDamage);
 	}
 
 	return EffectSpecHandle;

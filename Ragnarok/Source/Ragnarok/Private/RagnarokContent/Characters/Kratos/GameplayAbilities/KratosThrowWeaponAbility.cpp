@@ -12,7 +12,10 @@
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "EnhancedInputSubsystems.h"
@@ -54,6 +57,20 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	{
 		ThrowWaitEventTask->EventReceived.AddDynamic(this, &UKratosThrowWeaponAbility::OnThrowEventReceived);
 		ThrowWaitEventTask->ReadyForActivation();
+	}
+
+	HitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		CombatGameplayTags::Combat_Event_MeleeHit,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != HitEventTask)
+	{
+		HitEventTask->EventReceived.AddDynamic(this, &UKratosThrowWeaponAbility::OnHitEventReceived);
+		HitEventTask->ReadyForActivation();
 	}
 
 	PlayThrowAnimMontage();
@@ -153,10 +170,10 @@ void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
 
 	if (nullptr != PlayMontageTask)
 	{
-		PlayMontageTask->OnCompleted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCompleted);
-		PlayMontageTask->OnBlendOut.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageBlendOut);
-		PlayMontageTask->OnInterrupted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageInterrupted);
-		PlayMontageTask->OnCancelled.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCancelled);
+		//PlayMontageTask->OnCompleted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCompleted);
+		//PlayMontageTask->OnBlendOut.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageBlendOut);
+		//PlayMontageTask->OnInterrupted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageInterrupted);
+		//PlayMontageTask->OnCancelled.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCancelled);
 		PlayMontageTask->ReadyForActivation();
 	}
 	else
@@ -168,4 +185,35 @@ void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
 void UKratosThrowWeaponAbility::OnThrowEventReceived(FGameplayEventData Payload)
 {
 	ThrowWeapon();
+}
+
+void UKratosThrowWeaponAbility::OnHitEventReceived(FGameplayEventData Payload)
+{
+	float WeaponDamage = GetKratosCombatComponent()->GetKratosEquippedWeaponDamageAtLevel(GetAbilityLevel());
+
+	FGameplayEffectSpecHandle SpecHandle = CreateKratosDamageEffectSpecHandle(
+		HitEffectClass,
+		WeaponDamage,
+		KratosGameplayTags::Kratos_SetByCaller_AttackType_Throw,
+		3.0f
+	);
+
+	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
+
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+	FGameplayCueParameters CueParams;
+	GetASCFromActorInfo()->ExecuteGameplayCue(
+		FGameplayTag::RequestGameplayTag(TEXT("GameplayCue.Sounds.MeleeHit.Axe")),
+		CueParams
+	);
+
+	if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
+	}
+
+	if (true == bShowDebug) Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with throw attack"), FColor::Cyan);
+
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

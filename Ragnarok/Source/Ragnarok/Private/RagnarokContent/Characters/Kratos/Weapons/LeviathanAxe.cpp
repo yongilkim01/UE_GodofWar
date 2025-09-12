@@ -4,6 +4,7 @@
 #include "RagnarokContent/Characters/Kratos/Weapons/LeviathanAxe.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokContent/Characters/Kratos/Weapons/DataAssets/ItemPrimaryAssetKratosWeapon.h"
@@ -558,6 +559,7 @@ void ALeviathanAxe::PlayHitSoundCue(FVector ImpactLocation)
 void ALeviathanAxe::LodgeAxe(FVector ImpactNormal, FVector ImpactLocation)
 {
 	StopWeapon();
+	OwnerKratos->GetKratosCombatComponent()->ToggleWeaponCollision(false);
 
 	PivotPointComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 	SetActorRotation(CameraStartRotation);

@@ -90,6 +90,12 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 			HeavyAttackComboCount = TagMagniture.Value;
 			//Debug::Print(TEXT("Heavy Attack Combo"), HeavyAttackComboCount);
 		}
+
+		if (TagMagniture.Key.MatchesTagExact(KratosGameplayTags::Kratos_SetByCaller_AttackType_Throw))
+		{
+			Damage *= TagMagniture.Value;
+			//Debug::Print(TEXT("Heavy Attack Combo"), HeavyAttackComboCount);
+		}
 	}
 
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(

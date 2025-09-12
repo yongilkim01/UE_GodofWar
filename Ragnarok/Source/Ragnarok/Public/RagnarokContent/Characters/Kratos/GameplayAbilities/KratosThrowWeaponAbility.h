@@ -59,14 +59,19 @@ private:
 
 	UFUNCTION()
 	void OnThrowEventReceived(FGameplayEventData Payload);
+	UFUNCTION()
+	void OnHitEventReceived(FGameplayEventData Payload);
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Ragnarok")
+	UPROPERTY(EditAnywhere)
 	UAnimMontage* ThrowAnimMontage = nullptr;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> HitEffectClass;
 	UPROPERTY()
 	AKratosWeapon* CurWeapon = nullptr;
 
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = nullptr;
 	UAbilityTask_WaitGameplayEvent* ThrowWaitEventTask = nullptr;
+	UAbilityTask_WaitGameplayEvent* HitEventTask = nullptr;
 
 };

@@ -28,8 +28,7 @@ float UKratosCombatComponent::GetKratosEquippedWeaponDamageAtLevel(float Level) 
 
 void UKratosCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-
-    if (OverlappedActorArray.Contains(HitActor))
+    if (true == OverlappedActorArray.Contains(HitActor))
     {
         return;
     }

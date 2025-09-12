@@ -96,7 +96,7 @@ void UKratosDashHeavyAttackAbility::OnHitEventReceived(FGameplayEventData Payloa
 
 	float WeaponDamage = GetKratosCombatComponent()->GetKratosEquippedWeaponDamageAtLevel(GetAbilityLevel());
 
-	FGameplayEffectSpecHandle SpecHandle = CreateKratosDamageEffectSpecHandle(
+	FGameplayEffectSpecHandle SpecHandle = CreateKratosComboDamageEffectSpecHandle(
 		EffectClass,
 		WeaponDamage,
 		KratosGameplayTags::Kratos_SetByCaller_AttackType_Heavy,

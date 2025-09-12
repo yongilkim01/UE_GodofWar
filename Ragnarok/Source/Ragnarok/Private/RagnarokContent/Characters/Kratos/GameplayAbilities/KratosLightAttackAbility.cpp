@@ -263,7 +263,7 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 {
 	float WeaponDamage = GetKratosCombatComponent()->GetKratosEquippedWeaponDamageAtLevel(GetAbilityLevel());
 
-	FGameplayEffectSpecHandle SpecHandle = CreateKratosDamageEffectSpecHandle(
+	FGameplayEffectSpecHandle SpecHandle = CreateKratosComboDamageEffectSpecHandle(
 		EffectClass,
 		WeaponDamage,
 		KratosGameplayTags::Kratos_SetByCaller_AttackType_Light,
