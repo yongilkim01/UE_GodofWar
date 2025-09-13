@@ -14,20 +14,27 @@ class URagnarokAttributeSet;
 class UStartUpDataAsset;
 class UMotionWarpingComponent;
 
+/**
+ * 라그나로크 캐릭터 베이스 클래스
+ * 게임 내 모든 캐릭터의 기본이 되는 클래스로 어빌리티 시스템, 모션 워핑, UI 시스템을 제공한다
+ * 
+ * Ragnarok character base class.
+ * Base class for all characters in the game, providing ability system, motion warping, and UI system functionality.
+ */
 UCLASS()
 class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface, public IUIInterface
 {
 	GENERATED_BODY()
 
 public:
+	/** 생성자 */
 	ARagnarokCharacter();
 
-protected:
+	//~ Begin AActor Interface.
 	virtual void BeginPlay() override;
-
-public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//~ End AActor Interface.
 
 	//~ Begin APawn Interface.
 	virtual void PossessedBy(AController* NewController) override;
@@ -39,6 +46,12 @@ public:
 
 	//~ Begin ICombatInterface Interface.
 	virtual UCombatComponent* GetCombatComponent() const override;
+
+	/**
+	 * 캐릭터가 죽을 때 호출되는 함수
+	 *
+	 * @param DeathNiagaraEffect 죽음 시 재생할 나이아가라 이펙트
+	 */
 	virtual void Die(TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect) override;
 	//~ End ICombatInterface Interface.
 	
@@ -46,24 +59,33 @@ public:
 	virtual URagnarokUIComponent* GetUIComponent() const override;
 	//~ End IUIInterface Interface.
 
+	/** 어빌리티 시스템 컴포넌트를 반환하는 함수 */
+	FORCEINLINE URagnarokAbilitySystemComponent* GetAbilitySystem() const { return AbilitySystemComponent; }
+
+	/** 모션 워핑 컴포넌트를 반환하는 함수 */
+	FORCEINLINE UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
+
+	/** 어트리뷰트 셋을 반환하는 함수 */
+	FORCEINLINE URagnarokAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
+	/** 라그나로크 어빌리티 시스템 컴포넌트 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RagnarokCharacter|Components", meta = (DisplayName = "Ability System Component"))
 	URagnarokAbilitySystemComponent* AbilitySystemComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS|AttributeSets")
-	URagnarokAttributeSet* AttributeSet = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Core|Character")
+	/** 모션 워핑 컴포넌트 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RagnarokCharacter|Components", meta = (DisplayName = "Motion Warping Component"))
 	UMotionWarpingComponent* MotionWarpingComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data|StartUp")
+	/** 라그나로크 어트리뷰트 셋 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RagnarokCharacter|GAS", meta = (DisplayName = "Attribute Set"))
+	URagnarokAttributeSet* AttributeSet = nullptr;
+
+	/** 시작 시 초기화 데이터 에셋 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RagnarokCharacter|Data", meta = (DisplayName = "Start Up Data"))
 	TSoftObjectPtr<UStartUpDataAsset> StartUpData;
 
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Character")
+	/** 디버그 메시지 표시 여부 */
+	UPROPERTY(EditAnywhere, Category = "RagnarokCharacter|Debug", meta = (DisplayName = "Show Debug Messages"))
 	bool bShowDebugMsg = false;
-
-public:
-	FORCEINLINE URagnarokAbilitySystemComponent* GetAbilitySystem() const { return AbilitySystemComponent; }
-	FORCEINLINE UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
-	FORCEINLINE URagnarokAttributeSet* GetAttributeSet() const { return AttributeSet; }
 };
