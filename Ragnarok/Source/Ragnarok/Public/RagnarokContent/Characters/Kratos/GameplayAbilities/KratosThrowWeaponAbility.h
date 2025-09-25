@@ -53,6 +53,10 @@ protected:
 		OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 	//~ End UGameplayAbility Interface.
 
+	//~ Begin UGameplayAbility Interface.
+	virtual void OnMontageCompleted() override;
+	//~ End UGameplayAbility Interface.
+
 private:
 	void ThrowWeapon();
 	void PlayThrowAnimMontage();

@@ -122,6 +122,11 @@ bool UKratosThrowWeaponAbility::CanActivateAbility(const FGameplayAbilitySpecHan
 	}
 }
 
+void UKratosThrowWeaponAbility::OnMontageCompleted()
+{
+	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+}
+
 void UKratosThrowWeaponAbility::ThrowWeapon()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::ThrowWeapon"));
@@ -170,7 +175,7 @@ void UKratosThrowWeaponAbility::PlayThrowAnimMontage()
 
 	if (nullptr != PlayMontageTask)
 	{
-		//PlayMontageTask->OnCompleted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCompleted);
+		PlayMontageTask->OnCompleted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCompleted);
 		//PlayMontageTask->OnBlendOut.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageBlendOut);
 		//PlayMontageTask->OnInterrupted.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageInterrupted);
 		//PlayMontageTask->OnCancelled.AddDynamic(this, &UKratosThrowWeaponAbility::OnMontageCancelled);
