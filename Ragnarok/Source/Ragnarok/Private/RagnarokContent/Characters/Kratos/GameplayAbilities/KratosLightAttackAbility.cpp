@@ -27,6 +27,11 @@ UKratosLightAttackAbility::UKratosLightAttackAbility()
 	LaunchPowerMap.Add(3, 1600.0f);
 	LaunchPowerMap.Add(4, 1600.0f);
 
+	ComboSectionMap.Add(1, FName("Combo1"));
+	ComboSectionMap.Add(2, FName("Combo2"));
+	ComboSectionMap.Add(3, FName("Combo3"));
+	ComboSectionMap.Add(4, FName("Combo4"));
+
 	CurComboCount = 1;
 	bShowDebug = false;
 }
@@ -206,13 +211,12 @@ void UKratosLightAttackAbility::ProcessNextCombo()
 
 	CurComboCount++;
 
-	if (LightAttackMontageMap.Num() == CurComboCount + 1)
+	if (MaxComboCount == CurComboCount)
 	{
-		URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
-			GetKratosFromActorInfo(), JumpTag);
+		URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
 	}
 
-	if (CurComboCount > LightAttackMontageMap.Num())
+	if (CurComboCount > MaxComboCount)
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
@@ -220,6 +224,29 @@ void UKratosLightAttackAbility::ProcessNextCombo()
 	{
 		ExecuteAttackMontage(CurComboCount);
 	}
+
+	//if (nullptr != AttackMontageTask)
+	//{
+	//	AttackMontageTask->EndTask();
+	//	AttackMontageTask = nullptr;
+	//}
+
+	//CurComboCount++;
+
+	//if (LightAttackMontageMap.Num() == CurComboCount + 1)
+	//{
+	//	URagnarokAbilityFunctionLibrary::AddGameplayTagToActor(
+	//		GetKratosFromActorInfo(), JumpTag);
+	//}
+
+	//if (CurComboCount > LightAttackMontageMap.Num())
+	//{
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//}
+	//else
+	//{
+	//	ExecuteAttackMontage(CurComboCount);
+	//}
 }
 
 void UKratosLightAttackAbility::LaunchCharacterForward(int32 ComboCount)
@@ -311,20 +338,22 @@ void UKratosLightAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData P
 
 void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 {
-	if (false == LightAttackMontageMap.Contains(ComboCount))
+	if (nullptr == AttackMontage || false == ComboSectionMap.Contains(ComboCount))
 	{
+		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Not contains combo section or attack montage is nullptr"), FColor::Red);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-		return;
 	}
 
 	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
 
+	FName StartSectionName = ComboSectionMap[ComboCount];
+
 	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
-		LightAttackMontageMap[ComboCount],
+		AttackMontage,
 		1.0f,
-		NAME_None,
+		StartSectionName,
 		true,
 		1.0f,
 		0.0f,
@@ -338,23 +367,64 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		AttackMontageTask->OnInterrupted.AddDynamic(this, &UKratosLightAttackAbility::OnMontageInterrupted);
 		AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCancelled);
 		AttackMontageTask->ReadyForActivation();
-
-		//LaunchCharacterForwardSmoothly(CurComboCount);
-
 	}
 	else
 	{
 		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Failed creating montage task"), FColor::Orange);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
+
+	//if (false == LightAttackMontageMap.Contains(ComboCount))
+	//{
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//	return;
+	//}
+
+	//CurAttackState = ERagnarokAttackState::ERAS_Attacking;
+
+	//AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+	//	this,
+	//	NAME_None,
+	//	LightAttackMontageMap[ComboCount],
+	//	1.0f,
+	//	NAME_None,
+	//	true,
+	//	1.0f,
+	//	0.0f,
+	//	false
+	//);
+
+	//if (nullptr != AttackMontageTask)
+	//{
+	//	AttackMontageTask->OnCompleted.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCompleted);
+	//	AttackMontageTask->OnBlendOut.AddDynamic(this, &UKratosLightAttackAbility::OnMontageBlendOut);
+	//	AttackMontageTask->OnInterrupted.AddDynamic(this, &UKratosLightAttackAbility::OnMontageInterrupted);
+	//	AttackMontageTask->OnCancelled.AddDynamic(this, &UKratosLightAttackAbility::OnMontageCancelled);
+	//	AttackMontageTask->ReadyForActivation();
+
+	//	//LaunchCharacterForwardSmoothly(CurComboCount);
+
+	//}
+	//else
+	//{
+	//	Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Failed creating montage task"), FColor::Orange);
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//}
 }
 
 void UKratosLightAttackAbility::SetPlayRateAttackMontage(int32 ComboCount, float PlayRate)
 {
 	UAnimInstance* AnimInstance = GetKratosFromActorInfo()->GetMesh()->GetAnimInstance();
 
-	if (nullptr != AnimInstance && nullptr != LightAttackMontageMap[ComboCount])
+	if (nullptr != AnimInstance && nullptr != AttackMontage)
 	{
-		AnimInstance->Montage_SetPlayRate(LightAttackMontageMap[ComboCount], PlayRate);
+		AnimInstance->Montage_SetPlayRate(AttackMontage, PlayRate);
 	}
+
+	//UAnimInstance* AnimInstance = GetKratosFromActorInfo()->GetMesh()->GetAnimInstance();
+
+	//if (nullptr != AnimInstance && nullptr != LightAttackMontageMap[ComboCount])
+	//{
+	//	AnimInstance->Montage_SetPlayRate(LightAttackMontageMap[ComboCount], PlayRate);
+	//}
 }

@@ -71,12 +71,10 @@ private:
 	void LaunchCharacterForwardSmoothly(int32 ComboCount);
 
 protected:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	TMap<int, UAnimMontage*> LightAttackMontageMap;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
-	int32 CurComboCount = 1;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
 	FGameplayTag JumpTag;
 
@@ -87,6 +85,14 @@ protected:
 	ERagnarokAttackState CurAttackState = ERagnarokAttackState::ERAS_None;
 
 private:
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* AttackMontage = nullptr;
+	UPROPERTY(EditAnywhere)
+	TMap<int32, FName> ComboSectionMap;
+	
+	int32 MaxComboCount = 4;
+	int32 CurComboCount = 1;
+
 	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
 	FTimerHandle AttackWaitTimerHandle;
 	float ComboWaitDuration = 1.0f;
