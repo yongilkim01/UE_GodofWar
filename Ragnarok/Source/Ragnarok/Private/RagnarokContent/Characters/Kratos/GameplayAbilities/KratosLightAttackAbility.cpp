@@ -33,7 +33,7 @@ UKratosLightAttackAbility::UKratosLightAttackAbility()
 	ComboSectionMap.Add(4, FName("Combo4"));
 
 	CurComboCount = 1;
-	bShowDebug = false;
+	bShowDebug = true;
 }
 
 void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -45,8 +45,6 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	SetKratosAttackingState(true);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	bReserveComboAttack = false;
-
-	ExecuteAttackMontage(CurComboCount);
 
 	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
@@ -91,6 +89,9 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		AttackWaitEndTask->ReadyForActivation();
 
 	}
+
+	ExecuteAttackMontage(CurComboCount);
+
 }
 
 void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -131,14 +132,18 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+	if (true == bShowDebug) 
+		
+	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
 
 	switch (CurAttackState)
 	{
 	case ERagnarokAttackState::ERAS_Attacking:
+		Debug::Print(TEXT("ERagnarokAttackState::ERAS_Attacking"));
 		bReserveComboAttack = true;
 		break;
 	case ERagnarokAttackState::ERAS_AttackWait:
+		Debug::Print(TEXT("ERagnarokAttackState::ERAS_AttackWait"));
 		ProcessNextCombo();
 		break;
 	default:
@@ -352,7 +357,7 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		this,
 		NAME_None,
 		AttackMontage,
-		1.0f,
+		0.8f,
 		StartSectionName,
 		true,
 		1.0f,
