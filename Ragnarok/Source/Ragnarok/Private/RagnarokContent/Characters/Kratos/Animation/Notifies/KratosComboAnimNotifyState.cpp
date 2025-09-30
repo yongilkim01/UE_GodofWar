@@ -10,7 +10,7 @@
 UKratosComboAnimNotifyState::UKratosComboAnimNotifyState()
 {
 	AttackWaitStartEventTag = KratosGameplayTags::Kratos_Event_AttackWait_Start;
-	AttackWaitStartEventTag = KratosGameplayTags::Kratos_Event_AttackWait_End;
+	AttackWaitEndEventTag = KratosGameplayTags::Kratos_Event_AttackWait_End;
 	ComboIndex = 1;
 }
 

@@ -67,8 +67,6 @@ private:
 	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
 	void ResetAttackComboCount();
 	void ProcessNextCombo();
-	void LaunchCharacterForward(int32 ComboCount);
-	void LaunchCharacterForwardSmoothly(int32 ComboCount);
 
 protected:
 

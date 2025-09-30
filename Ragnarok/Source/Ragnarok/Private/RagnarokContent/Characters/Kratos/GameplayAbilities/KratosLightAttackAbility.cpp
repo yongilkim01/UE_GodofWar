@@ -89,9 +89,7 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		AttackWaitEndTask->ReadyForActivation();
 
 	}
-
 	ExecuteAttackMontage(CurComboCount);
-
 }
 
 void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
@@ -132,19 +130,13 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
-	if (true == bShowDebug) 
-		
-	Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::InputPressed"));
 
 	switch (CurAttackState)
 	{
-	case ERagnarokAttackState::ERAS_Attacking:
-		Debug::Print(TEXT("ERagnarokAttackState::ERAS_Attacking"));
-		bReserveComboAttack = true;
-		break;
 	case ERagnarokAttackState::ERAS_AttackWait:
 		Debug::Print(TEXT("ERagnarokAttackState::ERAS_AttackWait"));
-		ProcessNextCombo();
+		bReserveComboAttack = true;
 		break;
 	default:
 		break;
@@ -183,10 +175,10 @@ void UKratosLightAttackAbility::OnMontageCompleted()
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnMontageCompleted"));
 
-	if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
-	{
-		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-	}
+	//if (ERagnarokAttackState::ERAS_AttackWait != CurAttackState)
+	//{
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//}
 }
 
 void UKratosLightAttackAbility::OnMontageBlendOut()
@@ -208,6 +200,8 @@ void UKratosLightAttackAbility::ResetAttackComboCount()
 
 void UKratosLightAttackAbility::ProcessNextCombo()
 {
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ProcessNextCombo"));
+
 	if (nullptr != AttackMontageTask)
 	{
 		AttackMontageTask->EndTask();
@@ -254,42 +248,6 @@ void UKratosLightAttackAbility::ProcessNextCombo()
 	//}
 }
 
-void UKratosLightAttackAbility::LaunchCharacterForward(int32 ComboCount)
-{
-	if (nullptr == Kratos || false == LaunchPowerMap.Contains(ComboCount))
-	{
-		return;
-	}
-
-	float LaunchPower = LaunchPowerMap[ComboCount];
-
-	FVector ForwardVector = Kratos->GetActorForwardVector();
-	FVector LaunchVelocity = ForwardVector * LaunchPower;
-	LaunchVelocity.Z = 0.0f;
-
-	Kratos->LaunchCharacter(LaunchVelocity, true, false);
-}
-
-void UKratosLightAttackAbility::LaunchCharacterForwardSmoothly(int32 ComboCount)
-{
-	if (nullptr == Kratos || false == LaunchPowerMap.Contains(ComboCount))
-	{
-		return;
-	}
-	
-	UCharacterMovementComponent* KratosMovementComponent = Kratos->GetCharacterMovement();
-
-	float LaunchPower = LaunchPowerMap[ComboCount];
-
-	FVector CurVelocity = KratosMovementComponent->Velocity;
-	FVector ForwardVector = Kratos->GetActorForwardVector();
-	FVector AddVelocity = ForwardVector * LaunchPower;
-
-	FVector CalVelocity = CurVelocity + AddVelocity;
-	CalVelocity.Z = CurVelocity.Z;
-
-	KratosMovementComponent->Velocity = CalVelocity;
-}
 
 void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Payload)
 {
@@ -323,30 +281,85 @@ void UKratosLightAttackAbility::OnAttackWaitStartEventRecived(FGameplayEventData
 {
 	CurAttackState = ERagnarokAttackState::ERAS_AttackWait;
 
+	//if (true == bReserveComboAttack)
+	//{
+	//	bReserveComboAttack = false;
+	//	ProcessNextCombo();
+	//}
+}
+
+void UKratosLightAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData Payload)
+{
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::OnAttackWaitEndEventRecived"));
+
 	if (true == bReserveComboAttack)
 	{
 		bReserveComboAttack = false;
 		ProcessNextCombo();
 	}
-}
-
-void UKratosLightAttackAbility::OnAttackWaitEndEventRecived(FGameplayEventData Payload)
-{
-	if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
+	else
 	{
-		CurAttackState = ERagnarokAttackState::ERAS_Attacking;
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
+	//if (ERagnarokAttackState::ERAS_AttackWait == CurAttackState)
+	//{
+	//	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
+	//	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	//}
 
-	bReserveComboAttack = false;
+	//bReserveComboAttack = false;
 }
 
 void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 {
+	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage"));
+
 	if (nullptr == AttackMontage || false == ComboSectionMap.Contains(ComboCount))
 	{
 		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Not contains combo section or attack montage is nullptr"), FColor::Red);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+	}
+
+	if (nullptr != AttackWaitStartTask)
+	{
+		AttackWaitStartTask->EndTask();
+		AttackWaitStartTask = nullptr;
+	}
+
+	if (nullptr != AttackWaitEndTask)
+	{
+		AttackWaitEndTask->EndTask();
+		AttackWaitEndTask = nullptr;
+	}
+
+	AttackWaitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		KratosGameplayTags::Kratos_Event_AttackWait_Start,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != AttackWaitStartTask)
+	{
+		AttackWaitStartTask->EventReceived.AddDynamic(this, &UKratosLightAttackAbility::OnAttackWaitStartEventRecived);
+		AttackWaitStartTask->ReadyForActivation();
+
+	}
+
+	AttackWaitEndTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this,
+		KratosGameplayTags::Kratos_Event_AttackWait_End,
+		nullptr,
+		false,
+		false
+	);
+
+	if (nullptr != AttackWaitEndTask)
+	{
+		AttackWaitEndTask->EventReceived.AddDynamic(this, &UKratosLightAttackAbility::OnAttackWaitEndEventRecived);
+		AttackWaitEndTask->ReadyForActivation();
+
 	}
 
 	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
@@ -357,7 +370,7 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		this,
 		NAME_None,
 		AttackMontage,
-		0.8f,
+		0.7f,
 		StartSectionName,
 		true,
 		1.0f,
