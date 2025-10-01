@@ -9,6 +9,7 @@
 
 class UAbilityTask_WaitGameplayEvent;
 class UAbilityTask_PlayMontageAndWait;
+class AKratosWeapon;
 
 /**
  * 
@@ -87,6 +88,8 @@ private:
 	UAnimMontage* AttackMontage = nullptr;
 	UPROPERTY(EditAnywhere)
 	TMap<int32, FName> ComboSectionMap;
+	UPROPERTY()
+	AKratosWeapon* KratosWeapon = nullptr;
 	
 	int32 MaxComboCount = 4;
 	int32 CurComboCount = 1;

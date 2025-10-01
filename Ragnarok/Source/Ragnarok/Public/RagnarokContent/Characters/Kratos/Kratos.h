@@ -59,16 +59,30 @@ public:
 	//~ End ICombatInterface Interface.
 
 	/**
+	 * 공격 시 무기를 공격 소켓에 장착하는 함수
+	 *
+	 * @param KratosWeapon 공격 소켓에 장착할 무기
+	 */
+	void EquipWeaponToAttackSocekt(AKratosWeapon* KratosWeapon);
+
+	/**
+	 * 공격 시 무기를 공격 소켓에서 해제하는 함수
+	 *
+	 * @param KratosWeapon 공격 소켓에서 해제할 무기
+	 */
+	void UnEquipWeaponToAttackSocekt(AKratosWeapon* KratosWeapon);
+
+	/**
 	 * 무기를 해제하는 함수
 	 *
-	 * @param KratosWeapon 해제할 크레토스 무기
+	 * @param KratosWeapon 해제할 무기
 	 */
 	void UnEquipWeapon(AKratosWeapon* KratosWeapon);
 
 	/**
 	 * 무기를 던지는 함수
 	 *
-	 * @param KratosWeapon 던질 크레토스 무기
+	 * @param KratosWeapon 던질 무기
 	 */
 	void ThrowWeapon(AKratosWeapon* KratosWeapon);
 
@@ -191,11 +205,13 @@ private:
 	/** 크레토스 컨트롤 컴포넌트 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Kratos|Components", meta = (AllowPrivateAccess = "true", DisplayName = "Kratos Control Component"))
 	UKratosControlComponent* KratosControlComponent = nullptr;
-
+	UPROPERTY(EditAnywhere, Category = "Kratos|Weapon", meta = (DisplayName = "Equip Weapon Socket"))
+	FName EquipWeaponSocket;
 	/** 무기 해제 소켓 이름 */
 	UPROPERTY(EditAnywhere, Category = "Kratos|Weapon", meta = (DisplayName = "Unequip Weapon Socket"))
 	FName UnequipWeaponSocket;
-
+	UPROPERTY(EditAnywhere, Category = "Kratos|Weapon", meta = (DisplayName = "Equip Weapon Attack Socket"))
+	FName EquipWeaponAttackSocket;
 	/** 카메라 흔들기 클래스 */
 	UPROPERTY(EditAnywhere, Category = "Kratos|Camera", meta = (DisplayName = "Shake Camera Class"))
 	TSubclassOf<UCameraShakeBase> ShakeCameraClass;
@@ -205,37 +221,26 @@ private:
 
 	/** 구르기 상태 */
 	bool bRolling = false;
-
 	/** 공격 상태 */
 	bool bAttacking = false;
-
 	/** 고정 카메라 월드 Z 위치 */
 	float FixedCameraWorldZLocation = 0.0f;
-
 	/** 달리기 타이머 핸들 */
 	FTimerHandle RunningTimerHandle;
-
 	/** 크레토스 컨트롤러 약한 참조 */
 	TWeakObjectPtr<AKratosController> KratosController;
-
 	/** 카메라 줌 스프링 암 길이 */
 	float CameraZoomSpringArmLength = 100.0f;
-
 	/** 기본 스프링 암 길이 */
 	float IdleSpringArmLength = 0.0f;
-
 	/** 카메라 줌 회전 속도 */
 	float CameraZoomTurnRate = 30.0f;
-
 	/** 기본 카메라 회전 속도 */
 	float IdleCameraTurnRate = 50.0f;
-
 	/** 카메라 줌 최대 이동 속도 */
 	float CameraZoomMaxWalkSpeed = 250.0f;
-
 	/** 기본 최대 이동 속도 */
 	float IdleMaxWalkSpeed = 400.0f;
-
 	/** 타임라인 컴포넌트 재생 속도 */
 	float TimelineComponentPlayRate = 1.4f;
 };

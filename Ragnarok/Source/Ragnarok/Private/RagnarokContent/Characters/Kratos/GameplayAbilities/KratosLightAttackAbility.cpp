@@ -3,6 +3,7 @@
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosLightAttackAbility.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
+#include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
@@ -19,6 +20,8 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()
 {
@@ -89,6 +92,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		AttackWaitEndTask->ReadyForActivation();
 
 	}
+	KratosWeapon = Cast<AKratosWeapon>(GetCombatComponentFromActorInfo()->GetCurrentEquippedWeapon());
+	Kratos->EquipWeaponToAttackSocekt(KratosWeapon);
 	ExecuteAttackMontage(CurComboCount);
 }
 
@@ -124,6 +129,7 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 
 	bReserveComboAttack = false;
 	SetKratosAttackingState(false);
+	Kratos->UnEquipWeaponToAttackSocekt(KratosWeapon);
 	CurComboCount = 1;
 	URagnarokAbilityFunctionLibrary::RemoveGameplayTagToActor(GetKratosFromActorInfo(), JumpTag);
 }

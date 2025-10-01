@@ -115,6 +115,50 @@ URagnarokUIComponent* AKratos::GetUIComponent() const
 	return KratosUIComponent;
 }
 
+void AKratos::EquipWeaponToAttackSocekt(AKratosWeapon* KratosWeapon)
+{
+	USkeletalMeshComponent* ParentMesh = nullptr;
+	ParentMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	if (nullptr != ParentMesh)
+	{
+		FAttachmentTransformRules AttachRules(
+			EAttachmentRule::KeepRelative,
+			EAttachmentRule::KeepRelative,
+			EAttachmentRule::KeepRelative,
+			true
+		);
+
+		KratosWeapon->AttachToComponent(
+			ParentMesh,
+			AttachRules,
+			EquipWeaponAttackSocket
+		);
+	}
+}
+
+void AKratos::UnEquipWeaponToAttackSocekt(AKratosWeapon* KratosWeapon)
+{
+	USkeletalMeshComponent* ParentMesh = nullptr;
+	ParentMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	if (nullptr != ParentMesh)
+	{
+		FAttachmentTransformRules AttachRules(
+			EAttachmentRule::KeepRelative,
+			EAttachmentRule::KeepRelative,
+			EAttachmentRule::KeepRelative,
+			true
+		);
+
+		KratosWeapon->AttachToComponent(
+			ParentMesh,
+			AttachRules,
+			EquipWeaponSocket
+		);
+	}
+}
+
 void AKratos::UnEquipWeapon(AKratosWeapon* KratosWeapon)
 {
 	ULocalPlayer* LocalPlayer = KratosController->GetLocalPlayer();
@@ -156,6 +200,9 @@ void AKratos::LoadKratosDataAsset()
 
 		KratosControlComponent->RunSpeed = InitDA->MaxRunSpeed;
 		KratosControlComponent->WalkSpeed = InitDA->MaxWalkSpeed;
+
+		EquipWeaponAttackSocket = FName("RightWeaponAttackSocket");
+		EquipWeaponSocket = FName("RightWeaponSocket");
 	}
 	else
 	{
