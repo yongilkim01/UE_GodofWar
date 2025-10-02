@@ -12,7 +12,7 @@ class UAbilityTask_PlayMontageAndWait;
 class AKratosWeapon;
 
 /**
- * 
+ * 크레토스 약공격 어빌리티 클래스
  */
 UCLASS()
 class RAGNAROK_API UKratosLightAttackAbility : public UKratosGameplayAbility
@@ -20,6 +20,7 @@ class RAGNAROK_API UKratosLightAttackAbility : public UKratosGameplayAbility
 	GENERATED_BODY()
 
 public:
+	/** 생성자 */
 	UKratosLightAttackAbility();
 
 	//~ Begin UGameplayAbility Interface.
@@ -28,25 +29,21 @@ public:
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
-
 	virtual void EndAbility(
 		const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		bool bReplicateEndAbility, bool bWasCancelled) override;
-
 	virtual void InputPressed(
 		const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo, 
-		const FGameplayAbilityActivationInfo ActivationInfo) override;
-
-	virtual bool CanActivateAbility(
-		const FGameplayAbilitySpecHandle Handle, 
 		const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayTagContainer* SourceTags = nullptr, 
-		const FGameplayTagContainer* TargetTags = nullptr, 
+		const FGameplayAbilityActivationInfo ActivationInfo) override;
+	virtual bool CanActivateAbility(
+		const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayTagContainer* SourceTags = nullptr,
+		const FGameplayTagContainer* TargetTags = nullptr,
 		OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
-
 	//~ End UGameplayAbility Interface.
 
 	//~ Begin UKratosGameplayAbility Interface.
@@ -56,53 +53,86 @@ public:
 	//~ End UKratosGameplayAbility Interface.
 
 protected:
+	/**
+	 * 데미지 처리를 처리하는 콜백 함수
+	 */
 	UFUNCTION()
 	void OnGameplayEventReceived(FGameplayEventData Payload);
+	/**
+	 * 콤보 입력 대기 시작 처리하는 콜백 함수
+	 */
 	UFUNCTION()
 	void OnAttackWaitStartEventRecived(FGameplayEventData Payload);
+	/**
+	 * 콤보 입력 대기 종료 처리하는 콜백 함수
+	 */
 	UFUNCTION()
 	void OnAttackWaitEndEventRecived(FGameplayEventData Payload);
 
 private:
+	/**
+	 * 공격 몽타주를 실행하는 함수
+	 *
+	 * @param ComboCount 현재 콤보 카운트
+	 */
 	void ExecuteAttackMontage(int32 ComboCount);
+	/**
+	 * 콤보 카운트에 따라 몽타주 재생 속도를 조절하는 함수
+	 *
+	 * @param ComboCount 현재 콤보 카운트
+	 * @param PlayRate 재생 속도
+	 */
 	void SetPlayRateAttackMontage(int32 ComboCount, float PlayRate);
+	/** 공격 콤보 카운트를 리셋하는 함수 */
 	void ResetAttackComboCount();
+	/** 다음 콤보를 처리하는 함수 */
 	void ProcessNextCombo();
 
 protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
-	TMap<int, UAnimMontage*> LightAttackMontageMap;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	/** 점프 게임플레이 태그 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability", meta = (DisplayName = "Jump Tag"))
 	FGameplayTag JumpTag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability")
+	/** 게임플레이 이펙트 클래스 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ragnarok|Ability", meta = (DisplayName = "Effect Class"))
 	TSubclassOf<UGameplayEffect> EffectClass;
-
-	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
+	/** 현재 공격 상태 */
+	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability", meta = (DisplayName = "Current Attack State"))
 	ERagnarokAttackState CurAttackState = ERagnarokAttackState::ERAS_None;
 
 private:
-	UPROPERTY(EditAnywhere)
+	/** 약공격 애니메이션 몽타주 */
+	UPROPERTY(EditAnywhere, Category = "KratosLightAttack|Animation", meta = (DisplayName = "Attack Montage"))
 	UAnimMontage* AttackMontage = nullptr;
-	UPROPERTY(EditAnywhere)
+
+	/** 콤보 카운트별 몽타주 섹션 맵 */
+	UPROPERTY(EditAnywhere, Category = "KratosLightAttack|Combo", meta = (DisplayName = "Combo Section Map"))
 	TMap<int32, FName> ComboSectionMap;
+
+	/** 크레토스 무기 참조 */
 	UPROPERTY()
 	AKratosWeapon* KratosWeapon = nullptr;
-	
-	int32 MaxComboCount = 4;
-	int32 CurComboCount = 1;
 
+	/** 공격 몽타주 재생 태스크 */
 	UAbilityTask_PlayMontageAndWait* AttackMontageTask = nullptr;
-	FTimerHandle AttackWaitTimerHandle;
-	float ComboWaitDuration = 1.0f;
-
-	FTimerHandle TimerHandle;
+	/** 게임플레이 이벤트 대기 태스크 */
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = nullptr;
+	/** 공격 대기 시작 태스크 */
 	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
+	/** 공격 대기 종료 태스크 */
 	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
-	bool bReserveComboAttack = false;
 
+	/** 타이머 핸들 */
+	FTimerHandle TimerHandle;
+	/** 공격 대기 타이머 핸들 */
+	FTimerHandle AttackWaitTimerHandle;
+	/** 콤보별 넉백 파워 맵 */
 	TMap<int32, float> LaunchPowerMap;
+	/** 최대 콤보 카운트 */
+	int32 MaxComboCount = 4;
+	/** 현재 콤보 카운트 */
+	int32 CurComboCount = 1;
+	/** 콤보 입력 대기 시간 */
+	float ComboWaitDuration = 1.0f;
+	/** 다음 콤보 예약 여부 */
+	bool bReserveComboAttack = false;
 };
