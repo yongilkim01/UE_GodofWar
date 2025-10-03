@@ -31,7 +31,7 @@ UKratosLightAttackAbility::UKratosLightAttackAbility()
 	ComboSectionMap.Add(4, FName("Combo4"));
 
 	CurComboCount = 1;
-	bShowDebug = true;
+	bShowDebug = false;
 }
 
 void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -330,7 +330,7 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 		this,
 		NAME_None,
 		AttackMontage,
-		0.85f,
+		1.0f,
 		StartSectionName,
 		true,
 		1.0f,

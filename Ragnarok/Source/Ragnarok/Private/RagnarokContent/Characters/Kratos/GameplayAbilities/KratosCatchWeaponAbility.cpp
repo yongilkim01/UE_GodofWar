@@ -45,10 +45,10 @@ void UKratosCatchWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 	if (nullptr != ParentMesh)
 	{
 		FAttachmentTransformRules AttachRules(
-			EAttachmentRule::SnapToTarget,    // LocationRule
-			EAttachmentRule::SnapToTarget,    // RotationRule
-			EAttachmentRule::SnapToTarget,       // ScaleRule
-			true						      // bWeldSimulatedBodies
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::SnapToTarget,
+			EAttachmentRule::KeepRelative,
+			true			  
 		);
 
 		CatchingWeapon->AttachToComponent(

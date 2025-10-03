@@ -43,7 +43,7 @@ void UKratosThrowWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		return;
 	}
 
-	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+	//Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	ThrowWaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
@@ -143,7 +143,7 @@ void UKratosThrowWeaponAbility::ThrowWeapon()
 		FDetachmentTransformRules DetachRules(
 			EDetachmentRule::KeepWorld,
 			EDetachmentRule::KeepWorld,
-			EDetachmentRule::KeepWorld,
+			EDetachmentRule::KeepRelative,
 			true
 		);
 

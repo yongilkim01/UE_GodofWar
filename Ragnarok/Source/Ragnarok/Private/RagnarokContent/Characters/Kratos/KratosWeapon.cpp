@@ -93,10 +93,10 @@ void AKratosWeapon::UnlinkAnimClassLayersFromActor(const AActor* UnlinkActor)
 void AKratosWeapon::UnUequipWeapon(const AActor* OwnerActor, FName HandleSocketName)
 {
 	FAttachmentTransformRules AttachmentRules(
-		EAttachmentRule::SnapToTarget,    // LocationRule
-		EAttachmentRule::KeepRelative,    // RotationRule
-		EAttachmentRule::KeepWorld,       // ScaleRule
-		true						      // bWeldSimulatedBodies
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::KeepRelative,
+		EAttachmentRule::SnapToTarget,
+		true
 	);
 
 	AttachWeaponToActor(OwnerActor, AttachmentRules, HandleSocketName);

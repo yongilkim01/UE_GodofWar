@@ -181,6 +181,9 @@ void AKratos::LoadKratosDataAsset()
 		SpringArmComponent->TargetArmLength = InitDA->TargetArmLength;
 		SpringArmComponent->SocketOffset = InitDA->SocketOffset;	
 		SpringArmComponent->bUsePawnControlRotation = true;
+		SpringArmComponent->bEnableCameraLag = true;
+		SpringArmComponent->CameraLagSpeed = 3.0f;
+		SpringArmComponent->CameraLagMaxDistance = 150.0f;
 
 		MainCameraComponent->bUsePawnControlRotation = false;
 
