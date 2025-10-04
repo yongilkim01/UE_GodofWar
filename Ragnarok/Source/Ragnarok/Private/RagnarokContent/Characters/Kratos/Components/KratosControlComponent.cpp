@@ -109,7 +109,7 @@ URagnarokEnhancedInputComponent* UKratosControlComponent::SetupPlayerInputCompon
 
 void UKratosControlComponent::CalcCharacterRotation(float DeltaTime)
 {
-	if (false == IsMoving())
+	if (false == IsMoving() || MovementInputVector.Y > 0.0f)
 	{
 		return;
 	}
@@ -167,7 +167,7 @@ void UKratosControlComponent::InputMovePressed(const FInputActionValue& InputAct
 
 			float RotationInterpSpeed = 15.0f;
 			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), RotationInterpSpeed);
-			Kratos->SetActorRotation(TargetRotation);
+			Kratos->SetActorRotation(NewRotation);
 		}
 	}
 
