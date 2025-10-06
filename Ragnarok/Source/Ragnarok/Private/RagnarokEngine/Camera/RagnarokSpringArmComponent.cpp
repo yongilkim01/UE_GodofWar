@@ -3,6 +3,8 @@
 
 #include "RagnarokEngine/Camera/RagnarokSpringArmComponent.h"
 #include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
+#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -14,34 +16,55 @@ URagnarokSpringArmComponent::URagnarokSpringArmComponent()
 
 void URagnarokSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	if (true == bEnableUpdateOffset)
-	{
-		UpdateSocketOffset(DeltaTime);
-	}
-
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void URagnarokSpringArmComponent::UpdateSocketOffset(float DeltaTime)
+void URagnarokSpringArmComponent::SetCameraMode(ERagnarokCameraMode NewCameraMode)
 {
-	FVector OwnerMovementDirection = GetOwnerMovementDirection();
+	CurrentCameraMode = NewCameraMode;
 
-	float MovememtSpeed = OwnerMovementDirection.Size();
-	float CurrentOffsetX = SocketOffset.X;
-	if (MovememtSpeed < MinMovementSpeedThreshold)
+	switch (CurrentCameraMode)
 	{
-		SocketOffset.X = FMath::FInterpTo(CurrentOffsetX, 0.0f, DeltaTime, OffsetInterpolateSpeed);
+	case ERagnarokCameraMode::ERCM_None:
+		DesiredTargetArmLength = DefaultArmLength;
+		bEnableCameraLag = false;
+		break;
+	case ERagnarokCameraMode::EPCM_Running:
+		DesiredTargetArmLength = RunningArmLength;
+		bEnableCameraLag = false;
+		break;
+	case ERagnarokCameraMode::EPCM_Combat:
+		DesiredTargetArmLength = CombatArmLength;
+		bEnableCameraLag = true;
+		break;
 	}
-	else
+}
+
+void URagnarokSpringArmComponent::UpdateDynamicCameraLagSpeed(float DeltaTime)
+{
+	// OwnerCharacter의 이동 방향
+	FVector OwnerMovementDirection = GetOwnerMovementDirection();
+	float MovementSpeed = OwnerMovementDirection.Size();
+	float CalcCameraLagSpeed = DefaultCameraLagSpeed;
+
+	// 일정 속도 이하로 움직이고 있다면 기본 값 유지하고 아니라면 계산
+	if (MovementSpeed >= MinMovementSpeedThreshold) // 50.0f
 	{
-		float TargetOffsetX = CalculateTargetOffset(OwnerMovementDirection);
-		SocketOffset.X = FMath::FInterpTo(CurrentOffsetX, TargetOffsetX, DeltaTime, OffsetInterpolateSpeed);
+		CalcCameraLagSpeed = CalculateDynamicCameraLagSpeed(OwnerMovementDirection);
 	}
+
+	CameraLagSpeed = FMath::FInterpTo(
+		CameraLagSpeed,
+		CalcCameraLagSpeed,
+		DeltaTime,
+		CameraLagInterpolateSpeed
+	);
 }
 
 FVector URagnarokSpringArmComponent::GetOwnerMovementDirection() const
 {
 	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+
 	if (nullptr == OwnerCharacter || nullptr == OwnerCharacter->GetCharacterMovement())
 	{
 		return FVector::ZeroVector;
@@ -54,36 +77,51 @@ FVector URagnarokSpringArmComponent::GetOwnerMovementDirection() const
 		return FVector::ZeroVector;
 	}
 
-	// 월드 좌표에서 로컬 좌표로 변환
+	// 월드 가중치에서 로컬 가중치로 변환
+	// 캐릭터 기준 앞/뒤/옆을 판단하기 위한 Velocity
 	FRotator CharacterRotation = OwnerCharacter->GetActorRotation();
 	FVector LocalVelocity = CharacterRotation.UnrotateVector(Velocity);
 
 	return LocalVelocity;
 }
 
-float URagnarokSpringArmComponent::CalculateTargetOffset(const FVector& MovementDirection) const
+void URagnarokSpringArmComponent::InterpolateCameraSettings(float DeltaTime)
 {
-	float DirectionX = MovementDirection.X;
-	float DirectionY = MovementDirection.Y;
-	FVector NormalDirection = MovementDirection.GetSafeNormal();
-	float ForwardBackwardRatio = NormalDirection.X;
-	float LateralRatio = FMath::Abs(NormalDirection.Y);
-	float CalcTargetOffset = 0.0f;
+	TargetArmLength = FMath::FInterpTo(
+		TargetArmLength,
+		DesiredTargetArmLength,
+		DeltaTime,
+		5.0f
+	);
+}
+
+float URagnarokSpringArmComponent::CalculateDynamicCameraLagSpeed(const FVector& OwnerMovementDirection) const
+{
+	// OwnerCharacter 노말화
+	FVector NormalDirection = OwnerMovementDirection.GetSafeNormal();
+
+	// OwnerCharacter의 방향이 앞인지 뒤인지 판단하기 위한 변수
+	float ForwardBackwardRatio = NormalDirection.X; // ~1.0f ~ 1.0f
+	// OwnerCharacter의 옆 이동 여부를 판단하기 위한 변수
+	float LateralRatio = FMath::Abs(NormalDirection.Y); // 0.0f ~ 1.0f
 	
-	if (ForwardBackwardRatio < 0.0f)
+	// 앞/뒤 방향일 경우
+	if (FMath::Abs(ForwardBackwardRatio) > LateralRatio)
 	{
-		CalcTargetOffset = FMath::Lerp(0.0f, MaxBackwardOffset, FMath::Abs(ForwardBackwardRatio));
+		// 앞 방향일 경우
+		if (ForwardBackwardRatio > 0.0f)
+		{
+			return FMath::Lerp(DefaultCameraLagSpeed, ForwardCameraLagSpeed, ForwardBackwardRatio);
+		}
+		// 뒤 방향일 경우
+		else
+		{
+			return FMath::Lerp(DefaultCameraLagSpeed, BackwardCameraLagSpeed, ForwardBackwardRatio);
+		}
 	}
-	else if (ForwardBackwardRatio > 0.0f)
+	// 옆 방향일 경우
+	else
 	{
-		CalcTargetOffset = FMath::Lerp(0.0f, MaxForwardOffset, ForwardBackwardRatio);
+		return FMath::Lerp(DefaultCameraLagSpeed, LateralCameraLagSpeed, LateralRatio);
 	}
-
-	if (LateralRatio > 0.5f)
-	{
-		float LateralOffset = FMath::Lerp(0.0f, MaxLateralOffset, LateralRatio);
-		CalcTargetOffset = FMath::Lerp(CalcTargetOffset, LateralOffset, 0.5f);
-	}
-
-	return CalcTargetOffset;
 }

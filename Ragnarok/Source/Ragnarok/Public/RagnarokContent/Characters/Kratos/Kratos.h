@@ -12,6 +12,8 @@ class AKratosController;
 class AKratosWeapon;
 class ARagnarokWeapon;
 class USpringArmComponent;
+class URagnarokSpringArmComponent;
+class UKratosSpringArmComponent;
 class UCameraComponent;
 class UInitDataAssetKratos;
 class UCharacterPrimaryAssetKratos;
@@ -192,7 +194,7 @@ private:
 
 	/** 스프링 암 컴포넌트 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Kratos|Components", meta = (AllowPrivateAccess = "true", DisplayName = "Spring Arm Component"))
-	USpringArmComponent* SpringArmComponent = nullptr;
+	UKratosSpringArmComponent* SpringArmComponent = nullptr;
 
 	/** 크레토스 전투 컴포넌트 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Kratos|Components", meta = (AllowPrivateAccess = "true", DisplayName = "Kratos Combat Component"))

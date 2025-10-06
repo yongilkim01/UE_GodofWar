@@ -35,6 +35,8 @@ namespace KratosGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_JumpToFinisher, "Kratos.Status.JumpToFinisher");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_Rolling, "Kratos.Status.Rolling");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_Aiming, "Kratos.Status.Aiming");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_Attacking, "Kratos.Status.Attacking");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_Status_Running, "Kratos.Status.Running");
 
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Light, "Kratos.SetByCaller.AttackType.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Heavy, "Kratos.SetByCaller.AttackType.Heavy");

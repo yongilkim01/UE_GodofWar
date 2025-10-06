@@ -12,6 +12,14 @@ class URagnarokGameplayAbility;
 DECLARE_DELEGATE_OneParam(FOnMeshLoadedDelegate, USkeletalMesh*);
 
 UENUM()
+enum class ERagnarokCameraMode : uint8
+{
+	ERCM_None				UMETA(DisplayName = "None"),
+	EPCM_Running			UMETA(DisplayName = "Running"),
+	EPCM_Combat				UMETA(DisplayName = "Combat")
+};
+
+UENUM()
 enum class ERagnarokConfirmType : uint8
 {
 	ERCT_Yes				UMETA(DisplayName = "Yes"),

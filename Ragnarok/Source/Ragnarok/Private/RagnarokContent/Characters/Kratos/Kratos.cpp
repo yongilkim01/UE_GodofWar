@@ -6,13 +6,14 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosControlComponent.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosSpringArmComponent.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/DataAssets/InitDataAssetKratos.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 #include "RagnarokContent/Characters/Kratos/Animation/KratosLinkedAnimLayer.h"
 
-
+#include "RagnarokEngine/Camera/RagnarokSpringArmComponent.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
@@ -43,7 +44,7 @@ AKratos::AKratos()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArmComponent = CreateDefaultSubobject<UKratosSpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 
 	MainCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));

@@ -40,6 +40,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
+	URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos.Get(), KratosGameplayTags::Kratos_Status_Attacking);
+
 	SetKratosAttackingState(true);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	bReserveComboAttack = false;
@@ -97,6 +99,8 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::EndAbility"));
+
+	URagnarokFunctionLibrary::RemoveGameplayTagToActor(Kratos.Get(), KratosGameplayTags::Kratos_Status_Attacking);
 
 	if (nullptr != AttackMontageTask)
 	{

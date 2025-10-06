@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokSpringArmComponent.generated.h"
 
 class ARagnarokCharacter;
@@ -23,34 +24,49 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	//~ End UActorComponent Interface.
 
+	void SetCameraMode(ERagnarokCameraMode NewCameraMode);
+
 protected:
 	/** 캐릭터 이동 방향에 따라서 SocketOffset을 업데이트하는 함수. */
-	void UpdateSocketOffset(float DeltaTime);
+	void UpdateDynamicCameraLagSpeed(float DeltaTime);
+	/** 이동 방향에 따라 Target Offset을 계산하는 함수. */
+	float CalculateDynamicCameraLagSpeed(const FVector& OwnerMovementDirection) const;
 	/** OwnerCharacter의 방향을 반환하는 함수. */
 	FVector GetOwnerMovementDirection() const;
-	/** 이동 방향에 따라 Target Offset을 계산하는 함수. */
-	float CalculateTargetOffset(const FVector& MoveDirection) const;
+	/** 카메라 보간 업데이트 하는 함수 */
+	void InterpolateCameraSettings(float DeltaTime);
 
-private:
-	/** 앞으로 이동할 떄 최대 오프셋 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Max Forward Offset"))
-	float MaxForwardOffset = 0.0f;
-	/** 뒤로 이동할 떄 최대 오프셋 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Max Backward Offset"))
-	float MaxBackwardOffset = -200.0f;
-	/** 옆으로 이동할 떄 최대 오프셋 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Max Lateral Offset"))
-	float MaxLateralOffset = -100.0f;
-	/** 오프셋 보간 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Offset Interpolation Speed", ClampMin = "0.0"))
-	float OffsetInterpolateSpeed = 5.0f;
-	/** 오프셋 업데이트 기능 활성화 여부 멤버 변수 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Enable Update Offset"))
-	bool bEnableUpdateOffset = true;
-	/** 오프셋 초기화 이동 속도 */
+	/** 카메라 래그 보간 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Camera Lag Interpolate Speed", ClampMin = "0.0"))
+	float CameraLagInterpolateSpeed = 5.0f;
+	/**  업데이트 최소 임계값 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Min Movement Speed Threshold", ClampMin = "0.0"))
 	float MinMovementSpeedThreshold = 50.0f;
+	/** 카메라 래그 활성화 여부 멤버 변수 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Enable Dynamic Camera Lag"))
+	bool bEnableDynamicCameraLag = true;\
+	/** 기본 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Speed"))
+	float DefaultCameraLagSpeed = 3.0f;
+	/** 앞으로 움직일 떄 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Forward Camera Lag Speed"))
+	float ForwardCameraLagSpeed = 3.0f;
+	/** 뒤로 움직일 떄 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Backward Camera Lag Speed"))
+	float BackwardCameraLagSpeed = 15.0f;
+	/** 옆으로 움직일 떄 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Lateral Camera Lag Speed"))
+	float LateralCameraLagSpeed = 12.0f;
+	/** 기본 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Arm Length"))
+	float DefaultArmLength = 300.0f;
+	/** OwnerCharacter가 달릴 때 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Arm Length"))
+	float RunningArmLength = 400.0f;
+	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Arm Length"))
+	float CombatArmLength = 350.0f;
 
-	//UPROPERTY()
-	//ARagnarokCharacter* OwnerCharacter = nullptr;
+	ERagnarokCameraMode CurrentCameraMode = ERagnarokCameraMode::ERCM_None;
+	float DesiredTargetArmLength = 300.0f;
 };
