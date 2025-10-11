@@ -27,14 +27,17 @@ void URagnarokSpringArmComponent::SetCameraMode(ERagnarokCameraMode NewCameraMod
 	{
 	case ERagnarokCameraMode::ERCM_None:
 		DesiredTargetArmLength = DefaultArmLength;
-		bEnableCameraLag = false;
+		CameraLagSpeed = DefaultCameraLagSpeed;
+		bEnableCameraLag = true;
 		break;
 	case ERagnarokCameraMode::EPCM_Running:
 		DesiredTargetArmLength = RunningArmLength;
-		bEnableCameraLag = false;
+		CameraLagSpeed = RunningCameraLagSpeed;
+		bEnableCameraLag = true;
 		break;
 	case ERagnarokCameraMode::EPCM_Combat:
 		DesiredTargetArmLength = CombatArmLength;
+		CameraLagSpeed = CombatCameraLagSpeed;
 		bEnableCameraLag = true;
 		break;
 	}

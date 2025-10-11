@@ -46,8 +46,14 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Enable Dynamic Camera Lag"))
 	bool bEnableDynamicCameraLag = true;\
 	/** 기본 카메라 랙이 움직이는 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Speed"))
-	float DefaultCameraLagSpeed = 3.0f;
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
+	float DefaultCameraLagSpeed = 10.0f;
+	/** OwnerCharacter가 달릴 때 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
+	float RunningCameraLagSpeed = 3.0f;
+	/** OwnerCharacter가 전투할 때 카메라 랙이 움직이는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
+	float CombatCameraLagSpeed = 3.0f;
 	/** 앞으로 움직일 떄 카메라 랙이 움직이는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Forward Camera Lag Speed"))
 	float ForwardCameraLagSpeed = 3.0f;
@@ -59,14 +65,14 @@ protected:
 	float LateralCameraLagSpeed = 12.0f;
 	/** 기본 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Arm Length"))
-	float DefaultArmLength = 300.0f;
+	float DefaultArmLength = 170.0f;
 	/** OwnerCharacter가 달릴 때 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Arm Length"))
-	float RunningArmLength = 400.0f;
+	float RunningArmLength = 170.0f;
 	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Arm Length"))
-	float CombatArmLength = 350.0f;
+	float CombatArmLength = 170.0f;
 
 	ERagnarokCameraMode CurrentCameraMode = ERagnarokCameraMode::ERCM_None;
-	float DesiredTargetArmLength = 300.0f;
+	float DesiredTargetArmLength = 170.0f;
 };
