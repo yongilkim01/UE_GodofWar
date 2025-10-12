@@ -10,7 +10,7 @@
 class ARagnarokCharacter;
 
 /**
- * 
+ * 라그나로크 프로젝트용 SpringArmComponent 클래스
  */
 UCLASS()
 class RAGNAROK_API URagnarokSpringArmComponent : public USpringArmComponent
@@ -20,31 +20,12 @@ class RAGNAROK_API URagnarokSpringArmComponent : public USpringArmComponent
 public:
 	URagnarokSpringArmComponent();
 
-	//~ Begin UActorComponent Interface.
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	//~ End UActorComponent Interface.
-
-	void SetCameraMode(ERagnarokCameraMode NewCameraMode);
-
 protected:
-	/** 캐릭터 이동 방향에 따라서 SocketOffset을 업데이트하는 함수. */
-	void UpdateDynamicCameraLagSpeed(float DeltaTime);
-	/** 이동 방향에 따라 Target Offset을 계산하는 함수. */
-	float CalculateDynamicCameraLagSpeed(const FVector& OwnerMovementDirection) const;
-	/** OwnerCharacter의 방향을 반환하는 함수. */
-	FVector GetOwnerMovementDirection() const;
 	/** 카메라 보간 업데이트 하는 함수 */
 	void InterpolateCameraSettings(float DeltaTime);
+	/** 현재 카메라 모드를 변경하고 변경하려는 모드에 따라 SpringArm 설정을 변경하는 함수 */
+	void SetCameraMode(ERagnarokCameraMode NewCameraMode);
 
-	/** 카메라 래그 보간 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Camera Lag Interpolate Speed", ClampMin = "0.0"))
-	float CameraLagInterpolateSpeed = 5.0f;
-	/**  업데이트 최소 임계값 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Min Movement Speed Threshold", ClampMin = "0.0"))
-	float MinMovementSpeedThreshold = 50.0f;
-	/** 카메라 래그 활성화 여부 멤버 변수 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Enable Dynamic Camera Lag"))
-	bool bEnableDynamicCameraLag = true;\
 	/** 기본 카메라 랙이 움직이는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
 	float DefaultCameraLagSpeed = 10.0f;
@@ -53,16 +34,8 @@ protected:
 	float RunningCameraLagSpeed = 3.0f;
 	/** OwnerCharacter가 전투할 때 카메라 랙이 움직이는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
-	float CombatCameraLagSpeed = 3.0f;
-	/** 앞으로 움직일 떄 카메라 랙이 움직이는 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Forward Camera Lag Speed"))
-	float ForwardCameraLagSpeed = 3.0f;
-	/** 뒤로 움직일 떄 카메라 랙이 움직이는 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Backward Camera Lag Speed"))
-	float BackwardCameraLagSpeed = 15.0f;
-	/** 옆으로 움직일 떄 카메라 랙이 움직이는 속도 */
-	UPROPERTY(EditAnywhere, meta = (DisplayName = "Lateral Camera Lag Speed"))
-	float LateralCameraLagSpeed = 12.0f;
+	float CombatCameraLagSpeed = 1.0f;
+
 	/** 기본 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Arm Length"))
 	float DefaultArmLength = 170.0f;
@@ -73,8 +46,24 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Arm Length"))
 	float CombatArmLength = 170.0f;
 
+	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Max Distance"))
+	float DefaultCameraLagMaxDistance = 50.0f;
+	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Camera Lag Max Distance"))
+	float RunningCameraLagMaxDistance = 50.0f;
+	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Camera Lag Max Distance"))
+	float CombatCameraLagMaxDistance = 170.0f;
+
+	/** TargetArmLength가 보간되는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Target Arm Length Interpolate Speed"))
+	float TargetArmLengthInterpSpeed = 5.0f;
+	/** CameraLagSpeed가 보간되는 속도 */
+	UPROPERTY(EditAnywhere, meta = (DisplayName = "Camera Lag Speed Interpolate Speed"))
+	float CameraLagSpeedInterpSpeed = 1.0f;
+
 	ERagnarokCameraMode CurrentCameraMode = ERagnarokCameraMode::ERCM_None;
 	float DesiredTargetArmLength = 170.0f;
 	float DesiredCameraLagSpeed = 10.0f;
-	float CameraLagIntepSpeed = 0.0001f;
 };

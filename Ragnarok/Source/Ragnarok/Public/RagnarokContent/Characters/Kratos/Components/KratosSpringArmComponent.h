@@ -7,7 +7,7 @@
 #include "KratosSpringArmComponent.generated.h"
 
 /**
- * 
+ * AKratos 전용 SpringArmComponent 클래스
  */
 UCLASS()
 class RAGNAROK_API UKratosSpringArmComponent : public URagnarokSpringArmComponent
