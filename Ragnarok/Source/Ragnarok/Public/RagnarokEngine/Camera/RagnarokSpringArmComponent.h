@@ -31,7 +31,7 @@ protected:
 	float DefaultCameraLagSpeed = 10.0f;
 	/** OwnerCharacter가 달릴 때 카메라 랙이 움직이는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
-	float RunningCameraLagSpeed = 3.0f;
+	float RunningCameraLagSpeed = 1.0f;
 	/** OwnerCharacter가 전투할 때 카메라 랙이 움직이는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Camera Lag Speed", ClampMin = "0.1", ClampMax = "20.0"))
 	float CombatCameraLagSpeed = 1.0f;

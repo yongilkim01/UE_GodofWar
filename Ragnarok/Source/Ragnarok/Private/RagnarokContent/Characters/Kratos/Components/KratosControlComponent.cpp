@@ -7,6 +7,7 @@
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
+#include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
 #include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
@@ -183,6 +184,7 @@ void UKratosControlComponent::InputMoveReleased(const FInputActionValue& InputAc
 {
 	bRunning = false;
 	Kratos->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	URagnarokFunctionLibrary::RemoveGameplayTagToActor(Kratos, KratosGameplayTags::Kratos_Status_Running);
 }
 
 void UKratosControlComponent::InputLook(const FInputActionValue& InputActionValue)
@@ -205,4 +207,5 @@ void UKratosControlComponent::InputRun(const FInputActionValue& InputActionValue
 {
 	bRunning = true;
 	Kratos->GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
+	URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos, KratosGameplayTags::Kratos_Status_Running);
 }

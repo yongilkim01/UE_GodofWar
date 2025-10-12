@@ -26,7 +26,7 @@ void UKratosSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		{
 			NewCameraMode = ERagnarokCameraMode::EPCM_Combat;
 		}
-		else if (true == OwnerKratos->IsRunning())
+		else if (true == URagnarokFunctionLibrary::HasActorGameplayTag(OwnerKratos, KratosGameplayTags::Kratos_Status_Running))
 		{
 			NewCameraMode = ERagnarokCameraMode::EPCM_Running;
 		}
