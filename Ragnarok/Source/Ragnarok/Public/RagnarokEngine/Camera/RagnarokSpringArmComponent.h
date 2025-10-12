@@ -75,4 +75,6 @@ protected:
 
 	ERagnarokCameraMode CurrentCameraMode = ERagnarokCameraMode::ERCM_None;
 	float DesiredTargetArmLength = 170.0f;
+	float DesiredCameraLagSpeed = 10.0f;
+	float CameraLagIntepSpeed = 0.0001f;
 };

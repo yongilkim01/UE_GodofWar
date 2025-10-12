@@ -12,6 +12,8 @@ URagnarokSpringArmComponent::URagnarokSpringArmComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
+
+	DesiredCameraLagSpeed = DefaultCameraLagSpeed;
 }
 
 void URagnarokSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -27,17 +29,17 @@ void URagnarokSpringArmComponent::SetCameraMode(ERagnarokCameraMode NewCameraMod
 	{
 	case ERagnarokCameraMode::ERCM_None:
 		DesiredTargetArmLength = DefaultArmLength;
-		CameraLagSpeed = DefaultCameraLagSpeed;
+		DesiredCameraLagSpeed = DefaultCameraLagSpeed;
 		bEnableCameraLag = true;
 		break;
 	case ERagnarokCameraMode::EPCM_Running:
 		DesiredTargetArmLength = RunningArmLength;
-		CameraLagSpeed = RunningCameraLagSpeed;
+		DesiredCameraLagSpeed = RunningCameraLagSpeed;
 		bEnableCameraLag = true;
 		break;
 	case ERagnarokCameraMode::EPCM_Combat:
 		DesiredTargetArmLength = CombatArmLength;
-		CameraLagSpeed = CombatCameraLagSpeed;
+		DesiredCameraLagSpeed = CombatCameraLagSpeed;
 		bEnableCameraLag = true;
 		break;
 	}
@@ -95,6 +97,13 @@ void URagnarokSpringArmComponent::InterpolateCameraSettings(float DeltaTime)
 		DesiredTargetArmLength,
 		DeltaTime,
 		5.0f
+	);
+
+	CameraLagSpeed = FMath::FInterpTo(
+		CameraLagSpeed,
+		DesiredCameraLagSpeed,
+		DeltaTime,
+		CameraLagIntepSpeed
 	);
 }
 

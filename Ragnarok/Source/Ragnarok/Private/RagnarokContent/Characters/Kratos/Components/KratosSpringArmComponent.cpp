@@ -21,21 +21,27 @@ void UKratosSpringArmComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if (nullptr != OwnerKratos)
 	{
 		URagnarokAbilitySystemComponent* ASC = OwnerKratos->GetAbilitySystem();
+		ERagnarokCameraMode NewCameraMode = ERagnarokCameraMode::ERCM_None;
 
 		if (true == URagnarokFunctionLibrary::HasActorGameplayTag(OwnerKratos, KratosGameplayTags::Kratos_Status_Attacking))
 		{
-			Debug::Print(TEXT("Current Kratos Has Kratos Status Attacking"));
-			SetCameraMode(ERagnarokCameraMode::EPCM_Combat);
+			//Debug::Print(TEXT("Current Kratos Has Kratos Status Attacking"));
+			NewCameraMode = ERagnarokCameraMode::EPCM_Combat;
 		}
 		else if (true == OwnerKratos->IsRunning())
 		{
-			Debug::Print(TEXT("Current Kratos Has Kratos Status Running"));
-			SetCameraMode(ERagnarokCameraMode::EPCM_Running);
+			//Debug::Print(TEXT("Current Kratos Has Kratos Status Running"));
+			NewCameraMode = ERagnarokCameraMode::EPCM_Running;
 		}
 		else
 		{
-			Debug::Print(TEXT("Current Kratos Has None"));
-			SetCameraMode(ERagnarokCameraMode::ERCM_None);
+			//Debug::Print(TEXT("Current Kratos Has None"));
+			NewCameraMode = ERagnarokCameraMode::ERCM_None;
+		}
+
+		if (NewCameraMode != CurrentCameraMode)
+		{
+			SetCameraMode(NewCameraMode);
 		}
 	}
 
