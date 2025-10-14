@@ -18,8 +18,9 @@
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
-#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Systems/AbilitySystem/AbilityTasks/RKAbilityTask_RotateToCamera.h"
+#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
 
 
@@ -40,7 +41,15 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
-	RotateKratosToCameraDirection();
+	RotateToCameraTask = URKAbilityTask_RotateToCamera::CreateRotateToCameraTask(
+		this,
+		FName("RotateToCamera")
+	);
+
+	if (nullptr != RotateToCameraTask)
+	{
+		RotateToCameraTask->ReadyForActivation();
+	}
 
 	URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos.Get(), KratosGameplayTags::Kratos_Status_Attacking);
 
@@ -128,6 +137,12 @@ void UKratosLightAttackAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 		AttackWaitEndTask = nullptr;
 	}
 
+	if (nullptr != RotateToCameraTask)
+	{
+		RotateToCameraTask->EndTask();
+		RotateToCameraTask = nullptr;
+	}
+
 	bReserveComboAttack = false;
 	SetKratosAttackingState(false);
 	Kratos->UnEquipWeaponToAttackSocekt(KratosWeapon);
@@ -142,7 +157,7 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 	switch (CurAttackState)
 	{
 	case ERagnarokAttackState::ERAS_AttackWait:
-		Debug::Print(TEXT("ERagnarokAttackState::ERAS_AttackWait"));
+		//Debug::Print(TEXT("ERagnarokAttackState::ERAS_AttackWait"));
 		bReserveComboAttack = true;
 		break;
 	default:

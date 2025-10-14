@@ -9,6 +9,7 @@
 
 class UAbilityTask_WaitGameplayEvent;
 class UAbilityTask_PlayMontageAndWait;
+class URKAbilityTask_RotateToCamera;
 class AKratosWeapon;
 
 /**
@@ -120,6 +121,8 @@ private:
 	UAbilityTask_WaitGameplayEvent* AttackWaitStartTask = nullptr;
 	/** 공격 대기 종료 태스크 */
 	UAbilityTask_WaitGameplayEvent* AttackWaitEndTask = nullptr;
+	/** 공격 대기 종료 태스크 */
+	URKAbilityTask_RotateToCamera* RotateToCameraTask = nullptr;
 
 	/** 타이머 핸들 */
 	FTimerHandle TimerHandle;

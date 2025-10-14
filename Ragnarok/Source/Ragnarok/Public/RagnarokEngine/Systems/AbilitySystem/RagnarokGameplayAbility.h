@@ -25,20 +25,25 @@ public:
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
-
 	virtual void OnGiveAbility(
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilitySpec& Spec) override;
-
 	virtual void EndAbility(
 		const FGameplayAbilitySpecHandle Handle, 
 		const FGameplayAbilityActorInfo* ActorInfo, 
 		const FGameplayAbilityActivationInfo ActivationInfo, 
 		bool bReplicateEndAbility, bool bWasCancelled) override;
-
-	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
-
+	virtual bool DoesAbilitySatisfyTagRequirements(
+		const UAbilitySystemComponent& AbilitySystemComponent, 
+		const FGameplayTagContainer* SourceTags = nullptr, 
+		const FGameplayTagContainer* TargetTags = nullptr, 
+		OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 	//~ End UGameplayAbility Interface.
+
+	//~ Begin URagnarokGameplayAbility Interface.
+	/** 어빌리티의 소유 액터를 카메라 방향으로 회전시키는 함수 */
+	virtual void RotateOwnerToCameraDirection() {};
+	//~ End URagnarokGameplayAbility Interface.
 
 protected:
 	void BreakAbility(

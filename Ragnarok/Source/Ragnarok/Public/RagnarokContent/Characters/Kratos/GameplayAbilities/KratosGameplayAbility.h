@@ -20,13 +20,15 @@ class RAGNAROK_API UKratosGameplayAbility : public URagnarokGameplayAbility
 
 public:
 	//~ Begin UGameplayAbility Interface.
-
 	virtual void ActivateAbility(
 		const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
+	//~ End UGameplayAbility Interface.
 
+	//~ Begin UGameplayAbility Interface.
+	virtual void RotateOwnerToCameraDirection() override;
 	//~ End UGameplayAbility Interface.
 
 public:
@@ -45,9 +47,6 @@ public:
 		FGameplayTag AttackTypeTag,
 		float AddDamage = 1.0f
 	);
-
-	/** 크레토스를 카메라 방향으로 회전시키는 함수 */
-	void RotateKratosToCameraDirection();
 
 protected:
 	UFUNCTION()

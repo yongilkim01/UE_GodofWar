@@ -106,8 +106,10 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 	return EffectSpecHandle;
 }
 
-void UKratosGameplayAbility::RotateKratosToCameraDirection()
+void UKratosGameplayAbility::RotateOwnerToCameraDirection()
 {
+	Super::RotateOwnerToCameraDirection();
+
 	if (false == Kratos.IsValid())
 	{
 		Debug::Print(TEXT("UKratosGameplayAbility::RotateKratosToCameraDirection - Kratos is not valid"), FColor::Red);
