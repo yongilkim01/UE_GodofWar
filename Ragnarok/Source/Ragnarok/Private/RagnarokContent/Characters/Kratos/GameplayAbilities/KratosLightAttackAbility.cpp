@@ -40,6 +40,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
+	RotateKratosToCameraDirection();
+
 	URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos.Get(), KratosGameplayTags::Kratos_Status_Attacking);
 
 	SetKratosAttackingState(true);

@@ -46,6 +46,9 @@ public:
 		float AddDamage = 1.0f
 	);
 
+	/** 크레토스를 카메라 방향으로 회전시키는 함수 */
+	void RotateKratosToCameraDirection();
+
 protected:
 	UFUNCTION()
 	virtual void OnMontageCompleted();

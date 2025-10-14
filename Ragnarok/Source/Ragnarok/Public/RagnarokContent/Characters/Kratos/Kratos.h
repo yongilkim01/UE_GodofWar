@@ -121,18 +121,15 @@ public:
 	 */
 	bool GetAimingTargetLocation(FVector InWeaponLocation, FVector& OutTargetLocation, float MaxRange = 5000.0f);
 
-	// Getters (Inline Functions)
 	/** 크레토스 전투 컴포넌트를 반환하는 함수 */
 	FORCEINLINE UKratosCombatComponent* GetKratosCombatComponent() const { return KratosCombatComponent; }
-
 	/** 크레토스 카메라 컴포넌트를 반환하는 함수 */
 	FORCEINLINE UCameraComponent* GetKratosCameraComponent() const { return MainCameraComponent; }
-
 	/** 공격 중인지 확인하는 함수 */
 	FORCEINLINE bool IsAttacking() const { return bAttacking; }
-
 	/** 구르기 중인지 확인하는 함수 */
 	FORCEINLINE bool IsRolling() const { return bRolling; }
+
 
 protected:
 	/** 초기화 데이터 에셋 */

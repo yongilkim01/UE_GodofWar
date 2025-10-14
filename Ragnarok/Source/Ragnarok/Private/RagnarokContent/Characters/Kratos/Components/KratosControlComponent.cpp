@@ -189,7 +189,7 @@ void UKratosControlComponent::InputMoveReleased(const FInputActionValue& InputAc
 
 void UKratosControlComponent::InputLook(const FInputActionValue& InputActionValue)
 {
-	if (true == Kratos->bRolling || true == Kratos->bAttacking) return;
+	if (true == Kratos->bRolling) return;
 
 	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
 

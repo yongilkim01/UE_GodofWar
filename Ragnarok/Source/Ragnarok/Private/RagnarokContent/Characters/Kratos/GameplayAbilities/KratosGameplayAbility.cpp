@@ -10,6 +10,8 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
+#include "Camera/CameraComponent.h"
+
 void UKratosGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -102,6 +104,28 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 	}
 
 	return EffectSpecHandle;
+}
+
+void UKratosGameplayAbility::RotateKratosToCameraDirection()
+{
+	if (false == Kratos.IsValid())
+	{
+		Debug::Print(TEXT("UKratosGameplayAbility::RotateKratosToCameraDirection - Kratos is not valid"), FColor::Red);
+		return;
+	}
+
+	UCameraComponent* KratosCameraComponent = Kratos->GetKratosCameraComponent();
+
+	if (nullptr == KratosCameraComponent)
+	{
+		Debug::Print(TEXT("UKratosGameplayAbility::RotateKratosToCameraDirection - KratosCameraComponent is nullptr"), FColor::Red);
+		return;
+	}
+
+	FRotator KratosCameraRotation = KratosCameraComponent->GetComponentRotation();
+	FRotator NewKratosRotation = FRotator(0.0f, KratosCameraRotation.Yaw, 0.0f);
+
+	Kratos->SetActorRotation(NewKratosRotation);
 }
 
 void UKratosGameplayAbility::OnMontageCompleted()
