@@ -189,6 +189,9 @@ void AKratos::LoadKratosDataAsset()
 
 		MainCameraComponent->bUsePawnControlRotation = false;
 
+		GetKratosController()->PlayerCameraManager->ViewPitchMax = 60.0f;
+		GetKratosController()->PlayerCameraManager->ViewPitchMin = -50.0f;
+
 		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		GetCharacterMovement()->RotationRate = InitDA->CharacterMovementRotationRate;

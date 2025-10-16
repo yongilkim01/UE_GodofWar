@@ -15,46 +15,46 @@ URagnarokSpringArmComponent::URagnarokSpringArmComponent()
 
 	DesiredCameraLagSpeed = DefaultCameraLagSpeed;
 	CameraLagMaxDistance = DefaultCameraLagMaxDistance;
-	bEnableCameraLag = true;
+	bEnableCameraLag = false;
 }
 
 void URagnarokSpringArmComponent::SetCameraMode(ERagnarokCameraMode NewCameraMode)
 {
-	CurrentCameraMode = NewCameraMode;
+	//CurrentCameraMode = NewCameraMode;
 
-	switch (CurrentCameraMode)
-	{
-	case ERagnarokCameraMode::ERCM_None:
-		DesiredTargetArmLength = DefaultArmLength;
-		DesiredCameraLagSpeed = DefaultCameraLagSpeed;
-		CameraLagMaxDistance = DefaultCameraLagMaxDistance;
-		break;
-	case ERagnarokCameraMode::EPCM_Running:
-		DesiredTargetArmLength = RunningArmLength;
-		DesiredCameraLagSpeed = RunningCameraLagSpeed;
-		CameraLagMaxDistance = RunningCameraLagMaxDistance;
-		break;
-	case ERagnarokCameraMode::EPCM_Combat:
-		DesiredTargetArmLength = CombatArmLength;
-		DesiredCameraLagSpeed = CombatCameraLagSpeed;
-		CameraLagMaxDistance = CombatCameraLagMaxDistance;
-		break;
-	}
+	//switch (CurrentCameraMode)
+	//{
+	//case ERagnarokCameraMode::ERCM_None:
+	//	DesiredTargetArmLength = DefaultArmLength;
+	//	DesiredCameraLagSpeed = DefaultCameraLagSpeed;
+	//	CameraLagMaxDistance = DefaultCameraLagMaxDistance;
+	//	break;
+	//case ERagnarokCameraMode::EPCM_Running:
+	//	DesiredTargetArmLength = RunningArmLength;
+	//	DesiredCameraLagSpeed = RunningCameraLagSpeed;
+	//	CameraLagMaxDistance = RunningCameraLagMaxDistance;
+	//	break;
+	//case ERagnarokCameraMode::EPCM_Combat:
+	//	DesiredTargetArmLength = CombatArmLength;
+	//	DesiredCameraLagSpeed = CombatCameraLagSpeed;
+	//	CameraLagMaxDistance = CombatCameraLagMaxDistance;
+	//	break;
+	//}
 }
 
 void URagnarokSpringArmComponent::InterpolateCameraSettings(float DeltaTime)
 {
-	TargetArmLength = FMath::FInterpTo(
-		TargetArmLength,
-		DesiredTargetArmLength,
-		DeltaTime,
-		TargetArmLengthInterpSpeed
-	);
+	//TargetArmLength = FMath::FInterpTo(
+	//	TargetArmLength,
+	//	DesiredTargetArmLength,
+	//	DeltaTime,
+	//	TargetArmLengthInterpSpeed
+	//);
 
-	CameraLagSpeed = FMath::FInterpTo(
-		CameraLagSpeed,
-		DesiredCameraLagSpeed,
-		DeltaTime,
-		CameraLagSpeedInterpSpeed
-	);
+	//CameraLagSpeed = FMath::FInterpTo(
+	//	CameraLagSpeed,
+	//	DesiredCameraLagSpeed,
+	//	DeltaTime,
+	//	CameraLagSpeedInterpSpeed
+	//);
 }
