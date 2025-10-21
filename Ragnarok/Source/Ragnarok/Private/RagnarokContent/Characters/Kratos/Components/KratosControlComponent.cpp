@@ -205,7 +205,10 @@ void UKratosControlComponent::InputLook(const FInputActionValue& InputActionValu
 
 void UKratosControlComponent::InputRun(const FInputActionValue& InputActionValue)
 {
-	bRunning = true;
-	Kratos->GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
-	URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos, KratosGameplayTags::Kratos_Status_Running);
+	if (MovementInputVector.Y > 0.0f)
+	{
+		bRunning = true;
+		Kratos->GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
+		URagnarokFunctionLibrary::AddGameplayTagToActor(Kratos, KratosGameplayTags::Kratos_Status_Running);
+	}
 }

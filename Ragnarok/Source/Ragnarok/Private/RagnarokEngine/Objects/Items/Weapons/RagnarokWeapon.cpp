@@ -65,13 +65,13 @@ void ARagnarokWeapon::LoadWeaponPrimaryDataAsset(UObject* PDAAssetObject)
 
 void ARagnarokWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	APawn* WeaponOwningPawn = GetInstigator<APawn>();
+	APawn* WeaponOwner = GetInstigator<APawn>();
 
-	checkf(WeaponOwningPawn, TEXT("Forgot to assign an instigator as the owning pawn of the weapon : %s"), *GetName());
+	checkf(WeaponOwner, TEXT("ARagnarokWeapon::OnCollisionBoxBeginOverlap WeaponOwner is nullptr - %s"), *GetName());
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (true == URagnarokFunctionLibrary::IsTargetPawnHostile(WeaponOwningPawn, HitPawn))
+		if (true == URagnarokFunctionLibrary::IsTargetPawnHostile(WeaponOwner, HitPawn))
 		{
 			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 		}
@@ -80,13 +80,13 @@ void ARagnarokWeapon::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overlapped
 
 void ARagnarokWeapon::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	APawn* WeaponOwningPawn = GetInstigator<APawn>();
+	APawn* WeaponOwner = GetInstigator<APawn>();
 
-	checkf(WeaponOwningPawn, TEXT("Forgot to assign an instigator as the owning pawn of the weapon : %s"), *GetName());
+	checkf(WeaponOwner, TEXT("ARagnarokWeapon::OnCollisionBoxBeginOverlap WeaponOwner is nullptr - %s"), *GetName());
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (true == URagnarokFunctionLibrary::IsTargetPawnHostile(WeaponOwningPawn, HitPawn))
+		if (true == URagnarokFunctionLibrary::IsTargetPawnHostile(WeaponOwner, HitPawn))
 		{
 			OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor);
 		}
