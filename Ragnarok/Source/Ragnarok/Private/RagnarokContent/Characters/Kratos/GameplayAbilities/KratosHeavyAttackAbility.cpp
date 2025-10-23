@@ -233,15 +233,18 @@ void UKratosHeavyAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 
 	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
 
+	float PlayRate = (1 == ComboCount) ? -1.0f : 1.0f;
+	float StartingPosition = (1 == ComboCount) ? 1.0f : 0.0f;
+	   
 	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
 		NAME_None,
 		HeavyAttackMontageMap[ComboCount],
-		1.0f,
+		PlayRate,
 		NAME_None,
 		true,
 		1.0f,
-		0.0f
+		StartingPosition
 	);
 
 

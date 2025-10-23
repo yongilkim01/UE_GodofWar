@@ -41,6 +41,8 @@ void UKratosLightAttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ActivateAbility"));
 
+	Kratos->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+
 	RotateToCameraTask = URKAbilityTask_RotateToCamera::CreateRotateToCameraTask(
 		this,
 		FName("RotateToCamera")

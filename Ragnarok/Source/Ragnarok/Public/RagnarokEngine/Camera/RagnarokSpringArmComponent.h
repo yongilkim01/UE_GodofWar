@@ -41,10 +41,10 @@ protected:
 	float DefaultArmLength = 170.0f;
 	/** OwnerCharacter가 달릴 때 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Running Arm Length"))
-	float RunningArmLength = 170.0f;
+	float RunningArmLength = 220.0f;
 	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Arm Length"))
-	float CombatArmLength = 170.0f;
+	float CombatArmLength = 220.0f;
 
 	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Default Camera Lag Max Distance"))
@@ -54,7 +54,7 @@ protected:
 	float RunningCameraLagMaxDistance = 50.0f;
 	/** OwnerCharacter가 전투할 떄 카메라 암 길이 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Combat Camera Lag Max Distance"))
-	float CombatCameraLagMaxDistance = 170.0f;
+	float CombatCameraLagMaxDistance = 50.0f;
 
 	/** TargetArmLength가 보간되는 속도 */
 	UPROPERTY(EditAnywhere, meta = (DisplayName = "Target Arm Length Interpolate Speed"))
