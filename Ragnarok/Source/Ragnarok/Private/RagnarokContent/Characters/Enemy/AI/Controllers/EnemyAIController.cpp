@@ -16,9 +16,9 @@ AEnemyAIController::AEnemyAIController(const FObjectInitializer& ObjectInitializ
 
 {
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfigSight"));
-	AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
-	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
+	AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;			// 적감지
+	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;		// 아군감지
+	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;		// 중립감지
 	AISenseConfig_Sight->SightRadius = 5000.0f;
 	AISenseConfig_Sight->LoseSightRadius = 0.0f;
 	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 360.0f;
@@ -39,7 +39,14 @@ void AEnemyAIController::BeginPlay()
 
 	if (nullptr != CrowdFollowingComponent)
 	{
-		CrowdFollowingComponent->SetCrowdSimulationState(bEnableDetourCrowdAvoidance ? ECrowdSimulationState::Enabled : ECrowdSimulationState::Disabled);
+		if (true == bEnableDetourCrowdAvoidance)
+		{
+			CrowdFollowingComponent->SetCrowdSimulationState(ECrowdSimulationState::Enabled);
+		}
+		else
+		{
+			CrowdFollowingComponent->SetCrowdSimulationState(ECrowdSimulationState::Disabled);
+		}
 		
 		switch (DetourCrowdAvoidanceQuality)
 		{
@@ -54,14 +61,13 @@ void AEnemyAIController::BeginPlay()
 		CrowdFollowingComponent->SetGroupsToAvoid(1);
 		CrowdFollowingComponent->SetCrowdCollisionQueryRange(CrowdCollisionQueryRange);
 	}
-
 }
 
 ETeamAttitude::Type AEnemyAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	const APawn* PawnToCheck = Cast<const APawn>(&Other);
+	const APawn* CheckPawn = Cast<const APawn>(&Other);
 	
-	const IGenericTeamAgentInterface* TeamAgent = Cast<const IGenericTeamAgentInterface>(PawnToCheck->GetController());
+	const IGenericTeamAgentInterface* TeamAgent = Cast<const IGenericTeamAgentInterface>(CheckPawn->GetController());
 
 	if (nullptr != TeamAgent && GetGenericTeamId() > TeamAgent->GetGenericTeamId())
 	{
@@ -77,9 +83,9 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (nullptr != BehaviorTree)
+	if (nullptr != EnemyBehaviorTree)
 	{
-		RunBehaviorTree(BehaviorTree);
+		RunBehaviorTree(EnemyBehaviorTree);
 
 		if (ACharacter* InCharacter = Cast<ACharacter>(InPawn))
 		{
@@ -93,6 +99,7 @@ void AEnemyAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 {
 	if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
 	{
+		// 블랙보드의 TargetActor 가 nullptr일 경우 TargetActor에 Actor를 할당
 		if (nullptr == BlackboardComponent->GetValueAsObject("TargetActor"))
 		{
 			if (true == Stimulus.WasSuccessfullySensed() && nullptr != Actor)
