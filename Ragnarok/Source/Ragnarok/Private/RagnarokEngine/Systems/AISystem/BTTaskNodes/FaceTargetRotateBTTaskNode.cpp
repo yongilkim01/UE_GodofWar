@@ -10,8 +10,8 @@
 UFaceTargetRotateBTTaskNode::UFaceTargetRotateBTTaskNode()
 {
 	NodeName = TEXT("Rotate to Face Target Actor");
-	AnglePrecision = 10.0f;
-	RotationInterpolateSpeed = 5.0f;
+	AngleThreshold = 50.0f;
+	RotationInterpSpeed = 5.0f;
 
 	bNotifyTick = true;
 	bNotifyTaskFinished = true;
@@ -19,12 +19,11 @@ UFaceTargetRotateBTTaskNode::UFaceTargetRotateBTTaskNode()
 
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 
-	TargetToFaceKey.AddObjectFilter(
+	TargetActorKey.AddObjectFilter(
 		this, 
-		GET_MEMBER_NAME_CHECKED(ThisClass, TargetToFaceKey), 
+		GET_MEMBER_NAME_CHECKED(ThisClass, TargetActorKey), 
 		AActor::StaticClass()
 	);
-
 }
 
 void UFaceTargetRotateBTTaskNode::InitializeFromAsset(UBehaviorTree& Asset)
@@ -33,7 +32,7 @@ void UFaceTargetRotateBTTaskNode::InitializeFromAsset(UBehaviorTree& Asset)
 
 	if (UBlackboardData* BBData = GetBlackboardAsset())
 	{
-		TargetToFaceKey.ResolveSelectedKey(*BBData);
+		TargetActorKey.ResolveSelectedKey(*BBData);
 	}
 
 }
@@ -45,13 +44,13 @@ uint16 UFaceTargetRotateBTTaskNode::GetInstanceMemorySize() const
 
 FString UFaceTargetRotateBTTaskNode::GetStaticDescription() const
 {
-	const FString KeyDescription = TargetToFaceKey.SelectedKeyName.ToString();
-	return FString::Printf(TEXT("Smoothly rotate to face %s key, angle precision : %s"), *KeyDescription, *FString::SanitizeFloat(AnglePrecision));
+	const FString KeyDescription = TargetActorKey.SelectedKeyName.ToString();
+	return FString::Printf(TEXT("Smoothly rotate to face %s key, angle precision : %s"), *KeyDescription, *FString::SanitizeFloat(AngleThreshold));
 }
 
 EBTNodeResult::Type UFaceTargetRotateBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UObject* ActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetToFaceKey.SelectedKeyName);
+	UObject* ActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
 	AActor* TargetActor = Cast<AActor>(ActorObject);
 
 	APawn* ControlledPawn = OwnerComp.GetAIOwner()->GetPawn();
@@ -96,7 +95,7 @@ void UFaceTargetRotateBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 		const FRotator TargetRotation = FMath::RInterpTo(
 			Memory->OwnerPawn->GetActorRotation(), 
 			LookAtRotation, DeltaSeconds, 
-			RotationInterpolateSpeed);
+			RotationInterpSpeed);
 
 		Memory->OwnerPawn->SetActorRotation(TargetRotation);
 	}
@@ -110,5 +109,5 @@ bool UFaceTargetRotateBTTaskNode::HasReachedAnglePercision(APawn* QueryPawn, AAc
 	const float DotResult = FVector::DotProduct(OwnerForward, OwnerToTargetNormalVector);
 	const float Angle = UKismetMathLibrary::DegAcos(DotResult);
 
-	return Angle <= AnglePrecision;
+	return Angle <= AngleThreshold;
 }
