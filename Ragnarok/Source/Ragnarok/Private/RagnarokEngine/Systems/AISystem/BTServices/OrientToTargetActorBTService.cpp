@@ -38,22 +38,16 @@ void UOrientToTargetActorBTService::TickNode(UBehaviorTreeComponent& OwnerComp, 
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-	UObject* ActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
-	AActor* TargetActor = Cast<AActor>(ActorObject);
+	UObject* TargetActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
+	AActor* TargetActor = Cast<AActor>(TargetActorObject);
 
-	APawn* OwningPawn = OwnerComp.GetAIOwner()->GetPawn();
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
 
-	if (nullptr != OwningPawn && nullptr != TargetActor)
+	if (nullptr != OwnerPawn && nullptr != TargetActor)
 	{
-		const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetActor->GetActorLocation());
-		const FRotator TargetRot = FMath::RInterpTo(OwningPawn->GetActorRotation(), LookAtRot, DeltaSeconds, RotationSpeed);
+		const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(OwnerPawn->GetActorLocation(), TargetActor->GetActorLocation());
+		const FRotator TargetRot = FMath::RInterpTo(OwnerPawn->GetActorRotation(), LookAtRot, DeltaSeconds, RotationSpeed);
 
-		OwningPawn->SetActorRotation(TargetRot);
+		OwnerPawn->SetActorRotation(TargetRot);
 	}
 }
-
-//FString UOrientToTargetActorBTService::GetStaticDescription() const
-//{
-//	const FString KeyDescription = TargetActorKey.SelectedKeyName.ToString();
-//	return FString::Printf(TEXT("Orient rotation to %s Key %s"), *KeyDescription, GetStaticServiceDescription());
-//}

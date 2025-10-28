@@ -30,6 +30,7 @@ void UFaceTargetRotateBTTaskNode::InitializeFromAsset(UBehaviorTree& Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
+	// 에디터에서 설정한 키 이름과 블랙보드 키를 매핑
 	if (UBlackboardData* BBData = GetBlackboardAsset())
 	{
 		TargetActorKey.ResolveSelectedKey(*BBData);
@@ -50,24 +51,24 @@ FString UFaceTargetRotateBTTaskNode::GetStaticDescription() const
 
 EBTNodeResult::Type UFaceTargetRotateBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UObject* ActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
-	AActor* TargetActor = Cast<AActor>(ActorObject);
+	UObject* TargetActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
+	AActor* TargetActor = Cast<AActor>(TargetActorObject);
 
-	APawn* ControlledPawn = OwnerComp.GetAIOwner()->GetPawn();
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
 	
-	FFaceTargetRotateTaskMemory* Memory = CastInstanceNodeMemory<FFaceTargetRotateTaskMemory>(NodeMemory);
+	FFaceTargetRotateTaskMemory* InstanceMemory = CastInstanceNodeMemory<FFaceTargetRotateTaskMemory>(NodeMemory);
 
-	Memory->OwnerPawn = ControlledPawn;
-	Memory->TargetActor = TargetActor;
+	InstanceMemory->OwnerPawn = OwnerPawn;
+	InstanceMemory->TargetActor = TargetActor;
 
-	if (false == Memory->IsValid())
+	if (false == InstanceMemory->IsValid())
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	if (true == HasReachedAnglePercision(ControlledPawn, TargetActor))
+	if (true == HasReachedTargetActor(OwnerPawn, TargetActor))
 	{
-		Memory->Reset();
+		InstanceMemory->Reset();
 		return EBTNodeResult::Succeeded;
 	}
 
@@ -76,37 +77,38 @@ EBTNodeResult::Type UFaceTargetRotateBTTaskNode::ExecuteTask(UBehaviorTreeCompon
 
 void UFaceTargetRotateBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	FFaceTargetRotateTaskMemory* Memory = CastInstanceNodeMemory<FFaceTargetRotateTaskMemory>(NodeMemory);
+	FFaceTargetRotateTaskMemory* InstanceMemory = CastInstanceNodeMemory<FFaceTargetRotateTaskMemory>(NodeMemory);
 
-	if (false == Memory->IsValid())
+	if (false == InstanceMemory->IsValid())
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 	}
 
-	if (true == HasReachedAnglePercision(Memory->OwnerPawn.Get(), Memory->TargetActor.Get()))
+	if (true == HasReachedTargetActor(InstanceMemory->OwnerPawn.Get(), InstanceMemory->TargetActor.Get()))
 	{
-		Memory->Reset();
+		InstanceMemory->Reset();
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 	else
 	{
 		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
-			Memory->OwnerPawn->GetActorLocation(), Memory->TargetActor->GetActorLocation());
+			InstanceMemory->OwnerPawn->GetActorLocation(), InstanceMemory->TargetActor->GetActorLocation());
+
 		const FRotator TargetRotation = FMath::RInterpTo(
-			Memory->OwnerPawn->GetActorRotation(), 
+			InstanceMemory->OwnerPawn->GetActorRotation(), 
 			LookAtRotation, DeltaSeconds, 
 			RotationInterpSpeed);
 
-		Memory->OwnerPawn->SetActorRotation(TargetRotation);
+		InstanceMemory->OwnerPawn->SetActorRotation(TargetRotation);
 	}
 }
 
-bool UFaceTargetRotateBTTaskNode::HasReachedAnglePercision(APawn* QueryPawn, AActor* TargetActor) const
+bool UFaceTargetRotateBTTaskNode::HasReachedTargetActor(APawn* OwnerPawn, AActor* TargetActor) const
 {
-	const FVector OwnerForward = QueryPawn->GetActorForwardVector();
-	const FVector OwnerToTargetNormalVector = (TargetActor->GetActorLocation() - QueryPawn->GetActorLocation()).GetSafeNormal();
+	const FVector OwnerForwardVector = OwnerPawn->GetActorForwardVector();
+	const FVector OwnerToTargetNormalVector = (TargetActor->GetActorLocation() - OwnerPawn->GetActorLocation()).GetSafeNormal();
 
-	const float DotResult = FVector::DotProduct(OwnerForward, OwnerToTargetNormalVector);
+	const float DotResult = FVector::DotProduct(OwnerForwardVector, OwnerToTargetNormalVector);
 	const float Angle = UKismetMathLibrary::DegAcos(DotResult);
 
 	return Angle <= AngleThreshold;

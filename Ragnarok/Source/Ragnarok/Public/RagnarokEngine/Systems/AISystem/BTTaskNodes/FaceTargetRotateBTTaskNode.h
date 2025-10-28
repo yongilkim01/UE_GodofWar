@@ -64,7 +64,7 @@ public:
 	 * @param TargetActor 타겟 액터
 	 * @return 목표 각도에 도달했으면 true
 	 */
-	bool HasReachedAnglePercision(APawn* OwnerPawn, AActor* TargetActor) const;
+	bool HasReachedTargetActor(APawn* OwnerPawn, AActor* TargetActor) const;
 
 protected:
 	/** 목표 각도 임계값 */
