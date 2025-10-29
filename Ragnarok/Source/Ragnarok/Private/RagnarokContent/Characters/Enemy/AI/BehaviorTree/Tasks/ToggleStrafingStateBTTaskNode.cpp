@@ -13,8 +13,9 @@
 
 EBTNodeResult::Type UToggleStrafingStateBTTaskNode::ExecuteEnemyTask(AEnemyCharacter* EnemyCharacter)
 {
-	if (true == bEnable)
+	if (true == bEnableStrafing)
 	{
+		// 자동회전 비활성화
 		EnemyCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 
 		if (true == bChangeMaxWalkSpeed)
@@ -26,6 +27,7 @@ EBTNodeResult::Type UToggleStrafingStateBTTaskNode::ExecuteEnemyTask(AEnemyChara
 	}
 	else
 	{
+		// 자동회전 활성화
 		EnemyCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 		
 		float DefaultMaxWalkSpeed = 0.0f;

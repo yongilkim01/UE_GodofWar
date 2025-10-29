@@ -18,9 +18,9 @@ EBTNodeResult::Type UEnemyBTTaskNode::ExecuteEnemyTask(AEnemyCharacter* EnemyCha
 
 EBTNodeResult::Type UEnemyBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-    FEnemyTaskMemory* MyMemory = (FEnemyTaskMemory*)NodeMemory;
+    FEnemyTaskMemory* TaskMemory = (FEnemyTaskMemory*)NodeMemory;
 
-    if (nullptr == MyMemory->CachedEnemyCharacter)
+    if (nullptr == TaskMemory->CachedEnemyCharacter)
     {
         if (AAIController* AIController = OwnerComp.GetAIOwner())
         {
@@ -30,7 +30,7 @@ EBTNodeResult::Type UEnemyBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
                 if (nullptr != EnemyCharacter)
                 {
-                    MyMemory->CachedEnemyCharacter = EnemyCharacter;
+                    TaskMemory->CachedEnemyCharacter = EnemyCharacter;
                 }
                 else
                 {
@@ -51,7 +51,7 @@ EBTNodeResult::Type UEnemyBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerC
         }
     }
 
-    EBTNodeResult::Type Result = ExecuteEnemyTask(MyMemory->CachedEnemyCharacter);
+    EBTNodeResult::Type Result = ExecuteEnemyTask(TaskMemory->CachedEnemyCharacter);
 
     return Result;
 }
