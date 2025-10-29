@@ -13,7 +13,6 @@ UMotionWrapAttackTargetBTService::UMotionWrapAttackTargetBTService()
 {
 	INIT_SERVICE_NODE_NOTIFY_FLAGS();
 	TargetActorKey.AddObjectFilter(this, GET_MEMBER_NAME_CHECKED(ThisClass, TargetActorKey), AActor::StaticClass());
-
 }
 
 void UMotionWrapAttackTargetBTService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -24,9 +23,9 @@ void UMotionWrapAttackTargetBTService::TickNode(UBehaviorTreeComponent& OwnerCom
 	{
 		if (AAIController* AIController = OwnerComp.GetAIOwner())
 		{
-			if (APawn* ControlledPawn = AIController->GetPawn())
+			if (APawn* OwnerPawn = AIController->GetPawn())
 			{
-				EnemyCharacter = Cast<AEnemyCharacter>(ControlledPawn);
+				EnemyCharacter = Cast<AEnemyCharacter>(OwnerPawn);
 			}
 		}
 	}
@@ -35,8 +34,8 @@ void UMotionWrapAttackTargetBTService::TickNode(UBehaviorTreeComponent& OwnerCom
 
 	if (nullptr != BlackboardComp)
 	{
-		UObject* ActorObject = BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName);
-		AActor* TargetActor = Cast<AActor>(ActorObject);
+		UObject* TargetActorObject = BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName);
+		AActor* TargetActor = Cast<AActor>(TargetActorObject);
 
 		if (nullptr != TargetActor)
 		{

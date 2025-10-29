@@ -17,24 +17,24 @@ UHasGameplayTagBTDecorator::UHasGameplayTagBTDecorator()
 
 bool UHasGameplayTagBTDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
-	UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
 
-	if (nullptr == BlackboardComponent)
+	if (nullptr == BlackboardComp)
 	{
-		Debug::Print(TEXT("UHasGameplayTagBTDecorator::BlackboardComponent is nullptr!"), FColor::Yellow);
+		Debug::Print(TEXT("UHasGameplayTagBTDecorator::BlackboardComp is nullptr"), FColor::Yellow);
 		return false;
 	}
 
-	APawn* ControlledPawn = OwnerComp.GetAIOwner()->GetPawn();
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
 
-	if (nullptr == ControlledPawn)
+	if (nullptr == OwnerPawn)
 	{
-		Debug::Print(TEXT("UHasGameplayTagBTDecorator::ControlledPawn is nullptr!"), FColor::Yellow);
+		Debug::Print(TEXT("UHasGameplayTagBTDecorator::BlackboardComp is nullptr"), FColor::Yellow);
 		return false;
 	}
 
-	UObject* ActorObject = BlackboardComponent->GetValueAsObject(ActorToCheckKey.SelectedKeyName);
-	AActor* CheckActor = Cast<AActor>(ActorObject);
+	UObject* CheckActorObject = BlackboardComp->GetValueAsObject(CheckActorKey.SelectedKeyName);
+	AActor* CheckActor = Cast<AActor>(CheckActorObject);
 
 	if (true == URagnarokFunctionLibrary::HasActorGameplayTag(CheckActor, TagToCheck))
 	{

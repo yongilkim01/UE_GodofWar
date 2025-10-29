@@ -16,10 +16,6 @@ class UMotionWarpingComponent;
 
 /**
  * 라그나로크 캐릭터 베이스 클래스
- * 게임 내 모든 캐릭터의 기본이 되는 클래스로 어빌리티 시스템, 모션 워핑, UI 시스템을 제공한다
- * 
- * Ragnarok character base class.
- * Base class for all characters in the game, providing ability system, motion warping, and UI system functionality.
  */
 UCLASS()
 class RAGNAROK_API ARagnarokCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatInterface, public IUIInterface

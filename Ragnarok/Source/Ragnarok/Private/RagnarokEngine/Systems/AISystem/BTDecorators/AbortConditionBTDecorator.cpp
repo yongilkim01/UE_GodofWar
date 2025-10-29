@@ -22,44 +22,43 @@ bool UAbortConditionBTDecorator::CalculateRawConditionValue(UBehaviorTreeCompone
 
 	if (nullptr == BlackboardComponent)
 	{
-		Debug::Print(TEXT("UAbortConditionBTDecorator::BlackboardComponent is nullptr!"), FColor::Yellow);
+		Debug::Print(TEXT("UAbortConditionBTDecorator::BlackboardComponent is nullptr"), FColor::Yellow);
 		return false;
 	}
 
-	APawn* ControlledPawn = OwnerComp.GetAIOwner()->GetPawn();
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
 
-	if (nullptr == ControlledPawn)
+	if (nullptr == OwnerPawn)
 	{
-		Debug::Print(TEXT("UAbortConditionBTDecorator::ControlledPawn is nullptr!"), FColor::Yellow);
+		Debug::Print(TEXT("UAbortConditionBTDecorator::ControlledPawn is nullptr"), FColor::Yellow);
 		return false;
 	}
 
-	UObject* ActorObject = BlackboardComponent->GetValueAsObject(InTargetActorKey.SelectedKeyName);
+	UObject* TargetActorObject = BlackboardComponent->GetValueAsObject(TargetActorKey.SelectedKeyName);
 
-	if (nullptr == ActorObject)
+	if (nullptr == TargetActorObject)
 	{
-		Debug::Print(TEXT("UAbortConditionBTDecorator::ActorObject is nullptr!"), FColor::Yellow);
+		Debug::Print(TEXT("UAbortConditionBTDecorator::ActorObject is nullptr"), FColor::Yellow);
 		return false;
 	}
 		
 	float DistanceToTarget = BlackboardComponent->GetValueAsFloat(DistanceToTargetKey.SelectedKeyName);
-	AActor* TargetActor = Cast<AActor>(ActorObject);
-	AActor* OwnerAIActor = Cast<AActor>(ControlledPawn);
+	AActor* TargetActor = Cast<AActor>(TargetActorObject);
+	AActor* OwnerActor = Cast<AActor>(OwnerPawn);
 
 	bool bTargetActorDead = false;
-	bool bOwnerAIActorDead = false;
+	bool bOwnerActorDead = false;
 
 	if (true == URagnarokFunctionLibrary::HasActorGameplayTag(TargetActor, RagnarokGameplayTags::Global_State_Dead))
 	{
 		bTargetActorDead = true;
 	}
 
-	if (true == URagnarokFunctionLibrary::HasActorGameplayTag(OwnerAIActor, RagnarokGameplayTags::Global_State_Dead))
+	if (true == URagnarokFunctionLibrary::HasActorGameplayTag(OwnerActor, RagnarokGameplayTags::Global_State_Dead))
 	{
-		bOwnerAIActorDead = true;
+		bOwnerActorDead = true;
 	}
 
-	return true == bTargetActorDead ||
-		true == bOwnerAIActorDead ||
-		FMath::IsNearlyEqual(DistanceToTarget, 0.0f);
+	// 타겟이 죽거나 오너 액터가 죽거나 거리가 0일 경우 true 반환
+	return true == bTargetActorDead || true == bOwnerActorDead || FMath::IsNearlyEqual(DistanceToTarget, 0.0f);
 }

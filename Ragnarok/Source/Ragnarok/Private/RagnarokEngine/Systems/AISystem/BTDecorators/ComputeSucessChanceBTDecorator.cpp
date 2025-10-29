@@ -12,8 +12,8 @@ bool UComputeSucessChanceBTDecorator::CalculateRawConditionValue(UBehaviorTreeCo
         return false;
     }
 
-    APawn* ControlledPawn = AIController->GetPawn();
-    if (nullptr == ControlledPawn)
+    APawn* OwnerPawn = AIController->GetPawn();
+    if (nullptr == OwnerPawn)
     {
         return false;
     }
