@@ -9,7 +9,7 @@
 class UCombatComponent;
 
 /**
- * 
+ * CombatComponent 관련 처리 함수 BlueprintFuncionLibrary 클래스
  */
 UCLASS()
 class RAGNAROK_API UCombatFunctionLibrary : public UBlueprintFunctionLibrary
