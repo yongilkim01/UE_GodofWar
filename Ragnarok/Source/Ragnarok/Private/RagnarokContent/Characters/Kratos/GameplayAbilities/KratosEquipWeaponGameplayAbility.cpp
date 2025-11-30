@@ -15,7 +15,7 @@
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
 
@@ -120,7 +120,7 @@ void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventDa
 		KratosWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
-			SocketNameToAttachTo // FName Å¸ÀÔÀÇ ¸â¹ö º¯¼ö¿©¾ß ÇÔ
+			SocketNameToAttachTo // FName Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		);
 	}
 

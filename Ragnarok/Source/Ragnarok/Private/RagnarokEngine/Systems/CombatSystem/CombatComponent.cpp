@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 #include "Components/BoxComponent.h"

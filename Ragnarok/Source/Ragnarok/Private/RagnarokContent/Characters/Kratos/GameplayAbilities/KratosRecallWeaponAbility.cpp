@@ -7,7 +7,7 @@
 #include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 

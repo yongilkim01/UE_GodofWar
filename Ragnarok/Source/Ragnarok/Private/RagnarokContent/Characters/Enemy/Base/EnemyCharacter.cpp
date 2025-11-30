@@ -9,7 +9,7 @@
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"

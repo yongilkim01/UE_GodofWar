@@ -21,7 +21,7 @@
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Systems/AbilitySystem/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()

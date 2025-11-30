@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 #include "GameplayAbilitySpecHandle.h"
 #include "KratosWeapon.generated.h"

@@ -4,7 +4,7 @@
 #include "RagnarokContent/Abilities/Common/SpawnWeaponGameplayAbility.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Objects/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 
