@@ -7,8 +7,8 @@
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
-#include "RagnarokEngine/Systems/UISystem/UIInterface.h"
-#include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
+#include "RagnarokContent/UI/Interfaces/UIInterface.h"
+#include "RagnarokContent/UI/Components/RagnarokUIComponent.h"
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 

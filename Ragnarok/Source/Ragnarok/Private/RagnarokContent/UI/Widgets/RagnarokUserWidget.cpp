@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
-#include "RagnarokEngine/Systems/UISystem/UIInterface.h"
+#include "RagnarokContent/UI/Widgets/RagnarokUserWidget.h"
+#include "RagnarokContent/UI/Interfaces/UIInterface.h"
 
 #include "RagnarokContent/Characters/Kratos/Components/KratosUIComponent.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"

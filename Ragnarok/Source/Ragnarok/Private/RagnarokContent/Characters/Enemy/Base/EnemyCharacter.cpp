@@ -7,7 +7,7 @@
 #include "RagnarokContent/Characters/Enemy/DataAssets/EnemyStartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
-#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
+#include "RagnarokContent/UI/Widgets/RagnarokUserWidget.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 
@@ -21,7 +21,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 
-#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
+#include "RagnarokContent/UI/Widgets/RagnarokUserWidget.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {

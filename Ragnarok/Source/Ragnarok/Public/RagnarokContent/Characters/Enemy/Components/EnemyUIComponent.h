@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
+#include "RagnarokContent/UI/Components/RagnarokUIComponent.h"
 #include "EnemyUIComponent.generated.h"
 
 /**

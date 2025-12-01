@@ -17,7 +17,7 @@
 #include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/UISystem/RagnarokUIComponent.h"
+#include "RagnarokContent/UI/Components/RagnarokUIComponent.h"
 
 void UKratosEquipWeaponGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {

@@ -6,7 +6,7 @@
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
-#include "RagnarokEngine/Systems/UISystem/RagnarokUserWidget.h"
+#include "RagnarokContent/UI/Widgets/RagnarokUserWidget.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"

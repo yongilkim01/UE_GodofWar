@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "RagnarokEngine/Systems/CombatSystem/CombatInterface.h"
-#include "RagnarokEngine/Systems/UISystem/UIInterface.h"
+#include "RagnarokContent/UI/Interfaces/UIInterface.h"
 #include "RagnarokCharacter.generated.h"
 
 class URagnarokAbilitySystemComponent;
