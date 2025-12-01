@@ -4,7 +4,6 @@
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
-#include "RagnarokContent/Characters/Kratos/DataAssets/CharacterPrimaryAssetKratos.h"
 
 // Sets default values for this component's properties
 ULevelAssetManagerComponent::ULevelAssetManagerComponent()
