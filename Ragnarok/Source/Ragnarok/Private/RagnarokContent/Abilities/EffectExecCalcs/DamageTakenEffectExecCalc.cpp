@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/AbilitySystem/EffectExecCalcs/DamageTakenEffectExecCalc.h"
+#include "RagnarokContent/Abilities/EffectExecCalcs/DamageTakenEffectExecCalc.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
@@ -69,7 +69,7 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 
 	//Debug::Print(TEXT("Soure Attack Power"), SourceAttackPower);
 
-	// GameAbility¿¡¼­ Àü´ÞÇÑ ¹«±âÀÇ ±âº» µ¥¹ÌÁö¸¦ °è»ê
+	// GameAbilityï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 	for (const TPair<FGameplayTag, float>& TagMagniture : EffectSpec.SetByCallerTagMagnitudes)
 	{

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/AbilitySystem/GameplayCues/SoundPlayGameplayCueNotify.h"
+#include "RagnarokContent/Abilities/GameplayCues/SoundPlayGameplayCueNotify.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 

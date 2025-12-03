@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
+#include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
 #include "EnemyStartUpDataAsset.generated.h"
 
 class URagnarokAbilitySystemComponent;

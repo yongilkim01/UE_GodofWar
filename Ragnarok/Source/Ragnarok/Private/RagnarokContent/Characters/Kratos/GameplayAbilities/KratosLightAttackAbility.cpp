@@ -19,7 +19,7 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/AbilityTasks/RKAbilityTask_RotateToCamera.h"
+#include "RagnarokContent/Abilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 #include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 

@@ -18,7 +18,7 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
-#include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
+#include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
 #include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"

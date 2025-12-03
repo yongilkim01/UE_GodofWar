@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/AbilitySystem/Notifies/SendGameplayEventAnimNotify.h"
+#include "RagnarokContent/Abilities/Notifies/SendGameplayEventAnimNotify.h"
 #include "KratosEquipWeaponEventAnimNotify.generated.h"
 
 /**

@@ -6,7 +6,7 @@
 #include "RagnarokContent/Characters/Enemy/Components/EnemyUIComponent.h"
 #include "RagnarokContent/Characters/Enemy/DataAssets/EnemyStartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
-#include "RagnarokEngine/Systems/AbilitySystem/DataAssets/StartUpDataAsset.h"
+#include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
 #include "RagnarokContent/UI/Widgets/RagnarokUserWidget.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"

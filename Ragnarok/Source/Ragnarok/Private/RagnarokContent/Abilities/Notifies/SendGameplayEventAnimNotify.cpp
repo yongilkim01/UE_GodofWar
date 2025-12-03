@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/AbilitySystem/Notifies/SendGameplayEventAnimNotify.h"
+#include "RagnarokContent/Abilities/Notifies/SendGameplayEventAnimNotify.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 
@@ -30,7 +30,7 @@ void USendGameplayEventAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAni
 		EventData.Instigator = Owner;
 		EventData.Target = Owner;
 
-		// ºí·çÇÁ¸°Æ®ÀÇ "Send Gameplay Event To Actor" ³ëµå¿Í µ¿ÀÏÇÑ ¹æ½Ä
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ "Send Gameplay Event To Actor" ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Owner, EventTag, EventData);
 	}
 	else
