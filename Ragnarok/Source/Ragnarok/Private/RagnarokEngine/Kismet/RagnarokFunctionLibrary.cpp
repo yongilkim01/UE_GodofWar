@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 #include "GenericTeamAgentInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"

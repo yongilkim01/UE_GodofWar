@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayCueNotify_Static.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayCueNotify_Static.h"
 #include "SoundPlayGameplayCueNotify.generated.h"
 
 /**

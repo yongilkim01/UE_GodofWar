@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/AI/BehaviorTree/Tasks/ToggleStrafingStateBTTaskNode.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 
 #include "RagnarokContent/Characters/Enemy/EnemyGameplayTags.h"
 
@@ -15,7 +15,7 @@ EBTNodeResult::Type UToggleStrafingStateBTTaskNode::ExecuteEnemyTask(AEnemyChara
 {
 	if (true == bEnableStrafing)
 	{
-		// ÀÚµ¿È¸Àü ºñÈ°¼ºÈ­
+		// ï¿½Úµï¿½È¸ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
 		EnemyCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 
 		if (true == bChangeMaxWalkSpeed)
@@ -27,7 +27,7 @@ EBTNodeResult::Type UToggleStrafingStateBTTaskNode::ExecuteEnemyTask(AEnemyChara
 	}
 	else
 	{
-		// ÀÚµ¿È¸Àü È°¼ºÈ­
+		// ï¿½Úµï¿½È¸ï¿½ï¿½ È°ï¿½ï¿½È­
 		EnemyCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 		
 		float DefaultMaxWalkSpeed = 0.0f;

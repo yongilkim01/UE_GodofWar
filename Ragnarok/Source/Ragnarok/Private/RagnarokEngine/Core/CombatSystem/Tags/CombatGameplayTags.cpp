@@ -1,4 +1,4 @@
-#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
 
 namespace CombatGameplayTags
 {

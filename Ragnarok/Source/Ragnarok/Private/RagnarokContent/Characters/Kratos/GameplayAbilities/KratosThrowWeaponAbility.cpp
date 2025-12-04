@@ -11,8 +11,8 @@
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
 #include "AbilitySystemBlueprintLibrary.h"

@@ -3,9 +3,9 @@
 
 #include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
 
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayAbility.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayEffect.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayEffect.h"
 
 void UStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)
 {

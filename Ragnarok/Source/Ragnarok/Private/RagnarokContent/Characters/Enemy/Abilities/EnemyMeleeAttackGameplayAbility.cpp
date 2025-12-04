@@ -2,8 +2,8 @@
 
 
 #include "RagnarokContent/Characters/Enemy/Abilities/EnemyMeleeAttackGameplayAbility.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokContent/Characters/Enemy/EnemyGameplayTags.h"
 

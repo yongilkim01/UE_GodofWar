@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Systems/CombatSystem/Notifies/WeaponCollisionAnimNotifyState.h"
-#include "RagnarokEngine/Systems/CombatSystem/CombatFunctionLibrary.h"
-#include "RagnarokEngine/Systems/CombatSystem/CombatComponent.h"
+#include "RagnarokEngine/Core/CombatSystem/Notifies/WeaponCollisionAnimNotifyState.h"
+#include "RagnarokEngine/Core/CombatSystem/CombatFunctionLibrary.h"
+#include "RagnarokEngine/Core/CombatSystem/CombatComponent.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)

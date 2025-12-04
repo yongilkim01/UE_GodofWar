@@ -13,9 +13,9 @@
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilityFunctionLibrary.h"
-#include "RagnarokEngine/Systems/CombatSystem/Tags/CombatGameplayTags.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 UKratosHeavyAttackAbility::UKratosHeavyAttackAbility()
 {

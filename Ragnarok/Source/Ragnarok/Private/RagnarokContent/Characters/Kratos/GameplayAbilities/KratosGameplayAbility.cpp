@@ -6,7 +6,7 @@
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
@@ -58,7 +58,7 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosComboDamageEffectS
 {
 	check(EffectClass);
 
-	// µ¥¹ÌÁö ÀÌÆåÆ® Å¬·¡½º Ã³¸®±â
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® Å¬ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½
 	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
@@ -84,7 +84,7 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 {
 	check(EffectClass);
 
-	// µ¥¹ÌÁö ÀÌÆåÆ® Å¬·¡½º Ã³¸®±â
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® Å¬ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½
 	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());

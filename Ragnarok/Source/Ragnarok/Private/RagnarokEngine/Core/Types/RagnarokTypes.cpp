@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
 
 bool FRagnarokbilitySet::IsValid() const
 {

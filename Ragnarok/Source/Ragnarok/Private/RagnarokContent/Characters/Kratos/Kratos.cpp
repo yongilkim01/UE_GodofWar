@@ -21,8 +21,8 @@
 #include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
 #include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
 #include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAttributeSet.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAttributeSet.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"

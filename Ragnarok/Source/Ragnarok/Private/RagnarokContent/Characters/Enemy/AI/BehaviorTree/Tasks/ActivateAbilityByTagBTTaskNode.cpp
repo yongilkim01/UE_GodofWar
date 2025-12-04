@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/AI/BehaviorTree/Tasks/ActivateAbilityByTagBTTaskNode.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 EBTNodeResult::Type UActivateAbilityByTagBTTaskNode::ExecuteEnemyTask(AEnemyCharacter* EnemyCharacter)
 {

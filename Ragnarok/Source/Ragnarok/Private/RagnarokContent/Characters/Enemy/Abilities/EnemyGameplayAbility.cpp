@@ -4,7 +4,7 @@
 #include "RagnarokContent/Characters/Enemy/Abilities/EnemyGameplayAbility.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
 #include "RagnarokContent/Characters/Enemy/Components/EnemyCombatComponent.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 
 void UEnemyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

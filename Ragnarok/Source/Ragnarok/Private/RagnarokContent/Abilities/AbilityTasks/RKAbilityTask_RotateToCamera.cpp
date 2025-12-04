@@ -2,7 +2,7 @@
 
 
 #include "RagnarokContent/Abilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 

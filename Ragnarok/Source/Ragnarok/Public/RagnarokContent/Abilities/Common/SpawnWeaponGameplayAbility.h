@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
 #include "SpawnWeaponGameplayAbility.generated.h"
 
 class ARagnarokWeapon;

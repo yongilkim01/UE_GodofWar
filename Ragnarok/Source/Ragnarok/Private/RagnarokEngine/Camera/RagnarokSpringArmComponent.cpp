@@ -3,7 +3,7 @@
 
 #include "RagnarokEngine/Camera/RagnarokSpringArmComponent.h"
 #include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
-#include "RagnarokEngine/Systems/AbilitySystem/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
