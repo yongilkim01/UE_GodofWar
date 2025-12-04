@@ -17,10 +17,10 @@
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
+#include "RagnarokEngine/Input/DataAssets/InputConfigDataAsset.h"
 #include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
-#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
-#include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
+#include "RagnarokEngine/Asset/RagnarokAssetManager.h"
+#include "RagnarokEngine/Input/RagnarokEnhancedInputComponent.h"
 #include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Core/GameplayAbilities/RagnarokAttributeSet.h"
 

@@ -2,7 +2,7 @@
 
 
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
-#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Asset/RagnarokAssetManager.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 

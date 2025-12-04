@@ -9,8 +9,8 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/RagnarokFunctionLibrary.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Systems/InputSystem/DataAssets/InputConfigDataAsset.h"
-#include "RagnarokEngine/Systems/InputSystem/RagnarokEnhancedInputComponent.h"
+#include "RagnarokEngine/Input/DataAssets/InputConfigDataAsset.h"
+#include "RagnarokEngine/Input/RagnarokEnhancedInputComponent.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"

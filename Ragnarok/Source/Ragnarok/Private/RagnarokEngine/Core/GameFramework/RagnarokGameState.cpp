@@ -3,7 +3,7 @@
 
 #include "RagnarokEngine/Core/GameFramework/RagnarokGameState.h"
 
-#include "RagnarokEngine/Systems/AssetSystem/LevelAssetManagerComponent.h"
+#include "RagnarokEngine/Asset/LevelAssetManagerComponent.h"
 
 ARagnarokGameState::ARagnarokGameState()
 {

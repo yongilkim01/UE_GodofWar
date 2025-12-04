@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Systems/ControlSystem/Components/ControlComponent.h"
+#include "RagnarokEngine/Control/Components/ControlComponent.h"
 #include "KratosControlComponent.generated.h"
 
 class AKratos;

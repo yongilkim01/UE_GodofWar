@@ -3,7 +3,7 @@
 
 #include "RagnarokEngine/Core/DataAssets/RagnarokPrimaryDataAsset.h"
 
-#include "RagnarokEngine/Systems/AssetSystem/RagnarokAssetManager.h"
+#include "RagnarokEngine/Asset/RagnarokAssetManager.h"
 
 void URagnarokPrimaryDataAsset::LoadAsset()
 {
