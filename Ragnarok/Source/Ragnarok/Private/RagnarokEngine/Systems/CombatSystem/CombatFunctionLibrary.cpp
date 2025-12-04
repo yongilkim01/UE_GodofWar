@@ -2,7 +2,7 @@
 
 
 #include "RagnarokEngine/Systems/CombatSystem/CombatFunctionLibrary.h"
-#include "RagnarokEngine/Systems/CombatSystem/CombatInterface.h"
+#include "RagnarokEngine/Core/Interfaces/CombatInterface.h"
 
 UCombatComponent* UCombatFunctionLibrary::GetCombatComponentFromActor(AActor* InActor)
 {

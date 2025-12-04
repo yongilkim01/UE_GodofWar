@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
-#include "RagnarokEngine/Systems/CombatSystem/CombatInterface.h"
+#include "RagnarokEngine/Core/Interfaces/CombatInterface.h"
 #include "RagnarokEngine/Core/Interfaces/UIInterface.h"
 #include "RagnarokCharacter.generated.h"
 
