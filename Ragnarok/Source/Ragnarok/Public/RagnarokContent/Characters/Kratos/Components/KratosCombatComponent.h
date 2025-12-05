@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokEngine/Core/CombatSystem/CombatComponent.h"
+#include "RagnarokEngine/CombatSystem/CombatComponent.h"
 #include "KratosCombatComponent.generated.h"
 
 class AKratosWeapon;

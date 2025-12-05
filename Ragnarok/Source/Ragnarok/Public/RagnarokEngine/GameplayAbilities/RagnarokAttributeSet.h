@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokAttributeSet.generated.h"
 
 class IUIInterface;

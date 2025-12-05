@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAttributeSet.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"

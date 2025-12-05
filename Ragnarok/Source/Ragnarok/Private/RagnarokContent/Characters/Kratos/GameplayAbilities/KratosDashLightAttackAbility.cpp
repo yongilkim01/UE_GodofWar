@@ -8,8 +8,8 @@
 
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"

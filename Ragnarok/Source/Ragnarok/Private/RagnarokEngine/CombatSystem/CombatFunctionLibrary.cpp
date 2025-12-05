@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/CombatSystem/CombatFunctionLibrary.h"
+#include "RagnarokEngine/CombatSystem/CombatFunctionLibrary.h"
 #include "RagnarokEngine/Core/Interfaces/CombatInterface.h"
 
 UCombatComponent* UCombatFunctionLibrary::GetCombatComponentFromActor(AActor* InActor)

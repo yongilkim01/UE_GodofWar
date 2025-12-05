@@ -2,7 +2,7 @@
 
 
 #include "RagnarokContent/Abilities/EffectExecCalcs/DamageTakenEffectExecCalc.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"

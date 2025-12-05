@@ -5,7 +5,7 @@
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokContent/Characters/Kratos/KratosController.h"
 
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"

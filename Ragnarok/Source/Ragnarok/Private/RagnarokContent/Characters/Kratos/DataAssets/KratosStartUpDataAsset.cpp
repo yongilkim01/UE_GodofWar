@@ -3,8 +3,8 @@
 
 #include "RagnarokContent/Characters/Kratos/DataAssets/KratosStartUpDataAsset.h"
 
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 
 void UKratosStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)

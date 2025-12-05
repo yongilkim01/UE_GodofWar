@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/Abilities/EnemyDeathGameplayAbility.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "NiagaraFunctionLibrary.h"

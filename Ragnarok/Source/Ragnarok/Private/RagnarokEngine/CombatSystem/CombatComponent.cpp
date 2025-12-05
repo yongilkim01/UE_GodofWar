@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/CombatSystem/CombatComponent.h"
+#include "RagnarokEngine/CombatSystem/CombatComponent.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 

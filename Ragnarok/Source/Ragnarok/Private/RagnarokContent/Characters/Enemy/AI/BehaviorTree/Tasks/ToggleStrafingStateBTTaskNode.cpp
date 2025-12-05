@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/AI/BehaviorTree/Tasks/ToggleStrafingStateBTTaskNode.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 
 #include "RagnarokContent/Characters/Enemy/EnemyGameplayTags.h"
 

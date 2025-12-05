@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokGameplayAbility.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
 #include "RagnarokEngine/Core/Types/RagnarokTypes.h"
 
 void URagnarokAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)

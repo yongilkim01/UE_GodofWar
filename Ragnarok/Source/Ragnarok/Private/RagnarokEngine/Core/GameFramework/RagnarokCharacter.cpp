@@ -3,8 +3,8 @@
 
 #include "RagnarokEngine/Core/GameFramework/RagnarokCharacter.h"
 
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAbilitySystemComponent.h"
-#include "RagnarokEngine/Core/GameplayAbilities/RagnarokAttributeSet.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
+#include "RagnarokEngine/GameplayAbilities/RagnarokAttributeSet.h"
 
 #include "MotionWarpingComponent.h"
 

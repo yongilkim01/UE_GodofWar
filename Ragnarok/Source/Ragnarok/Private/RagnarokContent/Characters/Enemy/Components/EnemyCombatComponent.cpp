@@ -3,7 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/Components/EnemyCombatComponent.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
-#include "RagnarokEngine/Core/CombatSystem/Tags/CombatGameplayTags.h"
+#include "RagnarokEngine/CombatSystem/Tags/CombatGameplayTags.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 
