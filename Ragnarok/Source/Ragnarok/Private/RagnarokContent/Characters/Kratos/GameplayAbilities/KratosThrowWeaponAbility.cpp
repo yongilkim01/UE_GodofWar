@@ -83,6 +83,22 @@ void UKratosThrowWeaponAbility::EndAbility(const FGameplayAbilitySpecHandle Hand
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosThrowWeaponAbility::EndAbility"));
 
 	Kratos->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	if (nullptr != PlayMontageTask)
+	{
+	    PlayMontageTask->EndTask();
+	    PlayMontageTask = nullptr;
+	}
+	if (nullptr != ThrowWaitEventTask)
+	{
+	    ThrowWaitEventTask->EndTask();
+	    ThrowWaitEventTask = nullptr;
+	}
+	if (nullptr != HitEventTask)
+	{
+	    HitEventTask->EndTask();
+	    HitEventTask = nullptr;
+	}
 }
 
 void UKratosThrowWeaponAbility::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)

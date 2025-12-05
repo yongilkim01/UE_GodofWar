@@ -54,7 +54,7 @@ void UKratosCatchWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		CatchingWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
-			FName("RightWeaponSocket") // FName 타입의 멤버 변수여야 함
+			FName("RightWeaponSocket")
 		);
 	}
 

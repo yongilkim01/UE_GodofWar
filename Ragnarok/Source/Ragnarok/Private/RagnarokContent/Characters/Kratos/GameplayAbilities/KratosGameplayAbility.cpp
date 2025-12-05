@@ -58,7 +58,6 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosComboDamageEffectS
 {
 	check(EffectClass);
 
-	// ������ ����Ʈ Ŭ���� ó����
 	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
@@ -84,7 +83,6 @@ FGameplayEffectSpecHandle UKratosGameplayAbility::CreateKratosDamageEffectSpecHa
 {
 	check(EffectClass);
 
-	// ������ ����Ʈ Ŭ���� ó����
 	FGameplayEffectContextHandle ContextHandle = GetASCFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
