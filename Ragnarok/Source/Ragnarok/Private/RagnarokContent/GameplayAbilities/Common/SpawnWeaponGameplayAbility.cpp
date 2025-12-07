@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Abilities/Common/SpawnWeaponGameplayAbility.h"
+#include "RagnarokContent/GameplayAbilities/Common/SpawnWeaponGameplayAbility.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Abilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
+#include "RagnarokContent/GameplayAbilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
 
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"

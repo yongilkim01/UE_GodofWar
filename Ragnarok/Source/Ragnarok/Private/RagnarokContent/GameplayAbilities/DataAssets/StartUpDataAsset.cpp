@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Abilities/DataAssets/StartUpDataAsset.h"
+#include "RagnarokContent/GameplayAbilities/DataAssets/StartUpDataAsset.h"
 
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokGameplayAbility.h"
