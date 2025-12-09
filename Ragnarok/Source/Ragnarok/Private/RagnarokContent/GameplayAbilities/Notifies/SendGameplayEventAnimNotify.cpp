@@ -30,7 +30,6 @@ void USendGameplayEventAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAni
 		EventData.Instigator = Owner;
 		EventData.Target = Owner;
 
-		// ��������Ʈ�� "Send Gameplay Event To Actor" ���� ������ ���
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Owner, EventTag, EventData);
 	}
 	else

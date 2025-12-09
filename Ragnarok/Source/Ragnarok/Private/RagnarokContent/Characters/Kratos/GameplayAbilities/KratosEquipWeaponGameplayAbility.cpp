@@ -120,7 +120,7 @@ void UKratosEquipWeaponGameplayAbility::OnGameplayEventReceived(FGameplayEventDa
 		KratosWeapon->AttachToComponent(
 			ParentMesh,
 			AttachRules,
-			SocketNameToAttachTo // FName Ÿ���� ��� �������� ��
+			SocketNameToAttachTo
 		);
 	}
 

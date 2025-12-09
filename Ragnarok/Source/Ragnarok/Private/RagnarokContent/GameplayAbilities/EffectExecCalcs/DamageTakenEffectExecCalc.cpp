@@ -69,8 +69,6 @@ void UDamageTakenEffectExecCalc::Execute_Implementation(const FGameplayEffectCus
 
 	//Debug::Print(TEXT("Soure Attack Power"), SourceAttackPower);
 
-	// GameAbility���� ������ ������ �⺻ �������� ���
-
 	for (const TPair<FGameplayTag, float>& TagMagniture : EffectSpec.SetByCallerTagMagnitudes)
 	{
 		if (true == TagMagniture.Key.MatchesTagExact(RagnarokGameplayTags::Global_SetByCaller_BaseDamage))

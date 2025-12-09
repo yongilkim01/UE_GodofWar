@@ -59,6 +59,5 @@ bool UAbortConditionBTDecorator::CalculateRawConditionValue(UBehaviorTreeCompone
 		bOwnerActorDead = true;
 	}
 
-	// Ÿ���� �װų� ���� ���Ͱ� �װų� �Ÿ��� 0�� ��� true ��ȯ
 	return true == bTargetActorDead || true == bOwnerActorDead || FMath::IsNearlyEqual(DistanceToTarget, 0.0f);
 }

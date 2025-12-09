@@ -30,7 +30,6 @@ void UFaceTargetRotateBTTaskNode::InitializeFromAsset(UBehaviorTree& Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
-	// �����Ϳ��� ������ Ű �̸��� �������� Ű�� ����
 	if (UBlackboardData* BBData = GetBlackboardAsset())
 	{
 		TargetActorKey.ResolveSelectedKey(*BBData);
