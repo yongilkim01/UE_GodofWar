@@ -42,4 +42,8 @@ namespace KratosGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Heavy, "Kratos.SetByCaller.AttackType.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Kratos_SetByCaller_AttackType_Throw, "Kratos.SetByCaller.AttackType.Throw");
 
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_AttackReact_Knockback, "Kratos.AttackReact.Knockback");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_AttackReact_Launch, "Kratos.AttackReact.Launch");
+	UE_DEFINE_GAMEPLAY_TAG(Kratos_AttackReact_Slamdown, "Kratos.AttackReact.Slamdown");
+
 }

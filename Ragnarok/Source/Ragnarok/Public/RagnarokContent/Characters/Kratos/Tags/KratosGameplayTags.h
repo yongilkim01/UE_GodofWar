@@ -43,4 +43,8 @@ namespace KratosGameplayTags
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_SetByCaller_AttackType_Light);
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_SetByCaller_AttackType_Heavy);
 	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_SetByCaller_AttackType_Throw);
+
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_AttackReact_Knockback);
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_AttackReact_Launch);
+	RAGNAROK_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kratos_AttackReact_Slamdown);
 }
