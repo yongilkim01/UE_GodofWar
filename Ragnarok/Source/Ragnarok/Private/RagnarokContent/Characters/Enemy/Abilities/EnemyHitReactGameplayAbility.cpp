@@ -3,6 +3,7 @@
 
 #include "RagnarokContent/Characters/Enemy/Abilities/EnemyHitReactGameplayAbility.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
+#include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
@@ -14,6 +15,17 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
 
     if (nullptr != TriggerEventData)
     {
+        const FRagnarokGameplayEffectContext* Context = static_cast<const FRagnarokGameplayEffectContext*>(TriggerEventData->ContextHandle.Get());
+        FGameplayTag ReceivedAttackType;
+        FVector ReceivedHitDirection = FVector::ZeroVector;
+
+        if (nullptr != Context)
+        {
+            ReceivedAttackType = Context->GetAttackTypeTag();
+            ReceivedHitDirection = Context->GetHitDirection();
+        }
+
+
         FGameplayTag EventTag = TriggerEventData->EventTag;
         float EventMagnitude = TriggerEventData->EventMagnitude;
 

@@ -2,4 +2,9 @@
 
 
 #include "RagnarokContent/GameplayAbilities/RagnarokAbilitySystemGlobals.h"
+#include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"
 
+FGameplayEffectContext* URagnarokAbilitySystemGlobals::AllocGameplayEffectContext() const
+{
+    return new FRagnarokGameplayEffectContext();
+}

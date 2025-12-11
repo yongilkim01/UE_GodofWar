@@ -13,5 +13,7 @@ UCLASS()
 class RAGNAROK_API URagnarokAbilitySystemGlobals : public UAbilitySystemGlobals
 {
 	GENERATED_BODY()
+
+	virtual FGameplayEffectContext* AllocGameplayEffectContext() const override;
 	
 };

@@ -6,6 +6,8 @@
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
 #include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
+#include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -21,7 +23,6 @@
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokContent/GameplayAbilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 #include "RagnarokEngine/CombatSystem/Tags/CombatGameplayTags.h"
-#include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()
@@ -257,6 +258,22 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 
 	AActor* TargetActor = const_cast<AActor*>(Payload.Target.Get());
 
+	if (nullptr == TargetActor)
+	{
+		Debug::Print(TEXT("UKratosLightAttackAbility::OnGameplayEventReceived TargetActor is nullptr"), FColor::Red);
+		return;
+	}
+
+	if (true == SpecHandle.IsValid())
+	{
+		FRagnarokGameplayEffectContext* Context = static_cast<FRagnarokGameplayEffectContext*>(SpecHandle.Data->GetContext().Get());
+		if (nullptr != Context)
+		{
+			Context->SetAttackTypeTag(KratosGameplayTags::Kratos_AttackReact_Launch);
+			Context->SetHitDirection((TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).GetSafeNormal());
+		}
+	}
+
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
 	
 	FGameplayCueParameters CueParams;
@@ -267,7 +284,16 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 
 	if (true == ActiveGameplayEffectHandle.WasSuccessfullyApplied())
 	{
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, Payload);
+		FGameplayEventData UpdatedPayload;
+		UpdatedPayload.Target = Payload.Target;
+		UpdatedPayload.Instigator = Payload.Instigator;
+
+		if (true == SpecHandle.IsValid())
+		{
+			UpdatedPayload.ContextHandle = SpecHandle.Data->GetContext();
+		}
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(TargetActor, RagnarokGameplayTags::Global_Event_HitReact, UpdatedPayload);
 	}
 
 	if (true == bShowDebug) Debug::Print(TEXT("Hitting ") + Payload.Target.GetName() + TEXT(" with light attack (Combo: ") + FString::FromInt(CurComboCount) + TEXT(")"), FColor::Cyan);
