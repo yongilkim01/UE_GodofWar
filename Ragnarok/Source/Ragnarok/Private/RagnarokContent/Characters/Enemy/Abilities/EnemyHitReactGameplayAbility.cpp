@@ -4,6 +4,7 @@
 #include "RagnarokContent/Characters/Enemy/Abilities/EnemyHitReactGameplayAbility.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
 #include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"
+#include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
@@ -25,6 +26,35 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
             ReceivedHitDirection = Context->GetHitDirection();
         }
 
+        ERagnarokDirection HitDirection = ERagnarokDirection::ERD_None;
+        ACharacter* OwnerCharacter = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+
+        if (nullptr == OwnerCharacter)
+        {
+            const FVector ImpactDirection = ReceivedHitDirection.GetSafeNormal();
+            const FVector ActorForward = OwnerCharacter->GetActorForwardVector();
+            const double ForwardDot = FVector::DotProduct(ActorForward, ImpactDirection);
+            if (ForwardDot > 0.707f)
+            {
+                HitDirection = ERagnarokDirection::ERD_Forward;
+            }
+            else if (ForwardDot < -0.707f)
+            {
+                HitDirection = ERagnarokDirection::ERD_Backward;
+            }
+            else
+            {
+                const FVector CrossProduct = FVector::CrossProduct(ActorForward, ImpactDirection);
+                if (CrossProduct.Z > 0.0f)
+                {
+                    HitDirection = ERagnarokDirection::ERD_Left;
+                }
+                else
+                {
+                    HitDirection = ERagnarokDirection::ERD_Right;
+                }
+            }
+        }
 
         FGameplayTag EventTag = TriggerEventData->EventTag;
         float EventMagnitude = TriggerEventData->EventMagnitude;
