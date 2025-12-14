@@ -27,10 +27,10 @@
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()
 {
-	ComboSectionMap.Add(1, FName("Combo1"));
-	ComboSectionMap.Add(2, FName("Combo2"));
-	ComboSectionMap.Add(3, FName("Combo3"));
-	ComboSectionMap.Add(4, FName("Combo4"));
+	//ComboSectionMap.Add(1, FName("Combo1"));
+	//ComboSectionMap.Add(2, FName("Combo2"));
+	//ComboSectionMap.Add(3, FName("Combo3"));
+	//ComboSectionMap.Add(4, FName("Combo4"));
 
 	CurComboCount = 1;
 	bShowDebug = false;
@@ -323,7 +323,7 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage"));
 
-	if (nullptr == AttackMontage || false == ComboSectionMap.Contains(ComboCount))
+	if (nullptr == AttackMontage ||ComboCount > 3)
 	{
 		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Not contains combo section or attack montage is nullptr"), FColor::Red);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
@@ -373,7 +373,8 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 
 	CurAttackState = ERagnarokAttackState::ERAS_Attacking;
 
-	FName StartSectionName = ComboSectionMap[ComboCount];
+	//FName StartSectionName = ComboSectionMap[ComboCount];
+	FName StartSectionName = KratosAttackDataArray[ComboCount].ComboSectionName;
 
 	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,

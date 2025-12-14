@@ -106,8 +106,11 @@ private:
 	UAnimMontage* AttackMontage = nullptr;
 
 	/** 콤보 카운트별 몽타주 섹션 맵 */
-	UPROPERTY(EditAnywhere, Category = "KratosLightAttack|Combo", meta = (DisplayName = "Combo Section Map"))
-	TMap<int32, FName> ComboSectionMap;
+	//UPROPERTY(EditAnywhere, Category = "KratosLightAttack|Combo", meta = (DisplayName = "Combo Section Map"))
+	//TMap<int32, FName> ComboSectionMap;
+
+	UPROPERTY(EditAnywhere, Category = "KratosLightAttackAbility")
+	TArray<FKratosAttackData> KratosAttackDataArray;
 
 	/** 크레토스 무기 참조 */
 	UPROPERTY()

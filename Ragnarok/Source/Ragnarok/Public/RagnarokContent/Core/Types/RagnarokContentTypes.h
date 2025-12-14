@@ -62,6 +62,15 @@ enum class ERagnarokRollState : uint8
 	ERRS_Roll			UMETA(DisplayName = "Roll")
 };
 
+UENUM(BlueprintType)
+enum class ERagnarokAttackReactType : uint8
+{
+	ERART_None			UMETA(DisplayName = "None"),
+	ERART_Knockback		UMETA(DisplayName = "Knockback"),
+	ERART_Launch		UMETA(DisplayName = "Launch"),
+	ERART_Slamdown		UMETA(DisplayName = "Slamdown")
+};
+
 USTRUCT(BlueprintType)
 struct FKratosWeaponData
 {
@@ -81,4 +90,19 @@ struct FKratosWeaponData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> WeaponIconTextureSoftPtr;
+};
+
+USTRUCT(BlueprintType)
+struct FKratosAttackData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere)
+	int32 ComboIndex = 0;
+
+	UPROPERTY(EditAnywhere)
+	FName ComboSectionName;
+
+	UPROPERTY(EditAnywhere)
+	ERagnarokAttackReactType AttackReactType = ERagnarokAttackReactType::ERART_None;
 };
