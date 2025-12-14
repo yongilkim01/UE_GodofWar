@@ -32,6 +32,10 @@ public:
 	//~ End UGameplayAbility Interface.
 
 private:
+	void HandleKnockback(const FVector& HitDirection);
+	void HandleLaunch();
+	bool HandleSlamdown();
+
 	UFUNCTION()
 	void OnMontageCompleted();
 	UFUNCTION()
@@ -40,6 +44,13 @@ private:
 	void OnMontageInterrupted();
 	UFUNCTION()
 	void OnMontageCancelled();
+
+	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")
+	float KnockbackPower = 500.0f;
+	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")
+	float LaunchPower = 500.0f;
+	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")
+	float SlamdownPower = 1000.0f;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Ragnarok|Ability")
