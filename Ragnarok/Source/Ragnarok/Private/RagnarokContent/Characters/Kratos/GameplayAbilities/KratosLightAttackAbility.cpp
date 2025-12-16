@@ -2,12 +2,13 @@
 
 
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosLightAttackAbility.h"
+#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
+#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
 #include "RagnarokContent/Characters/Kratos/Kratos.h"
 #include "RagnarokContent/Characters/Kratos/KratosWeapon.h"
-#include "RagnarokContent/Characters/Kratos/Components/KratosCombatComponent.h"
-#include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 #include "RagnarokContent/Items/Weapons/RagnarokWeapon.h"
 #include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"
+#include "RagnarokContent/GameplayAbilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -21,17 +22,11 @@
 #include "RagnarokEngine/Core/Tags/RagnarokGameplayTags.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilityFunctionLibrary.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
-#include "RagnarokContent/GameplayAbilities/AbilityTasks/RKAbilityTask_RotateToCamera.h"
 #include "RagnarokEngine/CombatSystem/Tags/CombatGameplayTags.h"
 
 
 UKratosLightAttackAbility::UKratosLightAttackAbility()
 {
-	//ComboSectionMap.Add(1, FName("Combo1"));
-	//ComboSectionMap.Add(2, FName("Combo2"));
-	//ComboSectionMap.Add(3, FName("Combo3"));
-	//ComboSectionMap.Add(4, FName("Combo4"));
-
 	CurComboCount = 1;
 	bShowDebug = false;
 }
@@ -160,7 +155,6 @@ void UKratosLightAttackAbility::InputPressed(const FGameplayAbilitySpecHandle Ha
 	switch (CurAttackState)
 	{
 	case ERagnarokAttackState::ERAS_AttackWait:
-		//Debug::Print(TEXT("ERagnarokAttackState::ERAS_AttackWait"));
 		bReserveComboAttack = true;
 		break;
 	default:
