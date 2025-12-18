@@ -53,7 +53,6 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
         }
     }
 
-
     FGameplayTag EventTag = TriggerEventData->EventTag;
     float EventMagnitude = TriggerEventData->EventMagnitude;
 
