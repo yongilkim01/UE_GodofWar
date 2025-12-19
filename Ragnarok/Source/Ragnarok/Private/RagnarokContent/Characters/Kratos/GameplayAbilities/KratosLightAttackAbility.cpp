@@ -317,6 +317,8 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 {
 	if (true == bShowDebug) Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage"));
 
+	Debug::Print(TEXT("ComboCount : "), ComboCount);
+
 	if (nullptr == AttackMontage ||ComboCount > 3)
 	{
 		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Not contains combo section or attack montage is nullptr"), FColor::Red);
