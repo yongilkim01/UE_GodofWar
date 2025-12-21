@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Characters/Enemy/Abilities/EnemyHitReactGameplayAbility.h"
+#include "RagnarokContent/Characters/Enemy/GameplayAbilities/EnemyHitReactGameplayAbility.h"
 #include "RagnarokContent/Characters/Enemy/Base/EnemyCharacter.h"
 #include "RagnarokContent/Characters/Kratos/Tags/KratosGameplayTags.h"
 #include "RagnarokContent/GameplayAbilities/RagnarokGameplayEffectContext.h"

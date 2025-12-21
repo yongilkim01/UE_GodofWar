@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RagnarokContent/Characters/Enemy/Abilities/EnemyMeleeAttackGameplayAbility.h"
+#include "RagnarokContent/Characters/Enemy/GameplayAbilities/EnemyMeleeAttackGameplayAbility.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 #include "RagnarokEngine/CombatSystem/Tags/CombatGameplayTags.h"
 #include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"

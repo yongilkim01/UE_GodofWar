@@ -2,7 +2,7 @@
 
 
 #include "RagnarokContent/Characters/Enemy/DataAssets/EnemyStartUpDataAsset.h"
-#include "RagnarokContent/Characters/Enemy/Abilities/EnemyGameplayAbility.h"
+#include "RagnarokContent/Characters/Enemy/GameplayAbilities/EnemyGameplayAbility.h"
 #include "RagnarokEngine/GameplayAbilities/RagnarokAbilitySystemComponent.h"
 
 void UEnemyStartUpDataAsset::GiveToAbilitySystemComponent(URagnarokAbilitySystemComponent* InASC, int32 ApplyLevel)

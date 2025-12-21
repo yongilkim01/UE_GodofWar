@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RagnarokContent/Characters/Enemy/Abilities/EnemyGameplayAbility.h"
+#include "RagnarokContent/Characters/Enemy/GameplayAbilities/EnemyGameplayAbility.h"
 #include "EnemyHitReactGameplayAbility.generated.h"
 
 /**
