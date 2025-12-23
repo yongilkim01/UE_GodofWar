@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RagnarokContent/Characters/Kratos/GameplayAbilities/KratosGameplayAbility.h"
 #include "RagnarokContent/Core/Types/RagnarokContentTypes.h"
+#include "GameplayTagContainer.h"
 #include "KratosLightAttackAbility.generated.h"
 
 class UAbilityTask_WaitGameplayEvent;
@@ -141,4 +142,6 @@ private:
 	float ComboWaitDuration = 1.0f;
 	/** 다음 콤보 예약 여부 */
 	bool bReserveComboAttack = false;
+	/** 마지막 공격 반응 게임 태그 */
+	FGameplayTag RecentAttackReactTag;
 };

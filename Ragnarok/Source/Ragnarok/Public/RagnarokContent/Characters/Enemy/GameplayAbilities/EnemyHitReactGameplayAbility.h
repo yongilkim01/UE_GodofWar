@@ -33,6 +33,7 @@ public:
 
 private:
 	void HandleKnockback(const FVector& HitDirection);
+	void HandleKnockback(const AActor* Attacker);
 	void HandleLaunch();
 	bool HandleSlamdown();
 
@@ -46,7 +47,7 @@ private:
 	void OnMontageCancelled();
 
 	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")
-	float KnockbackPower = 500.0f;
+	float KnockbackPower = 1500.0f;
 	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")
 	float LaunchPower = 500.0f;
 	UPROPERTY(EditAnywhere, Category = "EnemyHitReactGameplayAbility")

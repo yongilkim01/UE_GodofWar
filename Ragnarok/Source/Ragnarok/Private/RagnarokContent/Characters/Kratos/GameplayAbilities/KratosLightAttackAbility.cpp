@@ -261,9 +261,10 @@ void UKratosLightAttackAbility::OnGameplayEventReceived(FGameplayEventData Paylo
 	if (true == SpecHandle.IsValid())
 	{
 		FRagnarokGameplayEffectContext* Context = static_cast<FRagnarokGameplayEffectContext*>(SpecHandle.Data->GetContext().Get());
-		if (nullptr != Context)
+		if (nullptr != Context && true == RecentAttackReactTag.IsValid())
 		{
-			Context->SetAttackTypeTag(KratosGameplayTags::Kratos_AttackReact_Launch);
+			Debug::Print(TEXT("RecentAttackReactTag is activate"), FColor::Orange);
+			Context->SetAttackTypeTag(RecentAttackReactTag);
 			Context->SetHitDirection((TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).GetSafeNormal());
 		}
 	}
@@ -319,11 +320,13 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 
 	Debug::Print(TEXT("ComboCount : "), ComboCount);
 
-	if (nullptr == AttackMontage ||ComboCount > 3)
+	if (nullptr == AttackMontage ||ComboCount > 4)
 	{
 		Debug::Print(TEXT("UKratosLightAttackAbility::ExecuteAttackMontage - Not contains combo section or attack montage is nullptr"), FColor::Red);
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	}
+
+	ComboCount--;
 
 	if (nullptr != AttackWaitStartTask)
 	{
@@ -371,6 +374,13 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 
 	//FName StartSectionName = ComboSectionMap[ComboCount];
 	FName StartSectionName = KratosAttackDataArray[ComboCount].ComboSectionName;
+	if (ERagnarokAttackReactType::ERART_Knockback == KratosAttackDataArray[ComboCount].AttackReactType)
+		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Knockback;
+	else if (ERagnarokAttackReactType::ERART_Launch == KratosAttackDataArray[ComboCount].AttackReactType)
+		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Launch;
+	else if (ERagnarokAttackReactType::ERART_Slamdown == KratosAttackDataArray[ComboCount].AttackReactType)
+		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Slamdown;
+
 
 	AttackMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,

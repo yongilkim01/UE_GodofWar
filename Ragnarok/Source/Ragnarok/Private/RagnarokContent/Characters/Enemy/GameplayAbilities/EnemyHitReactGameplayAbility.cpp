@@ -39,7 +39,8 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
     {
         if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Knockback)
         {
-            HandleKnockback(ReceivedHitDirection);
+            //HandleKnockback(ReceivedHitDirection);
+            HandleKnockback(TriggerEventData->Instigator.Get());
             bHandleAttackReact = true;
         }
         else if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Launch)
@@ -170,10 +171,51 @@ void UEnemyHitReactGameplayAbility::HandleKnockback(const FVector& HitDirection)
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
         return;
     }
-    FVector LaunchVelocity = HitDirection.GetSafeNormal() * KnockbackPower;
-    LaunchVelocity.Z = FMath::Max(LaunchVelocity.Z, 150.0f);
+
+    // 1. HitDirection의 Z값을 0으로 만들어 수평 방향 벡터를 구합니다.
+    FVector HorizontalHitDirection = HitDirection;
+    HorizontalHitDirection.Z = 0.0f;
+    
+    // 2. 수평 방향으로만 넉백을 적용합니다.
+    FVector LaunchVelocity = HorizontalHitDirection.GetSafeNormal() * KnockbackPower;
+
+    // 3. 캐릭터를 살짝 띄우기 위해 고정된 Z값을 더해줍니다. (이 값을 조절하여 뜨는 높이를 제어할 수 있습니다)
+    LaunchVelocity.Z = 200.0f;
+
+    UE_LOG(LogTemp, Warning, TEXT("HandleKnockback Called! Horizontal LaunchVelocity: %s"), *LaunchVelocity.ToString());
+
     OwnerEnemyCharacter->LaunchCharacter(LaunchVelocity, true, true);
 
+}
+
+void UEnemyHitReactGameplayAbility::HandleKnockback(const AActor* Attacker)
+{
+    AEnemyCharacter* OwnerEnemyCharacter = GetEnemyCharacterFromActorInfo();
+    if (nullptr == OwnerEnemyCharacter || nullptr == Attacker)
+    {
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+        return;
+    }
+
+    // 1. 적의 위치와 공격자의 위치를 가져옵니다.
+    const FVector EnemyLocation = OwnerEnemyCharacter->GetActorLocation();
+    const FVector AttackerLocation = Attacker->GetActorLocation();
+
+    // 2. 공격자로부터 적을 향하는 방향 벡터를 계산합니다.
+    FVector KnockbackDirection = EnemyLocation - AttackerLocation;
+
+    // 3. Z값을 0으로 만들어 순수한 수평 방향으로 만듭니다.
+    KnockbackDirection.Z = 0.0f;
+
+    // 4. 방향 벡터를 정규화하고 KnockbackPower를 곱해 최종 힘을 계산합니다.
+    FVector LaunchVelocity = KnockbackDirection.GetSafeNormal() * KnockbackPower;
+
+    // 5. 캐릭터를 살짝 띄우기 위해 Z값을 추가합니다.
+    LaunchVelocity.Z = 200.0f;
+
+    UE_LOG(LogTemp, Warning, TEXT("HandleKnockback Re-calculated! LaunchVelocity: %s"), *LaunchVelocity.ToString());
+
+    OwnerEnemyCharacter->LaunchCharacter(LaunchVelocity, true, true);
 }
 
 void UEnemyHitReactGameplayAbility::HandleLaunch()
