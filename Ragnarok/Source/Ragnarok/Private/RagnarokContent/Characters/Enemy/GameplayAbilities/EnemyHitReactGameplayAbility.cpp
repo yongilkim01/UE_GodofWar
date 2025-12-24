@@ -39,8 +39,8 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
     {
         if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Knockback)
         {
-            //HandleKnockback(ReceivedHitDirection);
-            HandleKnockback(TriggerEventData->Instigator.Get());
+            HandleKnockback(ReceivedHitDirection);
+            //HandleKnockback(TriggerEventData->Instigator.Get());
             bHandleAttackReact = true;
         }
         else if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Launch)
