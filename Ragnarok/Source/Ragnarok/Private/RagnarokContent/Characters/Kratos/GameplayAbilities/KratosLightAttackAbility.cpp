@@ -374,7 +374,9 @@ void UKratosLightAttackAbility::ExecuteAttackMontage(int32 ComboCount)
 
 	//FName StartSectionName = ComboSectionMap[ComboCount];
 	FName StartSectionName = KratosAttackDataArray[ComboCount].ComboSectionName;
-	if (ERagnarokAttackReactType::ERART_Knockback == KratosAttackDataArray[ComboCount].AttackReactType)
+	if (ERagnarokAttackReactType::ERART_Normal == KratosAttackDataArray[ComboCount].AttackReactType)
+		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Normal;
+	else if (ERagnarokAttackReactType::ERART_Knockback == KratosAttackDataArray[ComboCount].AttackReactType)
 		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Knockback;
 	else if (ERagnarokAttackReactType::ERART_Launch == KratosAttackDataArray[ComboCount].AttackReactType)
 		RecentAttackReactTag = KratosGameplayTags::Kratos_AttackReact_Launch;

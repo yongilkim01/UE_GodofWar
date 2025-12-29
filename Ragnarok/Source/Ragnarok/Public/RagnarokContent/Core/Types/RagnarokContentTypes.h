@@ -66,6 +66,7 @@ UENUM(BlueprintType)
 enum class ERagnarokAttackReactType : uint8
 {
 	ERART_None			UMETA(DisplayName = "None"),
+	ERART_Normal		UMETA(DisplayName = "Normal"),
 	ERART_Knockback		UMETA(DisplayName = "Knockback"),
 	ERART_Launch		UMETA(DisplayName = "Launch"),
 	ERART_Slamdown		UMETA(DisplayName = "Slamdown")

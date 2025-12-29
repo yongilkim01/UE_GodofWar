@@ -37,6 +37,11 @@ void UEnemyHitReactGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHa
     bool bHandleAttackReact = false;
     if (true == ReceivedAttackType.IsValid())
     {
+        if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Normal)
+        {
+            HandleNormal(ReceivedHitDirection);
+            bHandleAttackReact = true;
+        }
         if (ReceivedAttackType == KratosGameplayTags::Kratos_AttackReact_Knockback)
         {
             HandleKnockback(ReceivedHitDirection);
@@ -163,6 +168,27 @@ void UEnemyHitReactGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle 
 
 }
 
+void UEnemyHitReactGameplayAbility::HandleNormal(const FVector& HitDirection)
+{
+    AEnemyCharacter* OwnerEnemyCharacter = GetEnemyCharacterFromActorInfo();
+    if (nullptr == OwnerEnemyCharacter)
+    {
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+        return;
+    }
+
+    FVector HorizontalHitDirection = HitDirection;
+    HorizontalHitDirection.Z = 0.0f;
+
+    FVector LaunchVelocity = HorizontalHitDirection.GetSafeNormal() * NormalPower;
+
+    LaunchVelocity.Z = 200.0f;
+
+    UE_LOG(LogTemp, Warning, TEXT("HandleKnockback Called! Horizontal LaunchVelocity: %s"), *LaunchVelocity.ToString());
+
+    OwnerEnemyCharacter->LaunchCharacter(LaunchVelocity, true, true);
+}
+
 void UEnemyHitReactGameplayAbility::HandleKnockback(const FVector& HitDirection)
 {
     AEnemyCharacter* OwnerEnemyCharacter = GetEnemyCharacterFromActorInfo();
@@ -172,14 +198,11 @@ void UEnemyHitReactGameplayAbility::HandleKnockback(const FVector& HitDirection)
         return;
     }
 
-    // 1. HitDirection의 Z값을 0으로 만들어 수평 방향 벡터를 구합니다.
     FVector HorizontalHitDirection = HitDirection;
     HorizontalHitDirection.Z = 0.0f;
     
-    // 2. 수평 방향으로만 넉백을 적용합니다.
     FVector LaunchVelocity = HorizontalHitDirection.GetSafeNormal() * KnockbackPower;
 
-    // 3. 캐릭터를 살짝 띄우기 위해 고정된 Z값을 더해줍니다. (이 값을 조절하여 뜨는 높이를 제어할 수 있습니다)
     LaunchVelocity.Z = 200.0f;
 
     UE_LOG(LogTemp, Warning, TEXT("HandleKnockback Called! Horizontal LaunchVelocity: %s"), *LaunchVelocity.ToString());
