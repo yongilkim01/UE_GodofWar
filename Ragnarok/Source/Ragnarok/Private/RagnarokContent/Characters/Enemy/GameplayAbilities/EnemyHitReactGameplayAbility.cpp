@@ -220,20 +220,20 @@ void UEnemyHitReactGameplayAbility::HandleKnockback(const AActor* Attacker)
         return;
     }
 
-    // 1. ÀûÀÇ À§Ä¡¿Í °ø°ÝÀÚÀÇ À§Ä¡¸¦ °¡Á®¿É´Ï´Ù.
+    // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½.
     const FVector EnemyLocation = OwnerEnemyCharacter->GetActorLocation();
     const FVector AttackerLocation = Attacker->GetActorLocation();
 
-    // 2. °ø°ÝÀÚ·ÎºÎÅÍ ÀûÀ» ÇâÇÏ´Â ¹æÇâ º¤ÅÍ¸¦ °è»êÇÕ´Ï´Ù.
+    // 2. ï¿½ï¿½ï¿½ï¿½ï¿½Ú·Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
     FVector KnockbackDirection = EnemyLocation - AttackerLocation;
 
-    // 3. Z°ªÀ» 0À¸·Î ¸¸µé¾î ¼ø¼öÇÑ ¼öÆò ¹æÇâÀ¸·Î ¸¸µì´Ï´Ù.
+    // 3. Zï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
     KnockbackDirection.Z = 0.0f;
 
-    // 4. ¹æÇâ º¤ÅÍ¸¦ Á¤±ÔÈ­ÇÏ°í KnockbackPower¸¦ °öÇØ ÃÖÁ¾ ÈûÀ» °è»êÇÕ´Ï´Ù.
+    // 4. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½Ï°ï¿½ KnockbackPowerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
     FVector LaunchVelocity = KnockbackDirection.GetSafeNormal() * KnockbackPower;
 
-    // 5. Ä³¸¯ÅÍ¸¦ »ìÂ¦ ¶ç¿ì±â À§ÇØ Z°ªÀ» Ãß°¡ÇÕ´Ï´Ù.
+    // 5. Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½Â¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Zï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Õ´Ï´ï¿½.
     LaunchVelocity.Z = 200.0f;
 
     UE_LOG(LogTemp, Warning, TEXT("HandleKnockback Re-calculated! LaunchVelocity: %s"), *LaunchVelocity.ToString());

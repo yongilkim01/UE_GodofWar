@@ -4,12 +4,12 @@
 #include "RagnarokEngine/CombatSystem/Notifies/WeaponCollisionAnimNotifyState.h"
 #include "RagnarokEngine/CombatSystem/CombatFunctionLibrary.h"
 #include "RagnarokEngine/CombatSystem/CombatComponent.h"
-#include "RagnarokEngine/Kismet/Debug/RagnarokDebugHelper.h"
 
-void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
+void UWeaponCollisionAnimNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
-
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
+	
 	UCombatComponent* CombatComponent = UCombatFunctionLibrary::GetCombatComponentFromActor(MeshComp->GetOwner());
 
 	if (nullptr != CombatComponent)
